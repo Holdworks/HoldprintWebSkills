@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Holdprint — API & IA · Conecte LLMs ao seu ERP</title>
+<meta name="description" content="Conecte Claude, ChatGPT, Cursor, Gemini ou Copilot ao ERP Holdprint via MCP (OAuth) ou banco read-only. Instale as skills com um comando.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+  </button>
+  <a class="brand-mark" href="#overview" aria-label="Holdprint">
+    <img class="brand-logo" src="assets/logo-full.png" alt="Holdprint">
+    <span class="brand-tagline">API/MCP</span>
+  </a>
+  <nav class="header-nav">
+    <a href="#quickstart">Início rápido</a>
+    <a href="#install-cc">Instalar</a>
+    <a href="#tools">Tools</a>
+    <a href="#faq">FAQ</a>
+    <a class="header-ghbtn" href="https://github.com/holdprint/skills" target="_blank" rel="noreferrer">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M12 2C6.5 2 2 6.6 2 12.3c0 4.5 2.9 8.3 6.8 9.7.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.4-3.4-1.4-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.6 2.4 1.1 3 .8.1-.7.4-1.1.6-1.4-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.3 9.3 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9v2.8c0 .3.2.6.7.5 3.9-1.4 6.8-5.2 6.8-9.7C22 6.6 17.5 2 12 2z"/></svg>
+      GitHub
+    </a>
+  </nav>
+</header>
+
+<div class="backdrop" id="backdrop"></div>
+
+<div class="shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="nav-group">
+      <div class="nav-group-title">Começar</div>
+      <a class="nav-link" href="#overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9M5 10v10h14V10"/></svg>Visão geral</a>
+      <a class="nav-link" href="#quickstart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h7l-1 8 10-12h-7z"/></svg>Início rápido</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Conectar uma LLM</div>
+      <a class="nav-link" href="#install-cc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 17l6-6-6-6M12 19h8"/></svg>Claude Code</a>
+      <a class="nav-link" href="#install-web"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12a10 10 0 1 0 20 0 10 10 0 1 0-20 0M2 12h20M12 2a15 15 0 0 1 0 20a15 15 0 0 1 0-20"/></svg>claude.ai & ChatGPT</a>
+      <a class="nav-link" href="#skills"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v12H4zM2 20h20M9 8l2 2-2 2M13 12h3"/></svg>Instalar as skills</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Usar & referência</div>
+      <a class="nav-link" href="#usar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Como usar</a>
+      <a class="nav-link" href="#tools"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18v3h3l6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2-2z"/></svg>Tools do MCP</a>
+      <a class="nav-link" href="#domain"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 2 7l10 5 10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>Skills & domínio</a>
+      <a class="nav-link" href="#mongo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg>Banco read-only</a>
+      <a class="nav-link" href="#faq"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.5 9a2.5 2.5 0 0 1 4.5 1.5c0 1.7-2.5 2-2.5 3.5M12 17h.01"/></svg>FAQ</a>
+    </div>
+  </aside>
+
+  <main class="content">
+  <div class="content-inner">
+
+    <!-- OVERVIEW -->
+    <section class="doc" id="overview">
+      <p class="eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5z"/></svg>Holdprint para LLMs</p>
+      <h1 class="hero">Converse com a IA <span class="grad">usando os dados do seu ERP</span>.</h1>
+      <p class="lede">Conecte Claude, ChatGPT, Cursor, Gemini ou Copilot ao Holdprint e peça relatórios, análises e automações em português. Sem depender de um programador.</p>
+
+      <div class="hero-demo" aria-hidden="true">
+        <div class="hero-demo-bar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="who">Claude + Holdprint</span></div>
+        <div class="hero-demo-body">
+          <div class="bubble q">Quanto faturei este mês e qual meu saldo em caixa?</div>
+          <div class="bubble a"><span class="tool">via holdprint_report</span>Faturamento do mês: <b>R$ 588.420</b>. Saldo em caixa e bancos (contas ativas): <b>R$ 41.516</b>.</div>
+        </div>
+      </div>
+
+      <div class="paths">
+        <div class="path featured">
+          <span class="tag-rec">recomendado</span>
+          <div class="path-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9m0-16v16m0 0H5a2 2 0 0 1-2-2v-4"/></svg></div>
+          <h3>MCP hospedado</h3>
+          <p>Login por OAuth (seu e-mail e senha do Holdprint). 10 tools prontas para ler e operar o ERP com segurança. Funciona em todas as principais LLMs.</p>
+        </div>
+        <div class="path">
+          <div class="path-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/></svg></div>
+          <h3>Banco read-only</h3>
+          <p>Conexão MongoDB somente-leitura para casos avançados que precisam de queries diretas. Liberado sob demanda pela equipe Holdprint.</p>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule">
+
+    <!-- QUICKSTART -->
+    <section class="doc" id="quickstart">
+      <h2>Início rápido</h2>
+      <p class="section-sub">Dois passos: ensine a LLM a falar “Holdprint” (skills) e conecte ela aos seus dados (MCP).</p>
+      <div class="steps">
+        <div class="step"><div class="step-num"></div><div class="step-body">
+          <h3>Instale as skills</h3>
+          <p>Um comando ensina sua LLM o domínio do ERP (orçamento, custeio, campos dinâmicos).</p>
+          <div class="code" data-copy>
+            <div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">terminal</span></div>
+            <pre><code>npx @holdprint/skills install</code></pre>
+          </div>
+        </div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body">
+          <h3>Conecte ao MCP</h3>
+          <p>No Claude Code, um comando. No claude.ai/ChatGPT, um conector. O login abre no navegador.</p>
+          <div class="code" data-copy>
+            <div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">terminal</span></div>
+            <pre><code>claude mcp add <span class="f">--transport</span> http holdprint https://mcp.holdprint.net/mcp</code></pre>
+          </div>
+        </div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body">
+          <h3>Pergunte</h3>
+          <p>Pronto. Fale em português com a IA.</p>
+          <div class="code" data-copy>
+            <div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">prompt</span></div>
+            <pre><code>Quanto eu faturei este ano e qual meu saldo em caixa?</code></pre>
+          </div>
+        </div></div>
+      </div>
+    </section>
+
+    <hr class="rule">
+
+    <!-- CLAUDE CODE -->
+    <section class="doc" id="install-cc">
+      <h2>Instalar no Claude Code</h2>
+      <p class="section-sub">Terminal, um comando. Ideal para quem já usa Claude Code no editor.</p>
+      <div class="steps">
+        <div class="step"><div class="step-num"></div><div class="step-body">
+          <h3>Adicione o servidor MCP</h3>
+          <div class="code" data-copy>
+            <div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">terminal</span></div>
+            <pre><code>claude mcp add <span class="f">--transport</span> http holdprint https://mcp.holdprint.net/mcp</code></pre>
+          </div>
+        </div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body">
+          <h3>Faça login</h3>
+          <p>Na primeira chamada, o Claude abre o navegador na tela de login da Holdprint. Entre com o seu e-mail e senha do ERP — nenhum token é colado.</p>
+          <div class="shot">
+            <div class="shot-bar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="shot-url">mcp.holdprint.net/authorize</span></div>
+            <div class="shot-body" style="background:#0f172a">
+              <img src="assets/oauth-login.png" alt="Tela de login OAuth da Holdprint" onerror="this.parentElement.innerHTML='&lt;div style=&quot;text-align:center;color:#94a3b8;padding:40px&quot;&gt;Tela de login Holdprint (OAuth)&lt;/div&gt;'">
+            </div>
+          </div>
+        </div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body">
+          <h3>Verifique</h3>
+          <div class="code" data-copy>
+            <div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">terminal</span></div>
+            <pre><code>claude mcp list
+<span class="c"># holdprint ✓ conectado</span></code></pre>
+          </div>
+        </div></div>
+      </div>
+    </section>
+
+    <hr class="rule">
+
+    <!-- CLAUDE.AI / CHATGPT -->
+    <section class="doc" id="install-web">
+      <h2>Instalar no claude.ai & ChatGPT</h2>
+      <p class="section-sub">Pelo navegador, sem instalar nada. Adicione um conector personalizado apontando para o MCP.</p>
+
+      <div class="tabs" id="webTabs">
+        <div class="tab-bar">
+          <button class="tab-btn active" data-tab="cai"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M7 12h10"/></svg>claude.ai</button>
+          <button class="tab-btn" data-tab="gpt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>ChatGPT</button>
+        </div>
+
+        <div class="tab-panel active" data-panel="cai">
+          <div class="steps">
+            <div class="step"><div class="step-num"></div><div class="step-body">
+              <h3>Abra os conectores</h3>
+              <p>Em claude.ai: <strong>Configurações → Conectores → Adicionar conector personalizado</strong>.</p>
+            </div></div>
+            <div class="step"><div class="step-num"></div><div class="step-body">
+              <h3>Cole o endpoint</h3>
+              <p>Informe um nome e a URL do MCP. Salve.</p>
+              <div class="shot"><div class="shot-bar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="shot-url">claude.ai/settings/connectors</span></div>
+                <div class="shot-body">
+                  <div class="connector-card">
+                    <p class="cc-h">Adicionar conector personalizado</p>
+                    <p class="cc-sub">Conecte uma ferramenta via MCP.</p>
+                    <div class="field-label">Nome</div>
+                    <div class="field">Holdprint ERP</div>
+                    <div class="field-label">URL do servidor MCP</div>
+                    <div class="field">https://mcp.holdprint.net/mcp</div>
+                    <div class="fake-btn">Adicionar</div>
+                  </div>
+                </div>
+              </div>
+            </div></div>
+            <div class="step"><div class="step-num"></div><div class="step-body">
+              <h3>Faça login (OAuth)</h3>
+              <p>Ao conectar, abre a tela de login da Holdprint. Entre com seu e-mail e senha do ERP e autorize. O conector fica <strong>Conectado</strong>.</p>
+            </div></div>
+            <div class="step"><div class="step-num"></div><div class="step-body">
+              <h3>Use no chat</h3>
+              <p>As tools <code class="inline">holdprint_*</code> ficam disponíveis. Pergunte em português.</p>
+            </div></div>
+          </div>
+        </div>
+
+        <div class="tab-panel" data-panel="gpt">
+          <div class="steps">
+            <div class="step"><div class="step-num"></div><div class="step-body">
+              <h3>Abra os conectores</h3>
+              <p>No ChatGPT (planos com conectores): <strong>Settings → Connectors → Add custom / MCP server</strong>.</p>
+            </div></div>
+            <div class="step"><div class="step-num"></div><div class="step-body">
+              <h3>Cole o endpoint</h3>
+              <p>Tipo <code class="inline">http</code> (streamable), URL abaixo. Autenticação: OAuth.</p>
+              <div class="code" data-copy>
+                <div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">endpoint</span></div>
+                <pre><code>https://mcp.holdprint.net/mcp</code></pre>
+              </div>
+            </div></div>
+            <div class="step"><div class="step-num"></div><div class="step-body">
+              <h3>Faça login e use</h3>
+              <p>O login da Holdprint abre automaticamente. Depois é só pedir à IA.</p>
+            </div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+        <div><p class="ct-title">Endpoint a confirmar</p><p>A URL oficial de produção do MCP será confirmada na publicação. Se não responder, peça a URL atual ao suporte Holdprint.</p></div>
+      </div>
+    </section>
+
+    <hr class="rule">
+
+    <!-- SKILLS -->
+    <section class="doc" id="skills">
+      <h2>Instalar as skills</h2>
+      <p class="section-sub">As skills ensinam a LLM a entender o domínio do Holdprint: onde fica o custo (CostMemento), como resolver campos dinâmicos, blocos e medidas. Sem elas, a IA chuta.</p>
+      <div class="steps">
+        <div class="step"><div class="step-num"></div><div class="step-body">
+          <h3>Instale com um comando</h3>
+          <p>Detecta os harnesses instalados (Claude Code, Codex, Cursor, Gemini CLI, Copilot) e copia as skills para cada um.</p>
+          <div class="code" data-copy>
+            <div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">terminal</span></div>
+            <pre><code>npx @holdprint/skills install</code></pre>
+          </div>
+        </div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body">
+          <h3>Alvos específicos & manutenção</h3>
+          <div class="code" data-copy>
+            <div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">terminal</span></div>
+            <pre><code>npx @holdprint/skills install <span class="f">--harness</span>=claude,codex
+npx @holdprint/skills check
+npx @holdprint/skills update</code></pre>
+          </div>
+        </div></div>
+      </div>
+      <h3>O que vem instalado</h3>
+      <div class="tools">
+        <div class="tool"><code>holdprint-mcp</code><span>Operar o ERP pelo MCP (as 10 tools).</span></div>
+        <div class="tool"><code>holdprint-mongo</code><span>Ler o ERP por conexão MongoDB read-only.</span></div>
+      </div>
+      <div class="callout info">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        <div><p class="ct-title">Reinicie o harness</p><p>Depois de instalar, reinicie a ferramenta (ou abra uma nova sessão) para ela carregar as skills.</p></div>
+      </div>
+    </section>
+
+    <hr class="rule">
+
+    <!-- USAR -->
+    <section class="doc" id="usar">
+      <h2>Como usar</h2>
+      <p class="section-sub">Depois de conectar, converse em português. Exemplos que funcionam de imediato:</p>
+      <div class="asks">
+        <div class="ask"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><div><p class="q">“Quanto eu faturei em 2026 e qual meu lucro mensal?”</p><p class="a">Usa os relatórios de dashboard (faturamento, lucro, margem).</p></div></div>
+        <div class="ask"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><div><p class="q">“Qual meu saldo total em caixa e bancos?”</p><p class="a">Soma as contas financeiras, separando ativas.</p></div></div>
+        <div class="ask"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><div><p class="q">“Liste meus 10 orçamentos abertos de maior valor.”</p><p class="a">Filtra por status e ordena — sem você montar query.</p></div></div>
+        <div class="ask"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><div><p class="q">“Quantas notas emiti no mês e qual o total?”</p><p class="a">Conta e soma as NFes do período.</p></div></div>
+      </div>
+    </section>
+
+    <hr class="rule">
+
+    <!-- TOOLS -->
+    <section class="doc" id="tools">
+      <h2>Tools do MCP</h2>
+      <p class="section-sub">10 tools genéricas — a LLM as compõe para qualquer pergunta. Você não precisa decorá-las; esta referência é para conferência.</p>
+
+      <h3>Fluxo canônico</h3>
+      <p>Não chute nomes de entidade ou campo. Sempre: <code class="inline">discover</code> → <code class="inline">describe</code> → <code class="inline">query</code> / <code class="inline">count</code> / <code class="inline">aggregate</code>. Para valores em R$ que somam sub-documentos, use <code class="inline">report</code>. Para escrever, <code class="inline">discover_actions</code> → <code class="inline">action</code> (dry-run primeiro).</p>
+
+      <div class="ref">
+        <div class="ref-head"><code>holdprint_discover</code><span class="ref-tag">leitura</span></div>
+        <div class="ref-body"><p>Resolve um termo em português para a entidade canônica, ou lista todas.</p>
+          <div class="params"><div class="param"><code>term?</code><span>termo livre pt-BR ou nome técnico. Vazio = lista tudo.</span></div></div>
+        </div>
+      </div>
+
+      <div class="ref">
+        <div class="ref-head"><code>holdprint_describe</code><span class="ref-tag">leitura</span></div>
+        <div class="ref-body"><p>Retorna os campos exatos (nome, tipo, enum e valores) de uma entidade. Use antes de filtrar.</p>
+          <div class="params"><div class="param"><code>collection</code><span>entidade ou termo pt-BR.</span></div></div>
+        </div>
+      </div>
+
+      <div class="ref">
+        <div class="ref-head"><code>holdprint_query</code><span class="ref-tag">leitura</span></div>
+        <div class="ref-body"><p>Lê registros com filtro, ordenação e paginação. Traz só <code class="inline">deleted:false</code> por padrão.</p>
+          <div class="params">
+            <div class="param"><code>collection</code><span>entidade.</span></div>
+            <div class="param"><code>where?</code><span>igualdade <code class="inline">{campo: valor}</code> ou operadores <code class="inline">{campo: {gte: x}}</code>: eq, ne, contains, notContains, lt, lte, gt, gte, in.</span></div>
+            <div class="param"><code>fields?</code><span>campos a retornar.</span></div>
+            <div class="param"><code>sort?</code><span><code class="inline">'-campo'</code> (desc), <code class="inline">'campo'</code> (asc), <code class="inline">['-a','b']</code> ou <code class="inline">{campo:-1}</code>.</span></div>
+            <div class="param"><code>limit?</code><span>1–500 (default 50).</span></div>
+            <div class="param"><code>skip?</code><span>paginação.</span></div>
+            <div class="param"><code>search?</code><span>busca textual livre.</span></div>
+          </div>
+          <div class="code" data-copy>
+            <div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">exemplo</span></div>
+            <pre><code>holdprint_query({
+  collection: <span class="f">"Budget"</span>,
+  where: { state: <span class="f">"Won"</span> },
+  sort: <span class="f">"-total_price"</span>, limit: 10
+})</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="ref">
+        <div class="ref-head"><code>holdprint_count</code><span class="ref-tag">leitura</span></div>
+        <div class="ref-body"><p>Conta registros no servidor sem trazer a lista. Exato.</p>
+          <div class="params"><div class="param"><code>collection, where?</code><span>mesma sintaxe do query.</span></div></div>
+        </div>
+      </div>
+
+      <div class="ref">
+        <div class="ref-head"><code>holdprint_aggregate</code><span class="ref-tag">leitura</span></div>
+        <div class="ref-body"><p>sum / avg / min / max / count de um campo numérico, com agrupamento opcional. Some/avg varrem o conjunto inteiro (exato).</p>
+          <div class="params">
+            <div class="param"><code>op</code><span>count | sum | avg | min | max.</span></div>
+            <div class="param"><code>field?</code><span>campo numérico (obrigatório p/ sum/avg/min/max). Aceita dot-notation: <code class="inline">bankAccount.amount</code>.</span></div>
+            <div class="param"><code>groupBy?</code><span>campo para agrupar (ex.: status, vendedor).</span></div>
+          </div>
+          <div class="code" data-copy>
+            <div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">exemplo</span></div>
+            <pre><code>holdprint_aggregate({
+  collection: <span class="f">"Budget"</span>, op: <span class="f">"count"</span>,
+  where: { state: <span class="f">"Won"</span> }, groupBy: <span class="f">"sellerName"</span>
+})</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="ref">
+        <div class="ref-head"><code>holdprint_get</code><span class="ref-tag">leitura</span></div>
+        <div class="ref-body"><p>Busca um registro por id.</p><div class="params"><div class="param"><code>collection, id</code><span>—</span></div></div></div>
+      </div>
+
+      <div class="ref">
+        <div class="ref-head"><code>holdprint_report</code><span class="ref-tag">leitura · R$</span></div>
+        <div class="ref-body"><p>Relatórios de dashboard que somam sub-documentos (o que o aggregate genérico não alcança).</p>
+          <div class="params">
+            <div class="param"><code>report</code><span>vendas_total · nfe_faturamento_valor · nfe_faturamento_qtd · jobs_atrasados · jobs_finalizados · jobs_a_entregar · lucro_mensal · margem_contribuicao · custo_fixo · saldo_contas.</span></div>
+            <div class="param"><code>startDate, endDate</code><span>YYYY-MM-DD (saldo_contas dispensa datas).</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ref">
+        <div class="ref-head"><code>holdprint_discover_actions</code><span class="ref-tag">ação</span></div>
+        <div class="ref-body"><p>Descobre ações não-CRUD (ganhar orçamento, emitir NFe, liquidar despesa…) e seus parâmetros.</p>
+          <div class="params"><div class="param"><code>query</code><span>intenção pt-BR ou nome (ex.: "ganhar orçamento").</span></div></div>
+        </div>
+      </div>
+
+      <div class="ref">
+        <div class="ref-head"><code>holdprint_action</code><span class="ref-tag">escrita</span></div>
+        <div class="ref-body"><p>Executa uma ação. <strong>Roda em prévia (dry-run) por padrão</strong> — nada é gravado sem confirmação.</p>
+          <div class="params">
+            <div class="param"><code>actionName</code><span>de discover_actions.</span></div>
+            <div class="param"><code>args?</code><span>path params + corpo.</span></div>
+            <div class="param"><code>dryRun?</code><span>default <strong>true</strong>. false para efetivar.</span></div>
+            <div class="param"><code>confirmed?</code><span>true para ações destrutivas.</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ref">
+        <div class="ref-head"><code>holdprint_examples</code><span class="ref-tag">leitura</span></div>
+        <div class="ref-body"><p>Retorna jornadas comuns com os <code class="inline">args</code> já modelados — use antes de montar do zero.</p></div>
+      </div>
+
+      <div class="callout info">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+        <div><p class="ct-title">Escrever exige confirmação</p><p>Ações que alteram dados rodam primeiro em prévia (dry-run). Nada é gravado sem você confirmar.</p></div>
+      </div>
+    </section>
+
+    <hr class="rule">
+
+    <!-- DOMAIN / SKILLS -->
+    <section class="doc" id="domain">
+      <h2>Skills & domínio do Holdprint</h2>
+      <p class="section-sub">As skills (<code class="inline">holdprint-mcp</code> e <code class="inline">holdprint-mongo</code>) ensinam a LLM as regras do domínio que ela erraria sozinha. O essencial:</p>
+
+      <div class="know">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>O custo do orçamento NÃO está no Budget</h3>
+        <p>O preço/custo vive em <code class="inline">CostMemento</code> (versionado — use a maior <code class="inline">version</code>). Join: <code class="inline">Budget.code == CostMemento.public_identification</code> (inteiro, não ObjectId); ou <code class="inline">Budget.winner_propose_id → Propose.calc_id → CostMemento._id</code>. Quantidade em <code class="inline">CostMementoItem.quantity</code>.</p>
+      </div>
+
+      <div class="know">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>Campos dinâmicos & medidas</h3>
+        <p>Campos dinâmicos ficam em <code class="inline">fields_values</code> com chaves <code class="inline">"hold"+ObjectId</code> → resolva pela collection <code class="inline">Fields</code> (remove "hold", casa o <code class="inline">_id</code>, lê o <code class="inline">name_key</code>: WIDTH/LARGURA, HEIGHT/ALTURA…). O valor é polimórfico, discriminado por <code class="inline">class_name</code> (a classe .NET, não <code class="inline">_t</code>). <code class="inline">Feedstock.fields_values</code> é array; em Product/Process/Equipment é objeto.</p>
+      </div>
+
+      <div class="know">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>Enums e exclusão</h3>
+        <p>No Mongo cru, enums são <strong>inteiros</strong> (<code class="inline">Budget.state</code>: 1=Open, 2=Lost, 3=Won) — o MCP aceita string e converte. Exclusão é <strong>lógica</strong>: filtre sempre <code class="inline">deleted:false</code>. Product/Entity têm <code class="inline">active</code>; Budget/Process/Equipment não.</p>
+      </div>
+
+      <div class="callout info">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        <div><p class="ct-title">Pelo MCP, você não lida com isso</p><p>A skill <code class="inline">holdprint-mcp</code> + as tools já cuidam de enums, soft-delete e nomes. O detalhe acima importa para quem usa o <strong>banco read-only</strong> (skill <code class="inline">holdprint-mongo</code>).</p></div>
+      </div>
+    </section>
+
+    <hr class="rule">
+
+    <!-- MONGO -->
+    <section class="doc" id="mongo">
+      <h2>Banco read-only (avançado)</h2>
+      <p class="section-sub">Para quem precisa de queries diretas no MongoDB. A connection string é liberada manualmente pela equipe — não é gerada sozinha.</p>
+      <div class="steps">
+        <div class="step"><div class="step-num"></div><div class="step-body">
+          <h3>Solicite o acesso</h3>
+          <p>Fale com o suporte Holdprint para receber uma string de conexão somente-leitura ao seu banco de produção.</p>
+        </div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body">
+          <h3>Use a skill holdprint-mongo</h3>
+          <p>Ela ensina a LLM a navegar o schema (orçamento ↔ custeio, campos dinâmicos, blocos) e a montar queries corretas.</p>
+        </div></div>
+      </div>
+      <div class="callout warn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+        <div><p class="ct-title">Regras de ouro</p><p>É somente leitura — nunca escreva. Filtre sempre <code class="inline">deleted: false</code> (a exclusão é lógica). Nunca compartilhe a string: ela dá acesso aos seus dados.</p></div>
+      </div>
+    </section>
+
+    <hr class="rule">
+
+    <!-- FAQ -->
+    <section class="doc" id="faq">
+      <h2>Perguntas frequentes</h2>
+      <div class="faq">
+        <details open><summary>Preciso saber programar?</summary><div class="faq-a"><p>Não. Você conversa em português com a LLM; ela usa as tools do MCP (ou o banco read-only) para responder, gerar relatórios e montar integrações.</p></div></details>
+        <details><summary>Qual a diferença entre MCP e banco read-only?</summary><div class="faq-a"><p>O MCP é o caminho recomendado: simples e seguro, com login por OAuth e tools prontas. O banco read-only é para casos avançados que precisam de queries diretas no MongoDB.</p></div></details>
+        <details><summary>É seguro? A IA pode alterar meus dados?</summary><div class="faq-a"><p>Pelo MCP, ações que alteram dados rodam primeiro em prévia (dry-run) e exigem confirmação. O acesso ao banco é somente leitura. Você continua no controle.</p></div></details>
+        <details><summary>As skills funcionam em quais ferramentas?</summary><div class="faq-a"><p>Claude Code, Codex, Cursor, Gemini CLI e GitHub Copilot. O comando <code class="inline">npx @holdprint/skills install</code> detecta o que você tem instalado.</p></div></details>
+        <details><summary>Meus dados ficam expostos publicamente?</summary><div class="faq-a"><p>Não. O acesso é por conta: o login OAuth identifica você e a IA só enxerga os dados da sua empresa. As credenciais não são compartilhadas com o aplicativo de IA.</p></div></details>
+      </div>
+    </section>
+
+  </div>
+  </main>
+</div>
+
+<footer class="site-footer">
+  <span>Holdprint · API & IA</span>
+  <a href="https://docs.holdworks.ai" target="_blank" rel="noreferrer">docs.holdworks.ai</a>
+  <a href="https://github.com/holdprint/skills" target="_blank" rel="noreferrer">@holdprint/skills</a>
+  <span class="sep">Feito para quem gere, não só para quem programa.</span>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+{
+  "name": "@holdprint/skills",
+  "version": "0.1.0",
+  "description": "Skills oficiais da Holdprint para LLMs (Claude Code, Codex, Cursor, Gemini, Copilot) — ensinam a usar o ERP via MCP hospedado ou via conexão MongoDB read-only.",
+  "type": "module",
+  "bin": {
+    "holdprint-skills": "bin/cli.mjs"
+  },
+  "files": [
+    "bin/",
+    "lib/",
+    "skills/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test"
+  },
+  "keywords": [
+    "holdprint",
+    "erp",
+    "skills",
+    "agent-skills",
+    "mcp",
+    "claude-code",
+    "codex",
+    "llm",
+    "mongodb"
+  ],
+  "homepage": "https://holdprint.net",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  }
+}
