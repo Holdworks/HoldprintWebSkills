@@ -52,6 +52,16 @@
       <a class="nav-link" href="#mongo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg>Banco read-only</a>
       <a class="nav-link" href="#faq"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.5 9a2.5 2.5 0 0 1 4.5 1.5c0 1.7-2.5 2-2.5 3.5M12 17h.01"/></svg>FAQ</a>
     </div>
+    <div class="nav-group">
+      <div class="nav-group-title">API REST</div>
+      <a class="nav-link" href="#api-overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3.5 9h17M3.5 15h17M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>Vis&atilde;o geral da API</a>
+      <a class="nav-link" href="#api-customers"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3.5 9h17M3.5 15h17M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>Clientes</a>
+      <a class="nav-link" href="#api-suppliers"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3.5 9h17M3.5 15h17M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>Fornecedores</a>
+      <a class="nav-link" href="#api-budgets"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3.5 9h17M3.5 15h17M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>Or&ccedil;amentos</a>
+      <a class="nav-link" href="#api-jobs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3.5 9h17M3.5 15h17M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>Jobs</a>
+      <a class="nav-link" href="#api-expenses"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3.5 9h17M3.5 15h17M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>Contas a Pagar</a>
+      <a class="nav-link" href="#api-incomes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3.5 9h17M3.5 15h17M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>Contas a Receber</a>
+    </div>
   </aside>
 
   <main class="content">
@@ -448,6 +458,1112 @@ npx @holdprint/skills update</code></pre>
     </section>
 
     <hr class="rule">
+
+
+    <hr class="rule">
+
+    <!-- API OVERVIEW -->
+    <section class="doc" id="api-overview">
+      <p class="eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>API REST</p>
+      <h2>API REST do Holdprint</h2>
+      <p class="section-sub">Integração direta via HTTP, autenticada por API Key. Para conectar uma LLM, prefira o MCP (acima). A API REST é para integrações de sistema.</p>
+      <div class="ref">
+        <div class="ref-head"><span class="ref-tag">base</span><code>https://api.holdworks.ai</code></div>
+        <div class="ref-body">
+          <p>Todas as requisições usam a URL base acima e exigem o header <code class="inline">x-api-key</code>. Respostas em JSON, padrão REST.</p>
+          <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">header</span></div><pre><code>x-api-key: sua_api_key_aqui</code></pre></div>
+          <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg><div><p class="ct-title">Onde pegar seu token</p><p>No app Holdprint: <strong>Ajustes &rarr; API/MCP &rarr; Chave de API</strong>. Copie o token (ou gere um novo). Nunca exponha a chave em c&oacute;digo cliente ou repos p&uacute;blicos.</p></div></div>
+        </div>
+      </div>
+      <h3>Formato de resposta</h3>
+      <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">json</span></div><pre><code>{
+  "success": true,
+  "data": {
+    "items": [ ... ],
+    "pagination": { "page": 1, "limit": 50, "total": 100, "pages": 2 }
+  },
+  "message": "Success"
+}</code></pre></div>
+      <h3>C&oacute;digos de status</h3>
+      <table class="dtable"><thead><tr><th>C&oacute;digo</th><th>Significado</th></tr></thead><tbody>
+        <tr><td>200</td><td>OK &mdash; requisi&ccedil;&atilde;o bem-sucedida</td></tr>
+        <tr><td>400</td><td>Bad Request &mdash; par&acirc;metros inv&aacute;lidos</td></tr>
+        <tr><td>401</td><td>Unauthorized &mdash; API Key inv&aacute;lida ou ausente</td></tr>
+        <tr><td>404</td><td>Not Found &mdash; recurso n&atilde;o encontrado</td></tr>
+        <tr><td>500</td><td>Internal Server Error</td></tr>
+      </tbody></table>
+      <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Rate limiting</p><p>100 requisi&ccedil;&otilde;es por minuto por API Key. Header de resposta <code>X-RateLimit-Remaining</code>; reset a cada minuto. Implemente retry com backoff exponencial.</p></div></div>
+    </section>
+
+    <hr class="rule">
+
+    <section class="doc" id="api-customers"><h2>Clientes</h2><p class="section-sub">Consulta, criação e atualização do cadastro de clientes na plataforma Holdprint, com suporte a endereços múltiplos, contatos, limite de crédito e campos fiscais específicos por país.</p>
+
+<div class="ref">
+  <div class="ref-head"><span class="ref-tag get">GET</span><code>/api-key/customers/data</code></div>
+  <div class="ref-body">
+    <p>Consulta dados de clientes cadastrados na plataforma de forma paginada, com suporte a busca por nome, e-mail ou documento. Os dados retornados incluem informações completas de contato, endereço e status do cliente, facilitando integrações com CRM e sistemas de gestão. Se nenhum parâmetro for informado, o endpoint retorna todos os clientes ativos cadastrados.</p>
+    <p>Autenticação via API Key no header <code>x-api-key</code>.</p>
+    <h3>Parâmetros de Query</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>page</td><td>int</td><td class="req-no">opcional</td><td>Número da página para paginação (padrão: 1)</td></tr>
+      <tr><td>limit</td><td>int</td><td class="req-no">opcional</td><td>Quantidade de registros por página (padrão: 50 • máximo: 100)</td></tr>
+      <tr><td>search</td><td>string</td><td class="req-no">opcional</td><td>Busca por nome, e-mail ou documento do cliente (exemplo: Empresa Exemplo)</td></tr>
+      <tr><td>active</td><td>boolean</td><td class="req-no">opcional</td><td>Filtrar apenas clientes ativos (true/false) (padrão: true)</td></tr>
+      <tr><td>translate</td><td>boolean</td><td class="req-no">opcional</td><td>Traduzir nomes de campos (true/false) (padrão: false)</td></tr>
+    </tbody></table>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash</span></div><pre><code>curl -X GET "https://api.holdworks.ai/api-key/customers/data?page=1&amp;limit=50&amp;search=Empresa" \
+  -H "x-api-key: sua_api_key_aqui"</code></pre></div>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">json</span></div><pre><code>{
+  "success": true,
+  "data": {
+    "items": [
+      {
+        "id": 789,
+        "name": "Empresa Exemplo LTDA",
+        "email": "contato@exemplo.com",
+        "phone": "+55 11 98765-4321",
+        "document": "12.345.678/0001-99",
+        "address": {
+          "street": "Rua Exemplo, 123",
+          "complement": "Sala 501",
+          "neighborhood": "Centro",
+          "city": "São Paulo",
+          "state": "SP",
+          "zip_code": "01234-567",
+          "country": "Brasil"
+        },
+        "contact_person": "João Silva",
+        "active": true,
+        "notes": "Cliente preferencial com desconto especial",
+        "created_at": "2024-01-10T10:00:00Z",
+        "updated_at": "2025-01-15T14:30:00Z"
+      }
+    ],
+    "pagination": {
+      "page": 1,
+      "limit": 50,
+      "total": 145,
+      "pages": 3
+    }
+  },
+  "message": "Success"
+}</code></pre></div>
+    <h3>Estrutura de Dados</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>id</td><td>number</td><td>Identificador único do cliente</td></tr>
+      <tr><td>name</td><td>string</td><td>Nome ou razão social do cliente</td></tr>
+      <tr><td>email</td><td>string</td><td>E-mail de contato</td></tr>
+      <tr><td>phone</td><td>string</td><td>Telefone de contato</td></tr>
+      <tr><td>document</td><td>string</td><td>CPF ou CNPJ do cliente</td></tr>
+      <tr><td>address</td><td>object</td><td>Endereço completo do cliente</td></tr>
+      <tr><td>contact_person</td><td>string</td><td>Nome da pessoa de contato</td></tr>
+      <tr><td>active</td><td>boolean</td><td>Indica se o cliente está ativo</td></tr>
+      <tr><td>notes</td><td>string | null</td><td>Observações sobre o cliente</td></tr>
+      <tr><td>created_at</td><td>string</td><td>Data de cadastro (ISO 8601)</td></tr>
+      <tr><td>updated_at</td><td>string</td><td>Data da última atualização (ISO 8601)</td></tr>
+    </tbody></table>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Dica</p><p>Use o parâmetro search para criar funcionalidades de autocomplete ou busca rápida de clientes no seu sistema.</p></div></div>
+    <h3>Objeto Address</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>street</td><td>string</td><td>Logradouro e número</td></tr>
+      <tr><td>complement</td><td>string</td><td>Complemento (opcional)</td></tr>
+      <tr><td>neighborhood</td><td>string</td><td>Bairro</td></tr>
+      <tr><td>city</td><td>string</td><td>Cidade</td></tr>
+      <tr><td>state</td><td>string</td><td>Estado (sigla)</td></tr>
+      <tr><td>zip_code</td><td>string</td><td>CEP</td></tr>
+      <tr><td>country</td><td>string</td><td>País</td></tr>
+    </tbody></table>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Boas Práticas</p><ul><li>Use paginação para grandes volumes de dados</li><li>Implemente cache local para reduzir requisições</li><li>Utilize o filtro active=true para exibir apenas clientes ativos</li><li>Normalize documentos antes de buscar (remover pontos e traços)</li></ul></div></div>
+  </div>
+</div>
+
+<div class="ref">
+  <div class="ref-head"><span class="ref-tag post">POST</span><code>/api-key/customers</code></div>
+  <div class="ref-body">
+    <p>Cria um novo cliente na plataforma via API Key. Você pode cadastrar informações completas incluindo endereços múltiplos, contatos, limite de crédito e campos específicos por país. O sistema gera automaticamente o ID do cliente e registra as datas de criação. Apenas o campo Name é obrigatório; todos os demais são opcionais.</p>
+    <p>Autenticação via API Key no header <code>x-api-key</code> e <code>Content-Type: application/json</code>.</p>
+    <h3>Request Body</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>Name</td><td>string</td><td class="req-yes">Sim</td><td>Nome ou razão social do cliente</td></tr>
+      <tr><td>FullName</td><td>string</td><td class="req-no">Não</td><td>Nome completo/razão social completa (padrão: Name)</td></tr>
+      <tr><td>MainEmail</td><td>string</td><td class="req-no">Não</td><td>E-mail principal de contato</td></tr>
+      <tr><td>MainPhoneNumber</td><td>string</td><td class="req-no">Não</td><td>Telefone principal de contato</td></tr>
+      <tr><td>Site</td><td>string</td><td class="req-no">Não</td><td>Website do cliente</td></tr>
+      <tr><td>Addresses</td><td>array</td><td class="req-no">Não</td><td>Lista de endereços do cliente</td></tr>
+      <tr><td>Contacts</td><td>array</td><td class="req-no">Não</td><td>Lista de contatos do cliente</td></tr>
+      <tr><td>CustomerDetails</td><td>object</td><td class="req-no">Não</td><td>Detalhes de crédito do cliente</td></tr>
+      <tr><td>SpecificFields</td><td>object</td><td class="req-no">Não</td><td>Campos específicos por país</td></tr>
+    </tbody></table>
+    <h3>Estrutura de Addresses</h3>
+    <p>O campo Addresses aceita um array de objetos de endereço. Existem dois tipos de endereço. Endereço Genérico:</p>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>Description</td><td>string</td><td>Descrição do endereço (ex: "Sede", "Filial")</td></tr>
+      <tr><td>Country</td><td>string</td><td>País</td></tr>
+      <tr><td>AddressLine1</td><td>string</td><td>Logradouro e número</td></tr>
+      <tr><td>AddressLine2</td><td>string</td><td>Complemento</td></tr>
+      <tr><td>Locality</td><td>string</td><td>Cidade</td></tr>
+      <tr><td>AdministrativeAreaL1</td><td>string</td><td>Estado/Província</td></tr>
+      <tr><td>AdministrativeAreaL2</td><td>string</td><td>Bairro/Distrito</td></tr>
+      <tr><td>PostalCode</td><td>string</td><td>Código postal/CEP</td></tr>
+      <tr><td>Number</td><td>string</td><td>Número do endereço</td></tr>
+      <tr><td>Type</td><td>string</td><td>Tipo: "Generic" ou "BR"</td></tr>
+    </tbody></table>
+    <p>Endereço Brasil (BR): para endereços no Brasil, use <code>Type: "BR"</code> e inclua campos adicionais:</p>
+    <table class="dtable"><thead><tr><th>Campo Adicional</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>AddressLine3</td><td>string</td><td>Linha adicional de endereço</td></tr>
+      <tr><td>IbgeLocalityCode</td><td>int</td><td>Código IBGE da cidade</td></tr>
+      <tr><td>IbgeStateCode</td><td>int</td><td>Código IBGE do estado</td></tr>
+      <tr><td>IbgeCountryCode</td><td>int</td><td>Código IBGE do país (1058 para Brasil)</td></tr>
+    </tbody></table>
+    <h3>Estrutura de Contacts</h3>
+    <p>O campo Contacts aceita um array de objetos de contato:</p>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>Name</td><td>string</td><td>Nome do contato</td></tr>
+      <tr><td>Role</td><td>string</td><td>Cargo/função do contato</td></tr>
+      <tr><td>Phone</td><td>string</td><td>Telefone do contato</td></tr>
+      <tr><td>Email</td><td>string</td><td>E-mail do contato</td></tr>
+      <tr><td>BirthDate</td><td>string</td><td>Data de nascimento (ISO 8601)</td></tr>
+      <tr><td>ContactType</td><td>string</td><td>Tipo: "Customer", "Supplier", "Commercial", "Financial", "Other"</td></tr>
+    </tbody></table>
+    <h3>Estrutura de CustomerDetails</h3>
+    <p>O campo CustomerDetails contém informações sobre limite de crédito:</p>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>SalesCreditLimit</td><td>decimal</td><td>Limite de crédito para vendas (padrão: 0)</td></tr>
+      <tr><td>SalesCreditLimitExpirationDate</td><td>string</td><td>Data de expiração do limite (ISO 8601)</td></tr>
+    </tbody></table>
+    <h3>Campos Específicos por País</h3>
+    <p>O campo SpecificFields contém informações específicas de cada país. Campos disponíveis:</p>
+    <table class="dtable"><thead><tr><th>País</th><th>Campos Disponíveis</th></tr></thead><tbody>
+      <tr><td>Brasil (BR)</td><td>CNPJ (string) - CNPJ da empresa; CPF (string) - CPF do cliente; InscricaoEstadual (string) - Inscrição estadual; InscricaoMunicipal (string) - Inscrição municipal; RegimeTributario (string) - Regime tributário</td></tr>
+      <tr><td>Argentina (AR)</td><td>CUIT (string) - CUIT da empresa; CUIL (string) - CUIL da pessoa; IngresosBrutos (string) - Ingresos brutos</td></tr>
+      <tr><td>Portugal (PT)</td><td>NIF (string) - Número de Identificação Fiscal; NIPC (string) - Número de Identificação de Pessoa Coletiva</td></tr>
+      <tr><td>Chile (CL)</td><td>RUT (string) - Rol Único Tributario</td></tr>
+      <tr><td>Colômbia (CO)</td><td>NIT (string) - Número de Identificación Tributaria</td></tr>
+      <tr><td>Estados Unidos (US)</td><td>EIN (string) - Employer Identification Number; SSN (string) - Social Security Number</td></tr>
+      <tr><td>Paraguai (PY)</td><td>RUC (string) - Registro Único de Contribuyentes</td></tr>
+      <tr><td>Reino Unido (GB)</td><td>VATNumber (string) - VAT Registration Number; CompanyNumber (string) - Company Registration Number</td></tr>
+      <tr><td>Uruguai (UY)</td><td>RUT (string) - Registro Único Tributario</td></tr>
+    </tbody></table>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Dica</p><p>Você precisa especificar o tipo de campo no objeto. Por exemplo, para Brasil use <code>"SpecificFields": {"BR": {"CNPJ": "12.345.678/0001-99"}}</code></p></div></div>
+    <p>Exemplo de Requisição - Básico (apenas campos obrigatórios):</p>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash</span></div><pre><code>curl -X POST "https://api.holdworks.ai/api-key/customers" \
+  -H "x-api-key: sua_api_key_aqui" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "Name": "Empresa Exemplo LTDA"
+  }'</code></pre></div>
+    <p>Exemplo de Requisição - Completo (todos os campos opcionais):</p>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash</span></div><pre><code>curl -X POST "https://api.holdworks.ai/api-key/customers" \
+  -H "x-api-key: sua_api_key_aqui" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "Name": "Empresa Exemplo LTDA",
+    "FullName": "Empresa Exemplo Comércio e Serviços LTDA",
+    "MainEmail": "contato@exemplo.com",
+    "MainPhoneNumber": "+55 11 98765-4321",
+    "Site": "https://www.exemplo.com",
+    "Addresses": [
+      {
+        "Type": "BR",
+        "Description": "Sede",
+        "Country": "Brasil",
+        "AddressLine1": "Rua Exemplo",
+        "AddressLine2": "Sala 501",
+        "AddressLine3": "",
+        "Locality": "São Paulo",
+        "AdministrativeAreaL1": "SP",
+        "AdministrativeAreaL2": "Centro",
+        "PostalCode": "01234-567",
+        "Number": "123",
+        "IbgeLocalityCode": 3550308,
+        "IbgeStateCode": 35,
+        "IbgeCountryCode": 1058
+      }
+    ],
+    "Contacts": [
+      {
+        "Name": "João Silva",
+        "Role": "Gerente Comercial",
+        "Phone": "+55 11 91234-5678",
+        "Email": "joao.silva@exemplo.com",
+        "BirthDate": "1985-03-15T00:00:00Z",
+        "ContactType": "Commercial"
+      }
+    ],
+    "CustomerDetails": {
+      "SalesCreditLimit": 50000.00,
+      "SalesCreditLimitExpirationDate": "2025-12-31T23:59:59Z"
+    },
+    "SpecificFields": {
+      "BR": {
+        "CNPJ": "12.345.678/0001-99",
+        "InscricaoEstadual": "123.456.789.012",
+        "InscricaoMunicipal": "98765432",
+        "RegimeTributario": "Simples Nacional"
+      }
+    }
+  }'</code></pre></div>
+    <p>Exemplo de Resposta:</p>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">json</span></div><pre><code>{
+  "Id": "507f1f77bcf86cd799439011",
+  "Name": "Empresa Exemplo LTDA",
+  "FullName": "Empresa Exemplo Comércio e Serviços LTDA",
+  "MainEmail": "contato@exemplo.com",
+  "MainPhoneNumber": "+55 11 98765-4321",
+  "Site": "https://www.exemplo.com",
+  "EntityType": "Customer",
+  "Active": true,
+  "CreationTime": "2025-01-15T10:30:00Z",
+  "LastUpdateTime": "2025-01-15T10:30:00Z",
+  "Addresses": [
+    {
+      "Type": "BR",
+      "Description": "Sede",
+      "Country": "Brasil",
+      "AddressLine1": "Rua Exemplo",
+      "AddressLine2": "Sala 501",
+      "AddressLine3": "",
+      "Locality": "São Paulo",
+      "AdministrativeAreaL1": "SP",
+      "AdministrativeAreaL2": "Centro",
+      "PostalCode": "01234-567",
+      "Number": "123",
+      "IbgeLocalityCode": 3550308,
+      "IbgeStateCode": 35,
+      "IbgeCountryCode": 1058
+    }
+  ],
+  "Contacts": [
+    {
+      "Id": 1,
+      "Name": "João Silva",
+      "Role": "Gerente Comercial",
+      "Phone": "+55 11 91234-5678",
+      "Email": "joao.silva@exemplo.com",
+      "BirthDate": "1985-03-15T00:00:00Z",
+      "ContactType": "Commercial"
+    }
+  ],
+  "CustomerDetails": {
+    "SalesCreditLimit": 50000.00,
+    "AvaibleSalesCreditLimit": 50000.00,
+    "SalesCreditLimitExpirationDate": "2025-12-31T23:59:59Z"
+  },
+  "SpecificFields": {
+    "BR": {
+      "CNPJ": "12.345.678/0001-99",
+      "InscricaoEstadual": "123.456.789.012",
+      "InscricaoMunicipal": "98765432",
+      "RegimeTributario": "Simples Nacional"
+    }
+  }
+}</code></pre></div>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Dica</p><p>A resposta inclui campos gerados pelo sistema como Id, EntityType, Active, CreationTime e LastUpdateTime. O campo AvaibleSalesCreditLimit é inicializado com o mesmo valor de SalesCreditLimit.</p></div></div>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Boas Práticas</p><ul><li>Sempre valide e-mails e telefones antes de enviar</li><li>Use o campo FullName para armazenar razão social completa</li><li>Para endereços BR, sempre forneça os códigos IBGE quando possível</li><li>Inclua múltiplos contatos com tipos específicos (Commercial, Financial, etc.)</li><li>Defina limites de crédito com datas de expiração apropriadas</li><li>Use os campos específicos do país para compliance fiscal</li></ul></div></div>
+    <h3>Códigos de Status</h3>
+    <table class="dtable"><thead><tr><th>Código</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>200</td><td>Cliente criado com sucesso</td></tr>
+      <tr><td>400</td><td>Dados inválidos (campo obrigatório ausente ou formato incorreto)</td></tr>
+      <tr><td>401</td><td>API Key inválida ou ausente</td></tr>
+      <tr><td>500</td><td>Erro interno do servidor</td></tr>
+    </tbody></table>
+  </div>
+</div>
+
+<div class="ref">
+  <div class="ref-head"><span class="ref-tag put">PUT</span><code>/api-key/customers/{id}</code></div>
+  <div class="ref-body">
+    <p>Atualiza um cliente existente na plataforma via API Key. Você pode modificar todas as informações do cliente, incluindo endereços, contatos, limite de crédito e status de ativação. O sistema atualiza automaticamente o campo LastUpdateTime. Diferença do POST: este endpoint inclui o campo Active (boolean, obrigatório) que permite ativar ou desativar o cliente — esse campo não está disponível no endpoint de criação.</p>
+    <p>Autenticação via API Key no header <code>x-api-key</code> e <code>Content-Type: application/json</code>.</p>
+    <h3>Parâmetros de URL</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>id</td><td>string</td><td class="req-yes">Sim</td><td>ID do cliente a ser atualizado (MongoDB ObjectId). Exemplo: 507f1f77bcf86cd799439011</td></tr>
+    </tbody></table>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Dica</p><p>O sistema valida se o cliente pertence à conta associada à API Key. Se o ID não existir ou não pertencer à sua conta, será retornado erro 404.</p></div></div>
+    <h3>Request Body</h3>
+    <p>O corpo da requisição é similar ao POST, mas inclui o campo Active:</p>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>Name</td><td>string</td><td class="req-yes">Sim</td><td>Nome ou razão social do cliente</td></tr>
+      <tr><td>Active</td><td>boolean</td><td class="req-yes">Sim</td><td>NOVO: Status do cliente (true = ativo, false = inativo)</td></tr>
+      <tr><td>FullName</td><td>string</td><td class="req-no">Não</td><td>Nome completo/razão social completa (padrão: Name)</td></tr>
+      <tr><td>MainEmail</td><td>string</td><td class="req-no">Não</td><td>E-mail principal de contato</td></tr>
+      <tr><td>MainPhoneNumber</td><td>string</td><td class="req-no">Não</td><td>Telefone principal de contato</td></tr>
+      <tr><td>Site</td><td>string</td><td class="req-no">Não</td><td>Website do cliente</td></tr>
+      <tr><td>Addresses</td><td>array</td><td class="req-no">Não</td><td>Lista de endereços do cliente</td></tr>
+      <tr><td>Contacts</td><td>array</td><td class="req-no">Não</td><td>Lista de contatos do cliente</td></tr>
+      <tr><td>CustomerDetails</td><td>object</td><td class="req-no">Não</td><td>Detalhes de crédito do cliente</td></tr>
+      <tr><td>SpecificFields</td><td>object</td><td class="req-no">Não</td><td>Campos específicos por país</td></tr>
+    </tbody></table>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Dica</p><p>Os campos Addresses, Contacts, CustomerDetails e SpecificFields seguem a mesma estrutura documentada na seção de Criação acima. Consulte aquela seção para detalhes completos.</p></div></div>
+    <p>Exemplo de Requisição - Básico (atualizando nome e status):</p>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash</span></div><pre><code>curl -X PUT "https://api.holdworks.ai/api-key/customers/507f1f77bcf86cd799439011" \
+  -H "x-api-key: sua_api_key_aqui" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "Name": "Empresa Exemplo LTDA - Atualizada",
+    "Active": true
+  }'</code></pre></div>
+    <p>Exemplo de Requisição - Desativar Cliente:</p>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash</span></div><pre><code>curl -X PUT "https://api.holdworks.ai/api-key/customers/507f1f77bcf86cd799439011" \
+  -H "x-api-key: sua_api_key_aqui" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "Name": "Empresa Exemplo LTDA",
+    "Active": false
+  }'</code></pre></div>
+    <p>Exemplo de Requisição - Completo (atualizando todos os dados):</p>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash</span></div><pre><code>curl -X PUT "https://api.holdworks.ai/api-key/customers/507f1f77bcf86cd799439011" \
+  -H "x-api-key: sua_api_key_aqui" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "Name": "Empresa Exemplo LTDA - Atualizada",
+    "FullName": "Empresa Exemplo Comércio e Serviços LTDA - Atualizada",
+    "Active": true,
+    "MainEmail": "novo-contato@exemplo.com",
+    "MainPhoneNumber": "+55 11 99999-9999",
+    "Site": "https://www.exemplo-novo.com",
+    "Addresses": [
+      {
+        "Type": "BR",
+        "Description": "Sede - Novo Endereço",
+        "Country": "Brasil",
+        "AddressLine1": "Av. Paulista",
+        "AddressLine2": "10º andar",
+        "AddressLine3": "",
+        "Locality": "São Paulo",
+        "AdministrativeAreaL1": "SP",
+        "AdministrativeAreaL2": "Bela Vista",
+        "PostalCode": "01310-100",
+        "Number": "1000",
+        "IbgeLocalityCode": 3550308,
+        "IbgeStateCode": 35,
+        "IbgeCountryCode": 1058
+      }
+    ],
+    "Contacts": [
+      {
+        "Name": "Maria Santos",
+        "Role": "Diretora Comercial",
+        "Phone": "+55 11 98888-8888",
+        "Email": "maria.santos@exemplo.com",
+        "BirthDate": "1980-05-20T00:00:00Z",
+        "ContactType": "Commercial"
+      }
+    ],
+    "CustomerDetails": {
+      "SalesCreditLimit": 100000.00,
+      "SalesCreditLimitExpirationDate": "2026-12-31T23:59:59Z"
+    },
+    "SpecificFields": {
+      "BR": {
+        "CNPJ": "12.345.678/0001-99",
+        "InscricaoEstadual": "999.888.777.666",
+        "InscricaoMunicipal": "11223344",
+        "RegimeTributario": "Lucro Real"
+      }
+    }
+  }'</code></pre></div>
+    <p>Exemplo de Resposta:</p>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">json</span></div><pre><code>{
+  "Id": "507f1f77bcf86cd799439011",
+  "Name": "Empresa Exemplo LTDA - Atualizada",
+  "FullName": "Empresa Exemplo Comércio e Serviços LTDA - Atualizada",
+  "MainEmail": "novo-contato@exemplo.com",
+  "MainPhoneNumber": "+55 11 99999-9999",
+  "Site": "https://www.exemplo-novo.com",
+  "EntityType": "Customer",
+  "Active": true,
+  "CreationTime": "2025-01-15T10:30:00Z",
+  "LastUpdateTime": "2025-01-28T14:45:00Z",
+  "Addresses": [
+    {
+      "Type": "BR",
+      "Description": "Sede - Novo Endereço",
+      "Country": "Brasil",
+      "AddressLine1": "Av. Paulista",
+      "AddressLine2": "10º andar",
+      "AddressLine3": "",
+      "Locality": "São Paulo",
+      "AdministrativeAreaL1": "SP",
+      "AdministrativeAreaL2": "Bela Vista",
+      "PostalCode": "01310-100",
+      "Number": "1000",
+      "IbgeLocalityCode": 3550308,
+      "IbgeStateCode": 35,
+      "IbgeCountryCode": 1058
+    }
+  ],
+  "Contacts": [
+    {
+      "Id": 1,
+      "Name": "Maria Santos",
+      "Role": "Diretora Comercial",
+      "Phone": "+55 11 98888-8888",
+      "Email": "maria.santos@exemplo.com",
+      "BirthDate": "1980-05-20T00:00:00Z",
+      "ContactType": "Commercial"
+    }
+  ],
+  "CustomerDetails": {
+    "SalesCreditLimit": 100000.00,
+    "AvaibleSalesCreditLimit": 100000.00,
+    "SalesCreditLimitExpirationDate": "2026-12-31T23:59:59Z"
+  },
+  "SpecificFields": {
+    "BR": {
+      "CNPJ": "12.345.678/0001-99",
+      "InscricaoEstadual": "999.888.777.666",
+      "InscricaoMunicipal": "11223344",
+      "RegimeTributario": "Lucro Real"
+    }
+  }
+}</code></pre></div>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Dica</p><p>Note que o campo LastUpdateTime é atualizado automaticamente pelo sistema para refletir o horário da última modificação.</p></div></div>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Boas Práticas</p><ul><li>Sempre valide o ID do cliente antes de enviar a requisição</li><li>Use Active: false em vez de deletar clientes permanentemente</li><li>Atualize o limite de crédito com data de expiração apropriada</li><li>Ao atualizar endereços e contatos, envie a lista completa desejada</li><li>Mantenha histórico das alterações no seu sistema</li><li>Implemente retry logic para falhas temporárias de rede</li></ul></div></div>
+    <h3>Códigos de Status</h3>
+    <table class="dtable"><thead><tr><th>Código</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>200</td><td>Cliente atualizado com sucesso</td></tr>
+      <tr><td>400</td><td>Dados inválidos (campo obrigatório ausente ou formato incorreto)</td></tr>
+      <tr><td>401</td><td>API Key inválida ou ausente</td></tr>
+      <tr><td>404</td><td>Cliente não encontrado ou não pertence à sua conta</td></tr>
+      <tr><td>500</td><td>Erro interno do servidor</td></tr>
+    </tbody></table>
+  </div>
+</div>
+</section>
+
+    <hr class="rule">
+
+    <section class="doc" id="api-suppliers"><h2>Fornecedores</h2><p class="section-sub">Consulta o cadastro de fornecedores de forma paginada, com busca por nome, e-mail ou documento, filtro por categoria e dados completos de contato, endereço e condições de pagamento.</p>
+<div class="ref">
+  <div class="ref-head"><span class="ref-tag get">GET</span><code>/api-key/suppliers/data</code></div>
+  <div class="ref-body">
+    <p>Consulta dados de fornecedores cadastrados na plataforma. Este endpoint permite consultar o cadastro de fornecedores de forma paginada, com suporte a busca por nome, e-mail ou documento, e filtro por categoria. Os dados retornados incluem informações completas de contato, endereço, categoria e condições de pagamento, facilitando integrações com sistemas de compras e controle de estoque. Se nenhum parâmetro for informado, o endpoint retorna todos os fornecedores ativos cadastrados.</p>
+    <p>Autenticação via API Key no header <code>x-api-key</code>. Base da API: <code>https://api.holdworks.ai</code>.</p>
+    <h3>Parâmetros de Query</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>page</td><td>int</td><td class="req-no">opcional</td><td>Número da página para paginação (padrão: 1)</td></tr>
+      <tr><td>limit</td><td>int</td><td class="req-no">opcional</td><td>Quantidade de registros por página (padrão: 50 • máximo: 100)</td></tr>
+      <tr><td>search</td><td>string</td><td class="req-no">opcional</td><td>Busca por nome, e-mail ou documento do fornecedor (exemplo: Fornecedor XYZ)</td></tr>
+      <tr><td>category</td><td>string</td><td class="req-no">opcional</td><td>Filtrar por categoria de fornecedor (exemplo: paper_supplies)</td></tr>
+      <tr><td>active</td><td>boolean</td><td class="req-no">opcional</td><td>Filtrar apenas fornecedores ativos (true/false) (padrão: true)</td></tr>
+      <tr><td>translate</td><td>boolean</td><td class="req-no">opcional</td><td>Traduzir nomes de campos (true/false) (padrão: false)</td></tr>
+    </tbody></table>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash</span></div><pre><code>curl -X GET "https://api.holdworks.ai/api-key/suppliers/data?page=1&amp;limit=50&amp;category=paper_supplies" \
+  -H "x-api-key: sua_api_key_aqui"</code></pre></div>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">json</span></div><pre><code>{
+  "success": true,
+  "data": {
+    "items": [
+      {
+        "id": 55,
+        "name": "Fornecedor XYZ",
+        "email": "vendas@fornecedor.com",
+        "phone": "+55 11 91234-5678",
+        "document": "98.765.432/0001-11",
+        "category": "paper_supplies",
+        "address": {
+          "street": "Rua Industrial, 500",
+          "complement": "Galpão 3",
+          "neighborhood": "Distrito Industrial",
+          "city": "São Paulo",
+          "state": "SP",
+          "zip_code": "03456-789",
+          "country": "Brasil"
+        },
+        "contact_person": "Carlos Almeida",
+        "payment_terms": "30/60 dias",
+        "active": true,
+        "notes": "Fornecedor principal de papel offset",
+        "created_at": "2023-08-10T10:00:00Z",
+        "updated_at": "2025-01-05T09:30:00Z"
+      },
+      {
+        "id": 56,
+        "name": "Tintas Premium LTDA",
+        "email": "comercial@tintaspremium.com",
+        "phone": "+55 11 98765-4321",
+        "document": "12.345.678/0001-22",
+        "category": "ink_supplies",
+        "address": {
+          "street": "Av. das Tintas, 200",
+          "complement": null,
+          "neighborhood": "Zona Norte",
+          "city": "São Paulo",
+          "state": "SP",
+          "zip_code": "02123-456",
+          "country": "Brasil"
+        },
+        "contact_person": "Ana Paula",
+        "payment_terms": "À vista com desconto",
+        "active": true,
+        "notes": null,
+        "created_at": "2024-02-15T14:00:00Z",
+        "updated_at": "2024-12-20T10:15:00Z"
+      }
+    ],
+    "pagination": {
+      "page": 1,
+      "limit": 50,
+      "total": 78,
+      "pages": 2
+    }
+  },
+  "message": "Success"
+}</code></pre></div>
+    <h3>Categorias de Fornecedores</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>paper_supplies</td><td>string</td><td>Fornecedores de papel e substratos</td></tr>
+      <tr><td>ink_supplies</td><td>string</td><td>Fornecedores de tintas e consumíveis</td></tr>
+      <tr><td>equipment</td><td>string</td><td>Fornecedores de equipamentos e maquinário</td></tr>
+      <tr><td>services</td><td>string</td><td>Fornecedores de serviços terceirizados</td></tr>
+      <tr><td>other</td><td>string</td><td>Outros fornecedores</td></tr>
+    </tbody></table>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Dica</p><p>Filtre fornecedores por categoria para encontrar rapidamente parceiros específicos para cada tipo de insumo ou serviço necessário na produção.</p></div></div>
+    <h3>Estrutura de Dados</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>id</td><td>number</td><td>Identificador único do fornecedor</td></tr>
+      <tr><td>name</td><td>string</td><td>Nome ou razão social do fornecedor</td></tr>
+      <tr><td>email</td><td>string</td><td>E-mail de contato</td></tr>
+      <tr><td>phone</td><td>string</td><td>Telefone de contato</td></tr>
+      <tr><td>document</td><td>string</td><td>CNPJ do fornecedor</td></tr>
+      <tr><td>category</td><td>string</td><td>Categoria do fornecedor</td></tr>
+      <tr><td>address</td><td>object</td><td>Endereço completo do fornecedor</td></tr>
+      <tr><td>contact_person</td><td>string</td><td>Nome da pessoa de contato</td></tr>
+      <tr><td>payment_terms</td><td>string</td><td>Condições de pagamento acordadas</td></tr>
+      <tr><td>active</td><td>boolean</td><td>Indica se o fornecedor está ativo</td></tr>
+      <tr><td>notes</td><td>string | null</td><td>Observações sobre o fornecedor</td></tr>
+      <tr><td>created_at</td><td>string</td><td>Data de cadastro (ISO 8601)</td></tr>
+      <tr><td>updated_at</td><td>string</td><td>Data da última atualização (ISO 8601)</td></tr>
+    </tbody></table>
+    <h3>Objeto Address</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>street</td><td>string</td><td>Logradouro e número</td></tr>
+      <tr><td>complement</td><td>string</td><td>Complemento (opcional)</td></tr>
+      <tr><td>neighborhood</td><td>string</td><td>Bairro</td></tr>
+      <tr><td>city</td><td>string</td><td>Cidade</td></tr>
+      <tr><td>state</td><td>string</td><td>Estado (sigla)</td></tr>
+      <tr><td>zip_code</td><td>string</td><td>CEP</td></tr>
+      <tr><td>country</td><td>string</td><td>País</td></tr>
+    </tbody></table>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Boas Práticas</p><ul><li>Use paginação para grandes volumes de dados</li><li>Implemente cache local para reduzir requisições</li><li>Utilize filtros por categoria para encontrar fornecedores específicos</li><li>Mantenha as condições de pagamento atualizadas (payment_terms)</li></ul></div></div>
+  </div>
+</div>
+</section>
+
+    <hr class="rule">
+
+    <section class="doc" id="api-budgets"><h2>Orçamentos</h2><p class="section-sub">Consulta paginada de orçamentos com propostas, itens, produtos e checklists — ideal para integração, análises e relatórios.</p>
+
+<div class="ref">
+  <div class="ref-head"><span class="ref-tag get">GET</span><code>/api-key/budgets/data</code></div>
+  <div class="ref-body">
+    <p>Consulta dados detalhados de orçamentos de forma paginada, incluindo informações sobre propostas, itens, produtos e checklists. Suporta paginação, filtros por data e tradução de campos, retornando dados em formato estruturado para integração com sistemas externos.</p>
+
+    <p>Este endpoint requer autenticação via API Key no header <code>x-api-key</code>:</p>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">http</span></div><pre><code>GET /api-key/budgets/data HTTP/1.1
+Host: api.holdworks.ai
+x-api-key: sua_api_key_aqui</code></pre></div>
+
+    <h3>Parâmetros de Consulta</h3>
+    <p>Todos os parâmetros são opcionais e enviados via query string na URL.</p>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>page</td><td>integer</td><td class="req-no">opcional</td><td>Número da página a ser retornada, mínimo: 1 (padrão: 1)</td></tr>
+      <tr><td>pageSize</td><td>integer</td><td class="req-no">opcional</td><td>Quantidade de registros por página, mínimo: 1, máximo: 100 (padrão: 20)</td></tr>
+      <tr><td>startDate</td><td>datetime</td><td class="req-no">opcional</td><td>Data inicial para filtrar orçamentos, formato ISO 8601 (padrão: null)</td></tr>
+      <tr><td>endDate</td><td>datetime</td><td class="req-no">opcional</td><td>Data final para filtrar orçamentos, formato ISO 8601 (padrão: null)</td></tr>
+      <tr><td>language</td><td>string</td><td class="req-no">opcional</td><td>Código do idioma para tradução de campos (padrão: "pt-BR")</td></tr>
+    </tbody></table>
+
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Filtro de Datas</p><p>Se nenhuma data for informada, retorna todos os orçamentos. O filtro é aplicado sobre o campo <code>CreationDate</code> dos orçamentos.</p></div></div>
+
+    <h3>Estrutura da Resposta — PagedResult&lt;BudgetDataModel&gt;</h3>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">json</span></div><pre><code>{
+  "data": [ /* Array de BudgetDataModel */ ],
+  "totalCount": 150,
+  "page": 1,
+  "pageSize": 20,
+  "totalPages": 8,
+  "hasNextPage": true,
+  "hasPreviousPage": false
+}</code></pre></div>
+
+    <h3>Estrutura de Dados — BudgetDataModel</h3>
+    <p>Cada item no array <code>data</code> representa um orçamento:</p>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>code</td><td>integer</td><td>Código único do orçamento</td></tr>
+      <tr><td>title</td><td>string</td><td>Título/descrição do orçamento</td></tr>
+      <tr><td>customerName</td><td>string</td><td>Nome do cliente associado ao orçamento</td></tr>
+      <tr><td>budgetState</td><td>integer</td><td>Estado atual do orçamento (1=Open, 2=Lost, 3=Won)</td></tr>
+      <tr><td>creationDate</td><td>datetime</td><td>Data e hora de criação do orçamento</td></tr>
+      <tr><td>deliveryNeed</td><td>datetime?</td><td>Data necessária para entrega (pode ser null)</td></tr>
+      <tr><td>wonDate</td><td>datetime?</td><td>Data em que o orçamento foi ganho (pode ser null)</td></tr>
+      <tr><td>lostDate</td><td>datetime?</td><td>Data em que o orçamento foi perdido (pode ser null)</td></tr>
+      <tr><td>proposes</td><td>array</td><td>Lista de propostas deste orçamento</td></tr>
+    </tbody></table>
+
+    <h3>Estrutura de Dados — ProposeDataModel</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>paymentOption</td><td>string</td><td>Forma de pagamento desta proposta</td></tr>
+      <tr><td>totalPrice</td><td>decimal</td><td>Preço total da proposta</td></tr>
+      <tr><td>totalProfitPercentual</td><td>decimal</td><td>Percentual de lucro total sobre a proposta</td></tr>
+      <tr><td>productionCost</td><td>decimal</td><td>Custo total de produção</td></tr>
+      <tr><td>sellingCost</td><td>decimal</td><td>Custo total de venda</td></tr>
+      <tr><td>proposeItems</td><td>array</td><td>Lista de itens desta proposta</td></tr>
+    </tbody></table>
+
+    <h3>Estrutura de Dados — ProposeItemDataModel</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>itemName</td><td>string</td><td>Nome do item</td></tr>
+      <tr><td>quantity</td><td>double</td><td>Quantidade do item</td></tr>
+      <tr><td>unitSymbol</td><td>string</td><td>Símbolo da unidade de medida</td></tr>
+      <tr><td>unitPrice</td><td>double</td><td>Preço unitário</td></tr>
+      <tr><td>totalPrice</td><td>decimal</td><td>Preço total do item</td></tr>
+      <tr><td>totalProfit</td><td>decimal</td><td>Lucro total do item</td></tr>
+      <tr><td>profitPercentual</td><td>decimal</td><td>Percentual de lucro sobre o item</td></tr>
+      <tr><td>productionCost</td><td>decimal</td><td>Custo de produção do item</td></tr>
+      <tr><td>sellingCost</td><td>decimal</td><td>Custo de venda do item</td></tr>
+      <tr><td>products</td><td>array</td><td>Lista de produtos que compõem este item</td></tr>
+    </tbody></table>
+
+    <h3>Estrutura de Dados — BudgetProductDataModel</h3>
+    <p>Cada produto é um objeto dinâmico (dicionário) com propriedades fixas e campos customizáveis:</p>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Estrutura Dinâmica</p><p>Além das propriedades fixas documentadas, o produto pode conter campos customizáveis adicionais (ex: "Material", "Acabamento", "Cores") que variam conforme a configuração da sua conta.</p></div></div>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>Name</td><td>string</td><td>Nome do produto</td></tr>
+      <tr><td>Description</td><td>string</td><td>Descrição do produto</td></tr>
+      <tr><td>Quantity</td><td>decimal</td><td>Quantidade de produção</td></tr>
+      <tr><td>SaleQuantity</td><td>decimal</td><td>Quantidade de venda</td></tr>
+      <tr><td>UnitPrice</td><td>decimal</td><td>Preço unitário</td></tr>
+      <tr><td>TotalValue</td><td>decimal</td><td>Valor total</td></tr>
+      <tr><td>ProductionCost</td><td>decimal</td><td>Custo de produção</td></tr>
+      <tr><td>SellingCost</td><td>decimal</td><td>Custo de venda</td></tr>
+      <tr><td>Checklists</td><td>array</td><td>Lista de checklists respondidos</td></tr>
+    </tbody></table>
+
+    <h3>Exemplos de Uso</h3>
+    <p>Exemplo 1: Requisição básica.</p>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash</span></div><pre><code>curl -X GET "https://holdprintwebapi-prod.azurewebsites.net/api-key/budgets/data?page=1&amp;pageSize=20" \
+  -H "x-api-key: sua_api_key_aqui"</code></pre></div>
+
+    <p>Exemplo 2: Com filtro de data.</p>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash</span></div><pre><code>curl -X GET "https://holdprintwebapi-prod.azurewebsites.net/api-key/budgets/data?page=1&amp;pageSize=10&amp;startDate=2025-10-01&amp;endDate=2025-10-31&amp;language=pt-BR" \
+  -H "x-api-key: sua_api_key_aqui"</code></pre></div>
+
+    <h3>Exemplo de Resposta</h3>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">json</span></div><pre><code>{
+  "data": [
+    {
+      "code": 12345,
+      "title": "Impressão de Folhetos Promocionais",
+      "customerName": "Empresa XYZ Ltda",
+      "budgetState": 1,
+      "creationDate": "2025-10-15T14:30:00Z",
+      "deliveryNeed": "2025-10-25T10:00:00Z",
+      "wonDate": null,
+      "lostDate": null,
+      "proposes": [
+        {
+          "paymentOption": "À Vista",
+          "totalPrice": 1500.00,
+          "totalProfitPercentual": 35.50,
+          "productionCost": 967.50,
+          "sellingCost": 532.50,
+          "proposeItems": [
+            {
+              "itemName": "Folheto A4 - 4x4 cores",
+              "quantity": 5000.0,
+              "unitSymbol": "un",
+              "unitPrice": 0.30,
+              "totalPrice": 1500.00,
+              "totalProfit": 532.50,
+              "profitPercentual": 35.50,
+              "productionCost": 967.50,
+              "sellingCost": 532.50,
+              "products": [
+                {
+                  "Name": "Impressão Digital",
+                  "Description": "Impressão em papel couché 170g",
+                  "Quantity": 5000,
+                  "SaleQuantity": 5000,
+                  "UnitPrice": 0.15,
+                  "TotalValue": 750.00,
+                  "ProductionCost": 500.00,
+                  "SellingCost": 250.00,
+                  "Checklists": [
+                    {
+                      "question": "Qual tipo de papel?",
+                      "answer": "Papel Couché 170g"
+                    }
+                  ],
+                  "Material": [
+                    {
+                      "fieldName": "Material",
+                      "value": "Papel Couché 170g"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "totalCount": 150,
+  "page": 1,
+  "pageSize": 20,
+  "totalPages": 8,
+  "hasNextPage": true,
+  "hasPreviousPage": false
+}</code></pre></div>
+
+    <h3>Códigos de Status</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>200 OK</td><td>—</td><td>Requisição bem-sucedida, retorna os dados</td></tr>
+      <tr><td>401 Unauthorized</td><td>—</td><td>API Key inválida ou ausente</td></tr>
+      <tr><td>400 Bad Request</td><td>—</td><td>Parâmetros inválidos (ex: formato de data incorreto)</td></tr>
+      <tr><td>500 Internal Server Error</td><td>—</td><td>Erro interno no servidor</td></tr>
+    </tbody></table>
+
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Boas Práticas</p><ul><li>Sempre verifique <code>hasNextPage</code> antes de solicitar a próxima página</li><li>Use <code>totalPages</code> para implementar navegação direta por número de página</li><li>Limite o <code>pageSize</code> conforme necessário para otimizar performance</li><li>Cache os resultados quando apropriado para reduzir chamadas à API</li><li>Use filtros de data para reduzir o conjunto de dados retornado</li></ul></div></div>
+
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Dica de Performance</p><p>Para grandes volumes de dados, recomenda-se usar <code>pageSize</code> entre 20 e 50 e sempre aplicar filtros de data quando possível.</p></div></div>
+  </div>
+</div>
+</section>
+
+    <hr class="rule">
+
+    <section class="doc" id="api-jobs"><h2>Jobs · Produção</h2><p class="section-sub">Consulta de jobs (trabalhos/pedidos) com custos em 4 fases (orçado, aprovado, planejado, realizado) e dados completos de produção: progresso, tasks e insumos consumidos.</p>
+
+<div class="ref">
+  <div class="ref-head"><span class="ref-tag get">GET</span><code>/api-key/jobs/data</code></div>
+  <div class="ref-body">
+    <p>Consulta dados detalhados de jobs com paginação, filtros por data e tradução de campos. Retorna custos em diferentes fases e informações de produção (status, progresso, tasks, feedstocks). Autenticação via API Key no header <code>x-api-key</code>.</p>
+    <div class="callout warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg><div><p class="ct-title">Filtro padrão</p><p>Sem datas, retorna apenas jobs do <strong>mês corrente</strong>. Para jobs históricos, informe <code>startDate</code> e <code>endDate</code> explicitamente.</p></div></div>
+    <h3>Parâmetros de Consulta</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Padrão</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>page</td><td>integer</td><td>1</td><td>Número da página (mínimo: 1)</td></tr>
+      <tr><td>pageSize</td><td>integer</td><td>20</td><td>Registros por página (mínimo: 1, máximo: 100)</td></tr>
+      <tr><td>startDate</td><td>datetime</td><td>1º dia do mês</td><td>Data inicial do filtro (ISO 8601)</td></tr>
+      <tr><td>endDate</td><td>datetime</td><td>último dia do mês</td><td>Data final do filtro (ISO 8601)</td></tr>
+      <tr><td>language</td><td>string</td><td>"pt-BR"</td><td>Idioma para tradução de campos</td></tr>
+    </tbody></table>
+    <h3>Exemplos</h3>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash · mês atual</span></div><pre><code>curl -X GET "https://api.holdworks.ai/api-key/jobs/data?page=1&amp;pageSize=20" \
+  -H "x-api-key: sua_api_key_aqui"</code></pre></div>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash · todos (sem filtro de data)</span></div><pre><code>curl -X GET "https://api.holdworks.ai/api-key/jobs/data?page=1&amp;pageSize=100&amp;startDate=2000-01-01&amp;endDate=2099-12-31" \
+  -H "x-api-key: sua_api_key_aqui"</code></pre></div>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash · período específico</span></div><pre><code>curl -X GET "https://api.holdworks.ai/api-key/jobs/data?page=1&amp;pageSize=10&amp;startDate=2025-10-01&amp;endDate=2025-10-31&amp;language=pt-BR" \
+  -H "x-api-key: sua_api_key_aqui"</code></pre></div>
+    <h3>Estrutura da Resposta — JobDataModel</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>id</td><td>string</td><td>Identificador único (ObjectId) do job</td></tr>
+      <tr><td>code</td><td>integer</td><td>Código sequencial do job</td></tr>
+      <tr><td>title</td><td>string</td><td>Título/descrição do job</td></tr>
+      <tr><td>customerName</td><td>string</td><td>Nome do cliente associado</td></tr>
+      <tr><td>responsibleName</td><td>string</td><td>Nome do responsável pelo job</td></tr>
+      <tr><td>commercialResponsibleName</td><td>string</td><td>Nome do responsável comercial</td></tr>
+      <tr><td>creationTime</td><td>datetime</td><td>Data e hora de criação</td></tr>
+      <tr><td>deliveryNeeded</td><td>datetime?</td><td>Data necessária para entrega</td></tr>
+      <tr><td>deliveryExpected</td><td>datetime?</td><td>Data esperada de entrega</td></tr>
+      <tr><td>totalPrice</td><td>decimal</td><td>Preço total do job</td></tr>
+      <tr><td>paymentOption</td><td>string</td><td>Forma de pagamento selecionada</td></tr>
+      <tr><td>jobChargeStatus</td><td>string</td><td>Status de cobrança (Pending, Partial, Paid, Overdue)</td></tr>
+      <tr><td>jobInvoiceStatus</td><td>string</td><td>Status de faturamento (NotIssued, Partial, Issued, Cancelled)</td></tr>
+      <tr><td>isFinalized</td><td>boolean</td><td>Indica se o job foi finalizado</td></tr>
+      <tr><td>costs</td><td>object</td><td>Detalhes de custos em diferentes fases</td></tr>
+      <tr><td>production</td><td>object</td><td>Informações de produção (status, progresso, items, tasks)</td></tr>
+      <tr><td>products</td><td>array</td><td>Lista de produtos do job (do memento de custo)</td></tr>
+    </tbody></table>
+    <h3>JobCostDataModel — custos em 4 fases</h3>
+    <table class="dtable"><thead><tr><th>Fase</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>budgeted</td><td>Valores orçados (TotalPrice, ProductionCost, SellingCost, Profit, ProfitPercentual)</td></tr>
+      <tr><td>approved</td><td>Valores aprovados pelo cliente</td></tr>
+      <tr><td>planned</td><td>Valores planejados para produção</td></tr>
+      <tr><td>realized</td><td>Valores realizados (custos reais)</td></tr>
+    </tbody></table>
+    <h3>JobProductionDataModel</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>status</td><td>string</td><td>"Started" ou "NotStarted"</td></tr>
+      <tr><td>progressPercentage</td><td>decimal?</td><td>Percentual de progresso (0-100), por tasks finalizadas</td></tr>
+      <tr><td>startDate</td><td>datetime?</td><td>Menor data entre as tasks</td></tr>
+      <tr><td>endDate</td><td>datetime?</td><td>Maior data entre as tasks</td></tr>
+      <tr><td>items</td><td>array</td><td>Itens de produção com tasks e feedstocks</td></tr>
+    </tbody></table>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Cálculos automáticos</p><p><strong>progressPercentage</strong>: (tasks finalizadas / total) × 100. <strong>startDate</strong>: menor entre StartedDate/ReleasedDate/ScheduleStartDate. <strong>endDate</strong>: maior entre FinalizedDate/ScheduleEndDate.</p></div></div>
+    <h3>JobProductionTaskDataModel</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>publicId</td><td>integer</td><td>ID público da tarefa</td></tr>
+      <tr><td>name</td><td>string</td><td>Nome da tarefa</td></tr>
+      <tr><td>processPublicId</td><td>integer</td><td>ID público do processo associado</td></tr>
+      <tr><td>productionStatus</td><td>string</td><td>NotStarted, InProgress, Paused, Finalized, Cancelled</td></tr>
+      <tr><td>duration</td><td>decimal</td><td>Duração estimada/real (minutos)</td></tr>
+      <tr><td>scheduleStartDate</td><td>datetime?</td><td>Data agendada de início</td></tr>
+      <tr><td>scheduleEndDate</td><td>datetime?</td><td>Data agendada de término</td></tr>
+      <tr><td>startedDate</td><td>datetime?</td><td>Data real de início</td></tr>
+      <tr><td>finalizedDate</td><td>datetime?</td><td>Data real de finalização</td></tr>
+    </tbody></table>
+    <h3>JobProductionFeedstockDataModel</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>feedstockId</td><td>string</td><td>ID único (ObjectId) do feedstock</td></tr>
+      <tr><td>publicId</td><td>integer</td><td>ID público do feedstock</td></tr>
+      <tr><td>comercialId</td><td>integer</td><td>ID comercial do feedstock</td></tr>
+      <tr><td>options</td><td>object</td><td>Dicionário com opções traduzidas (ex.: "Largura": "210mm")</td></tr>
+    </tbody></table>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Boas práticas</p><ul><li>Sempre especifique <code>startDate</code>/<code>endDate</code> para jobs históricos</li><li>Use <code>pageSize</code> entre 20 e 50 para otimizar performance</li><li>Verifique <code>hasNextPage</code> antes da próxima página</li><li>Implemente cache local para reduzir chamadas</li></ul></div></div>
+    <h3>Diferenças vs. Orçamentos</h3>
+    <table class="dtable"><thead><tr><th>Aspecto</th><th>Jobs</th></tr></thead><tbody>
+      <tr><td>Filtro de data</td><td>Padrão = mês corrente (Orçamentos não têm filtro padrão)</td></tr>
+      <tr><td>Custos</td><td>4 fases (budgeted, approved, planned, realized)</td></tr>
+      <tr><td>Produção</td><td>Dados completos (items, tasks, feedstocks, progresso)</td></tr>
+      <tr><td>Produtos</td><td>Do memento de custo (Orçamentos usam produtos de catálogo)</td></tr>
+    </tbody></table>
+  </div>
+</div>
+</section>
+
+    <hr class="rule">
+
+    <section class="doc" id="api-expenses"><h2>Contas a Pagar</h2><p class="section-sub">Consulta despesas com classificações contábeis e centros de custo, permitindo análise financeira detalhada.</p>
+
+<div class="ref">
+  <div class="ref-head"><span class="ref-tag get">GET</span><code>/api-key/expenses/data</code></div>
+  <div class="ref-body">
+    <p>Consulta despesas de forma paginada, com suporte a filtros por data, status, fornecedor e categoria. Os dados incluem informações contábeis, centros de custo e detalhes de pagamento, facilitando relatórios financeiros e controle de custos. Requer autenticação via API Key no header <code>x-api-key</code>.</p>
+
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Filtro Padrão</p><p>Se nenhuma data for informada, este endpoint retorna apenas despesas do mês corrente. Para consultar despesas de outros períodos, sempre especifique as datas.</p></div></div>
+
+    <h3>Parâmetros de Query</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>page</td><td>int</td><td class="req-no">opcional</td><td>Número da página para paginação (padrão: 1)</td></tr>
+      <tr><td>limit</td><td>int</td><td class="req-no">opcional</td><td>Quantidade de registros por página (padrão: 50 • máximo: 100)</td></tr>
+      <tr><td>start_date</td><td>string</td><td class="req-no">opcional</td><td>Data inicial para filtro (formato: YYYY-MM-DD). Exemplo: 2025-01-01</td></tr>
+      <tr><td>end_date</td><td>string</td><td class="req-no">opcional</td><td>Data final para filtro (formato: YYYY-MM-DD). Exemplo: 2025-12-31</td></tr>
+      <tr><td>translate</td><td>boolean</td><td class="req-no">opcional</td><td>Traduzir nomes de campos (true/false). Padrão: false</td></tr>
+      <tr><td>status</td><td>string</td><td class="req-no">opcional</td><td>Filtrar por status (pending, paid, overdue, cancelled). Exemplo: paid</td></tr>
+      <tr><td>supplier_id</td><td>int</td><td class="req-no">opcional</td><td>Filtrar despesas de um fornecedor específico. Exemplo: 55</td></tr>
+      <tr><td>category</td><td>string</td><td class="req-no">opcional</td><td>Filtrar por categoria de despesa. Exemplo: equipment_rental</td></tr>
+    </tbody></table>
+
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash</span></div><pre><code>curl -X GET "https://api.holdworks.ai/api-key/expenses/data?page=1&amp;limit=50&amp;start_date=2025-01-01&amp;end_date=2025-12-31&amp;status=paid" \
+  -H "x-api-key: sua_api_key_aqui"</code></pre></div>
+
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">json</span></div><pre><code>{
+  "success": true,
+  "data": {
+    "items": [
+      {
+        "id": 1001,
+        "description": "Aluguel de Impressora Digital",
+        "amount": 3500.00,
+        "due_date": "2025-02-05",
+        "payment_date": "2025-02-05",
+        "status": "paid",
+        "supplier": {
+          "id": 55,
+          "name": "Fornecedor XYZ",
+          "document": "98.765.432/0001-11"
+        },
+        "category": "equipment_rental",
+        "cost_center": "production",
+        "payment_method": "bank_transfer",
+        "invoice_number": "NF-12345",
+        "notes": "Referente ao mês de janeiro/2025",
+        "created_at": "2025-01-15T10:00:00Z",
+        "updated_at": "2025-02-05T14:30:00Z"
+      },
+      {
+        "id": 1002,
+        "description": "Compra de Papel Offset A4",
+        "amount": 1250.00,
+        "due_date": "2025-02-15",
+        "payment_date": null,
+        "status": "pending",
+        "supplier": {
+          "id": 56,
+          "name": "Papelaria Central",
+          "document": "12.345.678/0001-90"
+        },
+        "category": "paper_supplies",
+        "cost_center": "production",
+        "payment_method": null,
+        "invoice_number": "NF-67890",
+        "notes": null,
+        "created_at": "2025-01-20T11:30:00Z",
+        "updated_at": "2025-01-20T11:30:00Z"
+      }
+    ],
+    "pagination": {
+      "page": 1,
+      "limit": 50,
+      "total": 120,
+      "pages": 3
+    }
+  },
+  "message": "Success"
+}</code></pre></div>
+
+    <h3>Status das Despesas</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>pending</td><td>string</td><td>Pendente - Despesa aguardando pagamento</td></tr>
+      <tr><td>paid</td><td>string</td><td>Paga - Despesa quitada</td></tr>
+      <tr><td>overdue</td><td>string</td><td>Vencida - Despesa não paga após o vencimento</td></tr>
+      <tr><td>cancelled</td><td>string</td><td>Cancelada - Despesa cancelada</td></tr>
+    </tbody></table>
+
+    <h3>Categorias de Despesas</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>paper_supplies</td><td>string</td><td>Papel e substratos</td></tr>
+      <tr><td>ink_supplies</td><td>string</td><td>Tintas e consumíveis de impressão</td></tr>
+      <tr><td>equipment_rental</td><td>string</td><td>Aluguel de equipamentos</td></tr>
+      <tr><td>equipment_maintenance</td><td>string</td><td>Manutenção de equipamentos</td></tr>
+      <tr><td>utilities</td><td>string</td><td>Utilidades (luz, água, internet)</td></tr>
+      <tr><td>labor</td><td>string</td><td>Mão de obra</td></tr>
+      <tr><td>services</td><td>string</td><td>Serviços terceirizados</td></tr>
+      <tr><td>other</td><td>string</td><td>Outras despesas</td></tr>
+    </tbody></table>
+
+    <h3>Centros de Custo</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>production</td><td>string</td><td>Custos diretos de produção</td></tr>
+      <tr><td>administration</td><td>string</td><td>Custos administrativos</td></tr>
+      <tr><td>sales</td><td>string</td><td>Custos comerciais e vendas</td></tr>
+      <tr><td>logistics</td><td>string</td><td>Custos de logística e entrega</td></tr>
+    </tbody></table>
+
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Dica</p><p>Use os filtros de <code>category</code> e <code>cost_center</code> para gerar relatórios específicos por tipo de despesa ou área da empresa.</p></div></div>
+
+    <h3>Estrutura de Dados</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>id</td><td>number</td><td>Identificador único da despesa</td></tr>
+      <tr><td>description</td><td>string</td><td>Descrição da despesa</td></tr>
+      <tr><td>amount</td><td>number</td><td>Valor da despesa</td></tr>
+      <tr><td>due_date</td><td>string</td><td>Data de vencimento (YYYY-MM-DD)</td></tr>
+      <tr><td>payment_date</td><td>string | null</td><td>Data do pagamento (YYYY-MM-DD)</td></tr>
+      <tr><td>status</td><td>string</td><td>Status da despesa (pending, paid, overdue, cancelled)</td></tr>
+      <tr><td>supplier</td><td>object</td><td>Informações do fornecedor</td></tr>
+      <tr><td>category</td><td>string</td><td>Categoria da despesa</td></tr>
+      <tr><td>cost_center</td><td>string</td><td>Centro de custo contábil</td></tr>
+      <tr><td>payment_method</td><td>string | null</td><td>Método de pagamento utilizado</td></tr>
+      <tr><td>invoice_number</td><td>string</td><td>Número da nota fiscal</td></tr>
+    </tbody></table>
+
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Boas Práticas</p><ul><li>Sempre especifique datas para evitar dados incompletos</li><li>Use paginação para grandes volumes de dados</li><li>Monitore despesas vencidas (status: overdue) regularmente</li><li>Filtre por centro de custo para análises departamentais</li></ul></div></div>
+  </div>
+</div>
+
+</section>
+
+    <hr class="rule">
+
+    <section class="doc" id="api-incomes"><h2>Contas a Receber</h2><p class="section-sub">Consulta receitas com classificações contábeis e centros de receita, permitindo análise financeira detalhada e controle de fluxo de caixa.</p>
+<div class="ref">
+  <div class="ref-head"><span class="ref-tag get">GET</span><code>/api-key/incomes/data</code></div>
+  <div class="ref-body">
+    <p>Consulta receitas de forma paginada, com suporte a filtros por data, status e cliente. Os dados incluem informações contábeis, centros de receita e detalhes de recebimento, facilitando o controle de fluxo de caixa e análises financeiras. A autenticação é feita via API Key no header <code>x-api-key</code>.</p>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Filtro Padrão</p><p>Se nenhuma data for informada, este endpoint retorna apenas receitas do mês corrente. Para consultar receitas de outros períodos, sempre especifique as datas.</p></div></div>
+    <h3>Parâmetros de Query</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>page</td><td>int</td><td class="req-no">opcional</td><td>Número da página para paginação (padrão: 1)</td></tr>
+      <tr><td>limit</td><td>int</td><td class="req-no">opcional</td><td>Quantidade de registros por página (padrão: 50 • máximo: 100)</td></tr>
+      <tr><td>start_date</td><td>string</td><td class="req-no">opcional</td><td>Data inicial para filtro (formato: YYYY-MM-DD). Exemplo: 2025-01-01</td></tr>
+      <tr><td>end_date</td><td>string</td><td class="req-no">opcional</td><td>Data final para filtro (formato: YYYY-MM-DD). Exemplo: 2025-12-31</td></tr>
+      <tr><td>translate</td><td>boolean</td><td class="req-no">opcional</td><td>Traduzir nomes de campos (true/false). Padrão: false</td></tr>
+      <tr><td>status</td><td>string</td><td class="req-no">opcional</td><td>Filtrar por status (pending, received, overdue, cancelled). Exemplo: received</td></tr>
+      <tr><td>customer_id</td><td>int</td><td class="req-no">opcional</td><td>Filtrar receitas de um cliente específico. Exemplo: 789</td></tr>
+    </tbody></table>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash</span></div><pre><code>curl -X GET "https://api.holdworks.ai/api-key/incomes/data?page=1&amp;limit=50&amp;start_date=2025-01-01&amp;end_date=2025-12-31&amp;status=received" \
+  -H "x-api-key: sua_api_key_aqui"</code></pre></div>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">json</span></div><pre><code>{
+  "success": true,
+  "data": {
+    "items": [
+      {
+        "id": 2001,
+        "description": "Pagamento Job #5678 - Cartões de Visita",
+        "amount": 12500.00,
+        "expected_date": "2025-02-15",
+        "received_date": "2025-02-14",
+        "status": "received",
+        "customer": {
+          "id": 789,
+          "name": "Empresa Exemplo LTDA",
+          "document": "12.345.678/0001-99"
+        },
+        "revenue_center": "sales",
+        "payment_method": "bank_transfer",
+        "invoice_number": "NFS-45678",
+        "job_id": 5678,
+        "notes": "Pagamento antecipado",
+        "created_at": "2025-01-15T10:00:00Z",
+        "updated_at": "2025-02-14T16:20:00Z"
+      },
+      {
+        "id": 2002,
+        "description": "Pagamento Job #5680 - Impressão de Catálogos",
+        "amount": 8750.00,
+        "expected_date": "2025-02-20",
+        "received_date": null,
+        "status": "pending",
+        "customer": {
+          "id": 790,
+          "name": "Editora ABC",
+          "document": "98.765.432/0001-10"
+        },
+        "revenue_center": "sales",
+        "payment_method": null,
+        "invoice_number": "NFS-45679",
+        "job_id": 5680,
+        "notes": null,
+        "created_at": "2025-01-18T14:00:00Z",
+        "updated_at": "2025-01-18T14:00:00Z"
+      }
+    ],
+    "pagination": {
+      "page": 1,
+      "limit": 50,
+      "total": 95,
+      "pages": 2
+    }
+  },
+  "message": "Success"
+}</code></pre></div>
+    <h3>Status das Receitas</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>pending</td><td>string</td><td>Pendente - Receita a receber</td></tr>
+      <tr><td>received</td><td>string</td><td>Recebida - Receita quitada</td></tr>
+      <tr><td>overdue</td><td>string</td><td>Vencida - Receita não recebida após a data esperada</td></tr>
+      <tr><td>cancelled</td><td>string</td><td>Cancelada - Receita cancelada</td></tr>
+    </tbody></table>
+    <h3>Centros de Receita</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>sales</td><td>string</td><td>Receitas de vendas de produtos e serviços</td></tr>
+      <tr><td>services</td><td>string</td><td>Receitas de serviços complementares</td></tr>
+      <tr><td>recurring</td><td>string</td><td>Receitas recorrentes (contratos, assinaturas)</td></tr>
+      <tr><td>other</td><td>string</td><td>Outras receitas</td></tr>
+    </tbody></table>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Dica</p><p>Monitore receitas com status overdue para identificar clientes com pagamentos atrasados e tomar ações de cobrança apropriadas.</p></div></div>
+    <h3>Estrutura de Dados</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>id</td><td>number</td><td>Identificador único da receita</td></tr>
+      <tr><td>description</td><td>string</td><td>Descrição da receita</td></tr>
+      <tr><td>amount</td><td>number</td><td>Valor da receita</td></tr>
+      <tr><td>expected_date</td><td>string</td><td>Data esperada de recebimento (YYYY-MM-DD)</td></tr>
+      <tr><td>received_date</td><td>string | null</td><td>Data do recebimento (YYYY-MM-DD)</td></tr>
+      <tr><td>status</td><td>string</td><td>Status da receita (pending, received, overdue, cancelled)</td></tr>
+      <tr><td>customer</td><td>object</td><td>Informações do cliente</td></tr>
+      <tr><td>revenue_center</td><td>string</td><td>Centro de receita contábil</td></tr>
+      <tr><td>payment_method</td><td>string | null</td><td>Método de pagamento utilizado</td></tr>
+      <tr><td>invoice_number</td><td>string</td><td>Número da nota fiscal</td></tr>
+      <tr><td>job_id</td><td>number | null</td><td>ID do job relacionado</td></tr>
+    </tbody></table>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Boas Práticas</p><ul><li>Sempre especifique datas para evitar dados incompletos</li><li>Use paginação para grandes volumes de dados</li><li>Compare expected_date vs received_date para análise de inadimplência</li><li>Filtre por centro de receita para análises de rentabilidade</li></ul></div></div>
+  </div>
+</div>
+</section>
 
     <!-- FAQ -->
     <section class="doc" id="faq">
