@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Holdprint — API & IA · Conecte LLMs ao seu ERP</title>
 <meta name="description" content="Conecte Claude, ChatGPT, Cursor, Gemini ou Copilot ao ERP Holdprint via MCP (OAuth) ou banco read-only. Instale as skills com um comando.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%233b82f6'/%3E%3Cpath d='M16 6.5l2.4 7.1 7.1 2.4-7.1 2.4L16 25.5l-2.4-7.1L6.5 16l7.1-2.4z' fill='white'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -472,7 +473,34 @@ npx @holdprint/skills update</code></pre>
         <div class="ref-body">
           <p>Todas as requisições usam a URL base acima e exigem o header <code class="inline">x-api-key</code>. Respostas em JSON, padrão REST.</p>
           <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">header</span></div><pre><code>x-api-key: sua_api_key_aqui</code></pre></div>
-          <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg><div><p class="ct-title">Onde pegar seu token</p><p>No app Holdprint: <strong>Ajustes &rarr; API/MCP &rarr; Chave de API</strong>. Copie o token (ou gere um novo). Nunca exponha a chave em c&oacute;digo cliente ou repos p&uacute;blicos.</p></div></div>
+          <h3>Onde pegar seu token</h3>
+          <div class="steps">
+            <div class="step"><div class="step-num"></div><div class="step-body"><h3>Acesse Ajustes</h3><p>No menu lateral do app Holdprint, clique em <strong>Ajustes</strong>.</p></div></div>
+            <div class="step"><div class="step-num"></div><div class="step-body"><h3>Abra API/MCP</h3><p>Dentro de Ajustes, clique em <strong>API/MCP</strong>.</p></div></div>
+            <div class="step"><div class="step-num"></div><div class="step-body"><h3>Copie o token</h3><p>Na aba <strong>Chave de API</strong>, clique em <strong>Copiar</strong> (ou <strong>Gerar novo token</strong> para criar um novo).</p></div></div>
+          </div>
+          <div class="shot">
+            <div class="shot-bar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="shot-url">app.holdprint.net/holdprint/settings/api-ai</span></div>
+            <div class="shot-body" style="padding:0">
+              <div class="app-mock">
+                <div class="am-side">
+                  <div class="am-logo">holdprint</div>
+                  <div class="am-item"><span class="am-dot"></span>Cadastros</div>
+                  <div class="am-item"><span class="am-dot"></span>Financeiro</div>
+                  <div class="am-item"><span class="am-dot"></span>Produ&ccedil;&atilde;o</div>
+                  <div class="am-item on"><span class="am-dot"></span>Ajustes</div>
+                </div>
+                <div class="am-main">
+                  <div class="am-crumb">Ajustes / <b>API/MCP</b></div>
+                  <div class="am-tabs"><span class="am-tab on">Chave de API</span><span class="am-tab">Instalar skills</span><span class="am-tab">Conectar MCP</span></div>
+                  <p class="am-label">Seu token pessoal de API</p>
+                  <div class="am-token-row"><div class="am-token">&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;</div><span class="am-copy">Copiar</span></div>
+                  <span class="am-gen">Gerar novo token</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="callout warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg><div><p class="ct-title">Mantenha sua API Key segura</p><p>Nunca exponha a chave em c&oacute;digo cliente ou reposit&oacute;rios p&uacute;blicos. Use vari&aacute;veis de ambiente. Para LLMs, prefira o MCP (login OAuth, sem colar token).</p></div></div>
         </div>
       </div>
       <h3>Formato de resposta</h3>

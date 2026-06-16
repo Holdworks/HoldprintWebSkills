@@ -57,4 +57,15 @@
     if (visible[0]) setActive(map.get(visible[0].target));
   }, { rootMargin: '-30% 0px -60% 0px', threshold: [0, 0.25, 0.5, 1] });
   map.forEach((_l, sec) => obs.observe(sec));
+
+  // Heading anchors — deep-link to each section
+  document.querySelectorAll('section.doc[id]').forEach((sec) => {
+    const h = sec.querySelector('h1, h2');
+    if (!h) return;
+    h.classList.add('anchor-h');
+    const a = document.createElement('a');
+    a.className = 'h-link'; a.href = '#' + sec.id; a.textContent = '#';
+    a.setAttribute('aria-label', 'Link para esta seção');
+    h.prepend(a);
+  });
 })();
