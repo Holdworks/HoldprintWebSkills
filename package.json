@@ -27,8 +27,18 @@
     "llm",
     "mongodb"
   ],
-  "homepage": "https://holdprint.net",
+  "homepage": "https://docs.holdworks.ai",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Holdworks/HoldprintWebSkills.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Holdworks/HoldprintWebSkills/issues"
+  },
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "engines": {
     "node": ">=18"
   }
