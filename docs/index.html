@@ -62,6 +62,7 @@
       <a class="nav-link" href="#api-jobs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3.5 9h17M3.5 15h17M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>Jobs</a>
       <a class="nav-link" href="#api-expenses"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3.5 9h17M3.5 15h17M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>Contas a Pagar</a>
       <a class="nav-link" href="#api-incomes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3.5 9h17M3.5 15h17M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>Contas a Receber</a>
+      <a class="nav-link" href="#api-financial-lookups"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3.5 9h17M3.5 15h17M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>Cadastros financeiros</a>
     </div>
   </aside>
 
@@ -512,12 +513,26 @@ npx @holdprint/skills update</code></pre>
   },
   "message": "Success"
 }</code></pre></div>
+      <h3>Erros na escrita (contas a pagar e a receber)</h3>
+      <p>Os endpoints de cria&ccedil;&atilde;o, edi&ccedil;&atilde;o e baixa de contas devolvem erros neste formato. O <code>code</code> identifica a regra; <code>fields</code> aponta o campo.</p>
+      <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">json</span></div><pre><code>{
+  "success": false,
+  "error": {
+    "code": "HOLD_CHART_OF_ACCOUNTS_2",
+    "message": "Mensagem do erro no idioma da conta",
+    "fields": [],
+    "parameters": []
+  }
+}</code></pre></div>
       <h3>C&oacute;digos de status</h3>
       <table class="dtable"><thead><tr><th>C&oacute;digo</th><th>Significado</th></tr></thead><tbody>
         <tr><td>200</td><td>OK &mdash; requisi&ccedil;&atilde;o bem-sucedida</td></tr>
-        <tr><td>400</td><td>Bad Request &mdash; par&acirc;metros inv&aacute;lidos</td></tr>
+        <tr><td>201</td><td>Created &mdash; registro criado</td></tr>
+        <tr><td>400</td><td>Bad Request &mdash; par&acirc;metros inv&aacute;lidos ou regra de neg&oacute;cio n&atilde;o atendida</td></tr>
         <tr><td>401</td><td>Unauthorized &mdash; API Key inv&aacute;lida ou ausente</td></tr>
+        <tr><td>403</td><td>Forbidden &mdash; recurso fora do plano da conta ou chave sem permiss&atilde;o para a opera&ccedil;&atilde;o</td></tr>
         <tr><td>404</td><td>Not Found &mdash; recurso n&atilde;o encontrado</td></tr>
+        <tr><td>409</td><td>Conflict &mdash; a mesma <code>Idempotency-Key</code> est&aacute; sendo processada em outra requisi&ccedil;&atilde;o</td></tr>
         <tr><td>500</td><td>Internal Server Error</td></tr>
       </tbody></table>
       <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Rate limiting</p><p>100 requisi&ccedil;&otilde;es por minuto por API Key. Header de resposta <code>X-RateLimit-Remaining</code>; reset a cada minuto. Implemente retry com backoff exponencial.</p></div></div>
@@ -1355,7 +1370,7 @@ x-api-key: sua_api_key_aqui</code></pre></div>
 
     <hr class="rule">
 
-    <section class="doc" id="api-expenses"><h2>Contas a Pagar</h2><p class="section-sub">Consulta despesas com classificações contábeis e centros de custo, permitindo análise financeira detalhada.</p>
+    <section class="doc" id="api-expenses"><h2>Contas a Pagar</h2><p class="section-sub">Consulta, criação, edição e baixa de despesas, com classificação no plano de contas e centros de custo.</p>
 
 <div class="ref">
   <div class="ref-head"><span class="ref-tag get">GET</span><code>/api-key/expenses/data</code></div>
@@ -1483,11 +1498,158 @@ x-api-key: sua_api_key_aqui</code></pre></div>
   </div>
 </div>
 
+
+<div class="ref">
+  <div class="ref-head"><span class="ref-tag post">POST</span><code>/api-key/expenses</code></div>
+  <div class="ref-body">
+    <p>Cria uma conta a pagar, à vista ou parcelada. A conta nasce em aberto; para registrar o pagamento, use <code>/api-key/expenses/{id}/settle</code>. A criação aparece no histórico da conta como feita pela integração (API).</p>
+    <p>Autenticação via API Key no header <code>x-api-key</code> e <code>Content-Type: application/json</code>.</p>
+    <h3>Headers</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>Idempotency-Key</td><td>string</td><td class="req-no">Recomendado</td><td>Identificador único da operação no seu sistema (até 200 caracteres). Reenviar a mesma chave com o mesmo corpo devolve a conta já criada, sem duplicar. A mesma chave com corpo diferente é recusada</td></tr>
+    </tbody></table>
+    <h3>Request Body</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>description</td><td>string</td><td class="req-yes">Sim</td><td>Descrição da conta a pagar</td></tr>
+      <tr><td>amount</td><td>number</td><td class="req-yes">Sim</td><td>Valor total. Maior que zero</td></tr>
+      <tr><td>dueDate</td><td>string</td><td class="req-yes">Sim</td><td>Vencimento (ISO 8601, ex.: 2026-11-10). No parcelamento, é a data base das parcelas</td></tr>
+      <tr><td>chartOfAccounts</td><td>array</td><td class="req-yes">Sim</td><td>Classificação no plano de contas: lista de <code>{ publicId, amount }</code>. Com um único item, <code>amount</code> pode ser omitido (usa o valor total). Com mais de um, cada item precisa de <code>amount</code> e a soma deve ser igual a <code>amount</code></td></tr>
+      <tr><td>paymentMethodId</td><td>string</td><td class="req-yes">Sim, à vista</td><td>Forma de pagamento (<code>/api-key/payment-methods/data</code>). Obrigatório quando não houver <code>paymentOptionId</code></td></tr>
+      <tr><td>paymentOptionId</td><td>string</td><td class="req-yes">Sim, parcelado</td><td>Condição de pagamento (<code>/api-key/payment-options/data</code>, com uso em compra). Informe para parcelar; as parcelas seguem a condição</td></tr>
+      <tr><td>installments</td><td>array</td><td class="req-no">Não</td><td>Parcelas personalizadas: lista de <code>{ dueDate, amount }</code>. Exige <code>paymentOptionId</code>; a soma deve ser igual a <code>amount</code></td></tr>
+      <tr><td>supplierId</td><td>string</td><td class="req-no">Não</td><td>Id do fornecedor (<code>/api-key/suppliers/data</code>)</td></tr>
+      <tr><td>companyId</td><td>string</td><td class="req-no">Não</td><td>Id da empresa emissora, em contas com mais de um CNPJ. Se omitido, usa a empresa padrão da conta</td></tr>
+      <tr><td>documentNumber</td><td>string</td><td class="req-no">Não</td><td>Número do documento (nota, boleto, contrato)</td></tr>
+      <tr><td>notes</td><td>string</td><td class="req-no">Não</td><td>Observações</td></tr>
+    </tbody></table>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">À vista ou parcelado</p><p>Sem <code>paymentOptionId</code>, é criada uma única conta com a forma de pagamento informada. Com <code>paymentOptionId</code>, é criada uma conta por parcela, conforme a condição de pagamento ou a lista <code>installments</code>. A resposta traz todas as parcelas em <code>items</code>.</p></div></div>
+    <p>Exemplo de requisição — à vista:</p>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash</span></div><pre><code>curl -X POST "https://api.holdworks.ai/api-key/expenses" \
+  -H "x-api-key: sua_api_key_aqui" \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: pedido-1234" \
+  -d '{
+    "description": "Aluguel de equipamento",
+    "amount": 1500.00,
+    "dueDate": "2026-11-10",
+    "supplierId": "6650f1c2a1b2c3d4e5f60789",
+    "paymentMethodId": "6650f1c2a1b2c3d4e5f60111",
+    "documentNumber": "NF 1234",
+    "chartOfAccounts": [ { "publicId": 12 } ]
+  }'</code></pre></div>
+    <p>Exemplo de requisição — parcelado em 3x com valores próprios:</p>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash</span></div><pre><code>curl -X POST "https://api.holdworks.ai/api-key/expenses" \
+  -H "x-api-key: sua_api_key_aqui" \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: pedido-1235" \
+  -d '{
+    "description": "Aluguel de equipamento",
+    "amount": 3000.00,
+    "dueDate": "2026-11-10",
+    "paymentOptionId": "6650f1c2a1b2c3d4e5f60222",
+    "installments": [
+      { "dueDate": "2026-11-10", "amount": 1000.00 },
+      { "dueDate": "2026-12-10", "amount": 1000.00 },
+      { "dueDate": "2027-01-10", "amount": 1000.00 }
+    ],
+    "chartOfAccounts": [
+      { "publicId": 12, "amount": 2000.00 },
+      { "publicId": 15, "amount": 1000.00 }
+    ]
+  }'</code></pre></div>
+    <p>Resposta (<strong>201</strong> na criação; <strong>200</strong> quando a <code>Idempotency-Key</code> já tinha sido usada):</p>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">json</span></div><pre><code>{
+  "success": true,
+  "data": {
+    "reusedExisting": false,
+    "items": [
+      {
+        "id": "6651a0b1c2d3e4f5a6b7c8d9",
+        "description": "Aluguel de equipamento",
+        "documentNumber": "NF 1234",
+        "notes": null,
+        "companyId": null,
+        "supplierId": "6650f1c2a1b2c3d4e5f60789",
+        "amount": 1500.00,
+        "openAmount": 1500.00,
+        "amountPaid": 0,
+        "dueDate": "2026-11-10T00:00:00Z",
+        "settlementDate": null,
+        "status": "Pending",
+        "paymentMethodId": "6650f1c2a1b2c3d4e5f60111",
+        "chartOfAccounts": [ { "publicId": 12, "amount": 1500.00 } ]
+      }
+    ]
+  }
+}</code></pre></div>
+  </div>
+</div>
+
+<div class="ref">
+  <div class="ref-head"><span class="ref-tag patch">PATCH</span><code>/api-key/expenses/{id}</code></div>
+  <div class="ref-body">
+    <p>Altera uma conta a pagar em aberto. Envie só os campos que mudam; os demais ficam como estão. A alteração aparece no histórico da conta.</p>
+    <p>Só é aceita para conta sem pagamento registrado. Conta paga ou com pagamento parcial devolve <strong>400</strong>; id inexistente ou de outra conta devolve <strong>404</strong>.</p>
+    <h3>Request Body</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>description</td><td>string</td><td class="req-no">Não</td><td>Nova descrição</td></tr>
+      <tr><td>amount</td><td>number</td><td class="req-no">Não</td><td>Novo valor. Se a conta tiver mais de uma classificação no plano de contas, envie também <code>chartOfAccounts</code></td></tr>
+      <tr><td>dueDate</td><td>string</td><td class="req-no">Não</td><td>Novo vencimento (ISO 8601)</td></tr>
+      <tr><td>documentNumber</td><td>string</td><td class="req-no">Não</td><td>Número do documento</td></tr>
+      <tr><td>notes</td><td>string</td><td class="req-no">Não</td><td>Observações</td></tr>
+      <tr><td>chartOfAccounts</td><td>array</td><td class="req-no">Não</td><td>Nova classificação: lista de <code>{ publicId, amount }</code>, com as mesmas regras da criação</td></tr>
+    </tbody></table>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash</span></div><pre><code>curl -X PATCH "https://api.holdworks.ai/api-key/expenses/6651a0b1c2d3e4f5a6b7c8d9" \
+  -H "x-api-key: sua_api_key_aqui" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "dueDate": "2026-11-20",
+    "amount": 1600.00
+  }'</code></pre></div>
+    <p>Resposta <strong>200</strong>: <code>{ "success": true, "data": { ...conta a pagar atualizada... } }</code>, no mesmo formato de cada item da criação.</p>
+  </div>
+</div>
+
+<div class="ref">
+  <div class="ref-head"><span class="ref-tag post">POST</span><code>/api-key/expenses/{id}/settle</code></div>
+  <div class="ref-body">
+    <p>Registra o pagamento (pagamento) de uma conta a pagar, com o mesmo efeito da baixa feita pela tela: a conta muda de status e a movimentação entra no extrato da conta financeira.</p>
+    <h3>Headers</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>Idempotency-Key</td><td>string</td><td class="req-no">Recomendado</td><td>Identificador único do pagamento no seu sistema. Se a resposta se perder e você reenviar a mesma baixa com a mesma chave, o pagamento não é lançado de novo</td></tr>
+    </tbody></table>
+    <h3>Request Body</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>financialAccountId</td><td>string</td><td class="req-yes">Sim</td><td>Conta financeira (banco ou caixa) da movimentação. Consulte em <code>/api-key/financial-accounts/data</code></td></tr>
+      <tr><td>paymentMethodId</td><td>string</td><td class="req-yes">Sim</td><td>Forma de pagamento (<code>/api-key/payment-methods/data</code>)</td></tr>
+      <tr><td>date</td><td>string</td><td class="req-yes">Sim</td><td>Data do pagamento (ISO 8601)</td></tr>
+      <tr><td>amount</td><td>number</td><td class="req-yes">Sim</td><td>Valor efetivamente pago, já com juros e multa somados e desconto abatido</td></tr>
+      <tr><td>interestAmount</td><td>number</td><td class="req-no">Não</td><td>Juros</td></tr>
+      <tr><td>fineAmount</td><td>number</td><td class="req-no">Não</td><td>Multa</td></tr>
+      <tr><td>discountAmount</td><td>number</td><td class="req-no">Não</td><td>Desconto</td></tr>
+      <tr><td>partial</td><td>boolean</td><td class="req-no">Não</td><td>Use <code>true</code> para pagamento parcial; o saldo continua em aberto</td></tr>
+    </tbody></table>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Conta do valor</p><p>Para quitar, <code>amount + discountAmount − interestAmount − fineAmount</code> deve ser igual ao saldo em aberto (<code>openAmount</code>). Exemplo: saldo 1.000,00, juros 20,00 e desconto 10,00 → <code>amount</code> = 1.010,00. Valores menores que o saldo só são aceitos com <code>partial: true</code>; valores maiores que o saldo são recusados.</p></div></div>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash</span></div><pre><code>curl -X POST "https://api.holdworks.ai/api-key/expenses/6651a0b1c2d3e4f5a6b7c8d9/settle" \
+  -H "x-api-key: sua_api_key_aqui" \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: pagamento-9876" \
+  -d '{
+    "financialAccountId": "6650f1c2a1b2c3d4e5f60333",
+    "paymentMethodId": "6650f1c2a1b2c3d4e5f60111",
+    "date": "2026-11-12",
+    "amount": 1010.00,
+    "interestAmount": 20.00,
+    "discountAmount": 10.00
+  }'</code></pre></div>
+    <p>Resposta <strong>200</strong> com a conta a pagar atualizada (<code>status</code> <code>Paid</code>, <code>openAmount</code> 0 e <code>settlementDate</code> preenchida). Conta já paga devolve <strong>400</strong>.</p>
+  </div>
+</div>
 </section>
 
     <hr class="rule">
 
-    <section class="doc" id="api-incomes"><h2>Contas a Receber</h2><p class="section-sub">Consulta receitas com classificações contábeis e centros de receita, permitindo análise financeira detalhada e controle de fluxo de caixa.</p>
+    <section class="doc" id="api-incomes"><h2>Contas a Receber</h2><p class="section-sub">Consulta, criação, edição e baixa de receitas, com classificação no plano de contas, para integração e controle de fluxo de caixa.</p>
 <div class="ref">
   <div class="ref-head"><span class="ref-tag get">GET</span><code>/api-key/incomes/data</code></div>
   <div class="ref-body">
@@ -1589,6 +1751,208 @@ x-api-key: sua_api_key_aqui</code></pre></div>
       <tr><td>job_id</td><td>number | null</td><td>ID do job relacionado</td></tr>
     </tbody></table>
     <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Boas Práticas</p><ul><li>Sempre especifique datas para evitar dados incompletos</li><li>Use paginação para grandes volumes de dados</li><li>Compare expected_date vs received_date para análise de inadimplência</li><li>Filtre por centro de receita para análises de rentabilidade</li></ul></div></div>
+  </div>
+</div>
+
+<div class="ref">
+  <div class="ref-head"><span class="ref-tag post">POST</span><code>/api-key/incomes</code></div>
+  <div class="ref-body">
+    <p>Cria uma conta a receber, à vista ou parcelada. A conta nasce em aberto; para registrar o pagamento, use <code>/api-key/incomes/{id}/settle</code>. A criação aparece no histórico da conta como feita pela integração (API).</p>
+    <p>Autenticação via API Key no header <code>x-api-key</code> e <code>Content-Type: application/json</code>.</p>
+    <h3>Headers</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>Idempotency-Key</td><td>string</td><td class="req-no">Recomendado</td><td>Identificador único da operação no seu sistema (até 200 caracteres). Reenviar a mesma chave com o mesmo corpo devolve a conta já criada, sem duplicar. A mesma chave com corpo diferente é recusada</td></tr>
+    </tbody></table>
+    <h3>Request Body</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>description</td><td>string</td><td class="req-yes">Sim</td><td>Descrição da conta a receber</td></tr>
+      <tr><td>amount</td><td>number</td><td class="req-yes">Sim</td><td>Valor total. Maior que zero</td></tr>
+      <tr><td>dueDate</td><td>string</td><td class="req-yes">Sim</td><td>Vencimento (ISO 8601, ex.: 2026-11-10). No parcelamento, é a data base das parcelas</td></tr>
+      <tr><td>chartOfAccounts</td><td>array</td><td class="req-yes">Sim</td><td>Classificação no plano de contas: lista de <code>{ publicId, amount }</code>. Com um único item, <code>amount</code> pode ser omitido (usa o valor total). Com mais de um, cada item precisa de <code>amount</code> e a soma deve ser igual a <code>amount</code></td></tr>
+      <tr><td>paymentMethodId</td><td>string</td><td class="req-yes">Sim, à vista</td><td>Forma de pagamento (<code>/api-key/payment-methods/data</code>). Obrigatório quando não houver <code>paymentOptionId</code></td></tr>
+      <tr><td>paymentOptionId</td><td>string</td><td class="req-yes">Sim, parcelado</td><td>Condição de pagamento (<code>/api-key/payment-options/data</code>, com uso em venda). Informe para parcelar; as parcelas seguem a condição</td></tr>
+      <tr><td>installments</td><td>array</td><td class="req-no">Não</td><td>Parcelas personalizadas: lista de <code>{ dueDate, amount }</code>. Exige <code>paymentOptionId</code>; a soma deve ser igual a <code>amount</code></td></tr>
+      <tr><td>customerId</td><td>string</td><td class="req-no">Não</td><td>Id do cliente (<code>/api-key/customers/data</code>)</td></tr>
+      <tr><td>companyId</td><td>string</td><td class="req-no">Não</td><td>Id da empresa emissora, em contas com mais de um CNPJ. Se omitido, usa a empresa padrão da conta</td></tr>
+      <tr><td>documentNumber</td><td>string</td><td class="req-no">Não</td><td>Número do documento (nota, boleto, contrato)</td></tr>
+      <tr><td>notes</td><td>string</td><td class="req-no">Não</td><td>Observações</td></tr>
+    </tbody></table>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">À vista ou parcelado</p><p>Sem <code>paymentOptionId</code>, é criada uma única conta com a forma de pagamento informada. Com <code>paymentOptionId</code>, é criada uma conta por parcela, conforme a condição de pagamento ou a lista <code>installments</code>. A resposta traz todas as parcelas em <code>items</code>.</p></div></div>
+    <p>Exemplo de requisição — à vista:</p>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash</span></div><pre><code>curl -X POST "https://api.holdworks.ai/api-key/incomes" \
+  -H "x-api-key: sua_api_key_aqui" \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: pedido-1234" \
+  -d '{
+    "description": "Venda pedido 1234",
+    "amount": 1500.00,
+    "dueDate": "2026-11-10",
+    "customerId": "6650f1c2a1b2c3d4e5f60789",
+    "paymentMethodId": "6650f1c2a1b2c3d4e5f60111",
+    "documentNumber": "NF 1234",
+    "chartOfAccounts": [ { "publicId": 12 } ]
+  }'</code></pre></div>
+    <p>Exemplo de requisição — parcelado em 3x com valores próprios:</p>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash</span></div><pre><code>curl -X POST "https://api.holdworks.ai/api-key/incomes" \
+  -H "x-api-key: sua_api_key_aqui" \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: pedido-1235" \
+  -d '{
+    "description": "Venda pedido 1234",
+    "amount": 3000.00,
+    "dueDate": "2026-11-10",
+    "paymentOptionId": "6650f1c2a1b2c3d4e5f60222",
+    "installments": [
+      { "dueDate": "2026-11-10", "amount": 1000.00 },
+      { "dueDate": "2026-12-10", "amount": 1000.00 },
+      { "dueDate": "2027-01-10", "amount": 1000.00 }
+    ],
+    "chartOfAccounts": [
+      { "publicId": 12, "amount": 2000.00 },
+      { "publicId": 15, "amount": 1000.00 }
+    ]
+  }'</code></pre></div>
+    <p>Resposta (<strong>201</strong> na criação; <strong>200</strong> quando a <code>Idempotency-Key</code> já tinha sido usada):</p>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">json</span></div><pre><code>{
+  "success": true,
+  "data": {
+    "reusedExisting": false,
+    "items": [
+      {
+        "id": "6651a0b1c2d3e4f5a6b7c8d9",
+        "description": "Venda pedido 1234",
+        "documentNumber": "NF 1234",
+        "notes": null,
+        "companyId": null,
+        "customerId": "6650f1c2a1b2c3d4e5f60789",
+        "amount": 1500.00,
+        "openAmount": 1500.00,
+        "amountReceived": 0,
+        "dueDate": "2026-11-10T00:00:00Z",
+        "settlementDate": null,
+        "status": "Pending",
+        "paymentMethodId": "6650f1c2a1b2c3d4e5f60111",
+        "chartOfAccounts": [ { "publicId": 12, "amount": 1500.00 } ]
+      }
+    ]
+  }
+}</code></pre></div>
+  </div>
+</div>
+
+<div class="ref">
+  <div class="ref-head"><span class="ref-tag patch">PATCH</span><code>/api-key/incomes/{id}</code></div>
+  <div class="ref-body">
+    <p>Altera uma conta a receber em aberto. Envie só os campos que mudam; os demais ficam como estão. A alteração aparece no histórico da conta.</p>
+    <p>Só é aceita para conta sem pagamento registrado. Conta paga ou com pagamento parcial devolve <strong>400</strong>; id inexistente ou de outra conta devolve <strong>404</strong>.</p>
+    <h3>Request Body</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>description</td><td>string</td><td class="req-no">Não</td><td>Nova descrição</td></tr>
+      <tr><td>amount</td><td>number</td><td class="req-no">Não</td><td>Novo valor. Se a conta tiver mais de uma classificação no plano de contas, envie também <code>chartOfAccounts</code></td></tr>
+      <tr><td>dueDate</td><td>string</td><td class="req-no">Não</td><td>Novo vencimento (ISO 8601)</td></tr>
+      <tr><td>documentNumber</td><td>string</td><td class="req-no">Não</td><td>Número do documento</td></tr>
+      <tr><td>notes</td><td>string</td><td class="req-no">Não</td><td>Observações</td></tr>
+      <tr><td>chartOfAccounts</td><td>array</td><td class="req-no">Não</td><td>Nova classificação: lista de <code>{ publicId, amount }</code>, com as mesmas regras da criação</td></tr>
+    </tbody></table>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash</span></div><pre><code>curl -X PATCH "https://api.holdworks.ai/api-key/incomes/6651a0b1c2d3e4f5a6b7c8d9" \
+  -H "x-api-key: sua_api_key_aqui" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "dueDate": "2026-11-20",
+    "amount": 1600.00
+  }'</code></pre></div>
+    <p>Resposta <strong>200</strong>: <code>{ "success": true, "data": { ...conta a receber atualizada... } }</code>, no mesmo formato de cada item da criação.</p>
+  </div>
+</div>
+
+<div class="ref">
+  <div class="ref-head"><span class="ref-tag post">POST</span><code>/api-key/incomes/{id}/settle</code></div>
+  <div class="ref-body">
+    <p>Registra o pagamento (recebimento) de uma conta a receber, com o mesmo efeito da baixa feita pela tela: a conta muda de status e a movimentação entra no extrato da conta financeira.</p>
+    <h3>Headers</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>Idempotency-Key</td><td>string</td><td class="req-no">Recomendado</td><td>Identificador único do pagamento no seu sistema. Se a resposta se perder e você reenviar a mesma baixa com a mesma chave, o pagamento não é lançado de novo</td></tr>
+    </tbody></table>
+    <h3>Request Body</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>financialAccountId</td><td>string</td><td class="req-yes">Sim</td><td>Conta financeira (banco ou caixa) da movimentação. Consulte em <code>/api-key/financial-accounts/data</code></td></tr>
+      <tr><td>paymentMethodId</td><td>string</td><td class="req-yes">Sim</td><td>Forma de pagamento (<code>/api-key/payment-methods/data</code>)</td></tr>
+      <tr><td>date</td><td>string</td><td class="req-yes">Sim</td><td>Data do pagamento (ISO 8601)</td></tr>
+      <tr><td>amount</td><td>number</td><td class="req-yes">Sim</td><td>Valor efetivamente recebido, já com juros e multa somados e desconto abatido</td></tr>
+      <tr><td>interestAmount</td><td>number</td><td class="req-no">Não</td><td>Juros</td></tr>
+      <tr><td>fineAmount</td><td>number</td><td class="req-no">Não</td><td>Multa</td></tr>
+      <tr><td>discountAmount</td><td>number</td><td class="req-no">Não</td><td>Desconto</td></tr>
+      <tr><td>partial</td><td>boolean</td><td class="req-no">Não</td><td>Use <code>true</code> para pagamento parcial; o saldo continua em aberto</td></tr>
+    </tbody></table>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Conta do valor</p><p>Para quitar, <code>amount + discountAmount − interestAmount − fineAmount</code> deve ser igual ao saldo em aberto (<code>openAmount</code>). Exemplo: saldo 1.000,00, juros 20,00 e desconto 10,00 → <code>amount</code> = 1.010,00. Valores menores que o saldo só são aceitos com <code>partial: true</code>; valores maiores que o saldo são recusados.</p></div></div>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash</span></div><pre><code>curl -X POST "https://api.holdworks.ai/api-key/incomes/6651a0b1c2d3e4f5a6b7c8d9/settle" \
+  -H "x-api-key: sua_api_key_aqui" \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: pagamento-9876" \
+  -d '{
+    "financialAccountId": "6650f1c2a1b2c3d4e5f60333",
+    "paymentMethodId": "6650f1c2a1b2c3d4e5f60111",
+    "date": "2026-11-12",
+    "amount": 1010.00,
+    "interestAmount": 20.00,
+    "discountAmount": 10.00
+  }'</code></pre></div>
+    <p>Resposta <strong>200</strong> com a conta a receber atualizada (<code>status</code> <code>Paid</code>, <code>openAmount</code> 0 e <code>settlementDate</code> preenchida). Conta já paga devolve <strong>400</strong>.</p>
+  </div>
+</div>
+</section>
+
+
+    <hr class="rule">
+
+    <section class="doc" id="api-financial-lookups"><h2>Cadastros financeiros</h2><p class="section-sub">Plano de contas, formas e condições de pagamento: os identificadores que as contas a pagar e a receber pedem na criação, edição e baixa.</p>
+
+<div class="ref">
+  <div class="ref-head"><span class="ref-tag get">GET</span><code>/api-key/chart-of-accounts/data</code></div>
+  <div class="ref-body">
+    <p>Lista o plano de contas da conta. Use o <code>publicId</code> em <code>chartOfAccounts</code> na criação e edição de contas a pagar e a receber. Só aceitam lançamento as contas com <code>acceptsEntries: true</code> (analíticas).</p>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash</span></div><pre><code>curl -X GET "https://api.holdworks.ai/api-key/chart-of-accounts/data" \
+  -H "x-api-key: sua_api_key_aqui"</code></pre></div>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>publicId</td><td>int</td><td>Identificador usado nas contas a pagar e a receber</td></tr>
+      <tr><td>parentPublicId</td><td>int</td><td>Conta pai (0 no primeiro nível)</td></tr>
+      <tr><td>name</td><td>string</td><td>Nome da conta</td></tr>
+      <tr><td>accountType</td><td>string</td><td><code>Credit</code> ou <code>Debit</code></td></tr>
+      <tr><td>type</td><td>string</td><td><code>Analytic</code> ou <code>Synthetic</code></td></tr>
+      <tr><td>acceptsEntries</td><td>boolean</td><td>Se a conta pode receber lançamentos</td></tr>
+    </tbody></table>
+  </div>
+</div>
+
+<div class="ref">
+  <div class="ref-head"><span class="ref-tag get">GET</span><code>/api-key/payment-methods/data</code></div>
+  <div class="ref-body">
+    <p>Lista as formas de pagamento ativas (dinheiro, PIX, boleto, cartão…). Use o <code>id</code> em <code>paymentMethodId</code> na criação à vista e na baixa.</p>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash</span></div><pre><code>curl -X GET "https://api.holdworks.ai/api-key/payment-methods/data" \
+  -H "x-api-key: sua_api_key_aqui"</code></pre></div>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>id</td><td>string</td><td>Identificador da forma de pagamento</td></tr>
+      <tr><td>name</td><td>string</td><td>Nome</td></tr>
+      <tr><td>isIncome</td><td>boolean</td><td>Usada em recebimentos</td></tr>
+      <tr><td>isExpense</td><td>boolean</td><td>Usada em pagamentos</td></tr>
+    </tbody></table>
+  </div>
+</div>
+
+<div class="ref">
+  <div class="ref-head"><span class="ref-tag get">GET</span><code>/api-key/payment-options/data</code></div>
+  <div class="ref-body">
+    <p>Lista as condições de pagamento (forma + prazo, ex.: "Boleto 30/60/90"). Use o <code>id</code> em <code>paymentOptionId</code> para criar contas parceladas. Contas a receber aceitam condições com <code>isIncome: true</code>; contas a pagar, com <code>isExpense: true</code>.</p>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash</span></div><pre><code>curl -X GET "https://api.holdworks.ai/api-key/payment-options/data" \
+  -H "x-api-key: sua_api_key_aqui"</code></pre></div>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>id</td><td>string</td><td>Identificador da condição</td></tr>
+      <tr><td>name</td><td>string</td><td>Nome</td></tr>
+      <tr><td>description</td><td>string</td><td>Descrição</td></tr>
+      <tr><td>paymentMethodId</td><td>string</td><td>Forma de pagamento da condição</td></tr>
+      <tr><td>isIncome</td><td>boolean</td><td>Disponível para vendas (contas a receber)</td></tr>
+      <tr><td>isExpense</td><td>boolean</td><td>Disponível para compras (contas a pagar)</td></tr>
+    </tbody></table>
   </div>
 </div>
 </section>
