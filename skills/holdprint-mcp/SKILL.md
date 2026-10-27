@@ -124,11 +124,13 @@ refresh do Hold Identity, cifrado). As tools respondem com os dados e a visibili
 - No modo hold (stack local), toda escrita leva uma `Idempotency-Key` **estável por conteúdo** e a WebApi guarda a resposta por
   **24 horas**: repetir a mesma escrita (mesmos argumentos) dentro dessa janela devolve o resultado da primeira, sem duplicar.
   Para repetir de propósito (ex.: a mesma movimentação de estoque duas vezes), mude algo que identifique a operação (observação,
-  descrição). Escrita de alto impacto ou ainda não revisada devolve "Aprovação necessária: <link>": mostre o link, espere o
-  usuário aprovar na tela, confira com `holdprint_check_approval` e repita a mesma tool com `approval_id`. Nunca contorne.
-- No modo hold, `holdprint_attach_document` (upload multipart) não pode ser aprovado por link (o corpo muda a cada envio): a tool
-  avisa e o anexo deve ser feito pela tela até a rota de upload ser revisada. `holdprint_budget_link` (gerar link público) segue o
-  mesmo caminho das outras escritas: pode devolver "Aprovação necessária" e depois roda com `approval_id`.
+  descrição). As escritas executam direto; só uma rota marcada para aprovação devolve "Aprovação necessária: <link>" (caso raro): mostre o
+  link, espere o usuário aprovar na tela, confira com `holdprint_check_approval` e repita a mesma tool com `approval_id`. Nunca contorne.
+  Antes de escrita de dinheiro, nota fiscal ou mensagem externa, mostre ao usuário o efeito (use `holdprint_action_preview`).
+- No modo hold, `holdprint_attach_document` (upload multipart) não pode ser aprovado por link (o corpo muda a cada envio): se a rota
+  vier marcada para aprovação, a tool avisa e o anexo deve ser feito pela tela (ou por `holdprint files upload` na CLI).
+  `holdprint_budget_link` (gerar link público) segue o mesmo caminho das outras escritas: executa direto.
+- A mesma conta também é alcançável pela CLI: `holdprint tools run <nome>` chama estas mesmas ferramentas do terminal (ver skill `holdprint-cli`).
 - Limite conhecido do token delegado: rotas do ERP que repassam o token do usuário ao Auth ou ao Merlin falham pelo MCP nesse modo;
   diga isso ao usuário em vez de insistir.
 
@@ -139,7 +141,7 @@ refresh do Hold Identity, cifrado). As tools respondem com os dados e a visibili
 | Inventar nome de entidade/campo | Use `holdprint_discover` + `holdprint_describe` primeiro |
 | Enum em pt-BR ou número (`"Ganho"`, `1`) | Use o valor em inglês (`"Won"`) |
 | Somar valor em R$ com `aggregate` e vir errado | Valores moram em sub-docs → use `holdprint_report` |
-| Tentar executar ação destrutiva por `holdprint_action` (ou mandar `confirmed: true`) | Use `holdprint_action_preview` → aprovação do usuário → `holdprint_action_execute` |
+| Tentar executar ação destrutiva por `holdprint_action` (ou mandar `confirmed: true`) | Use `holdprint_action_preview` → mostre o efeito ao usuário e confirme → `holdprint_action_execute` |
 | Gravar um lote com `dry_run: false` sem `previewId` | Rode a simulação primeiro e reenvie o mesmo conteúdo com o `previewId` dela |
 | Mandar `dry_run` em `holdprint_action` | O parâmetro dessa tool é `dryRun` (camelCase); os importadores é que usam `dry_run` |
 | Achar que "não tem dados" | Pode estar filtrando excluídos; tente `includeDeleted: true` para conferir |

@@ -61,7 +61,7 @@ holdprint_action { actionName: "win-budget", args: { budgetId: "..." } }
 ```
 holdprint_action_preview { actionName: "delete-customer", args: { id: "..." } }
 ```
-2. Mostrar o efeito ao usuário e esperar a aprovação.
+2. Mostrar o efeito ao usuário e esperar a confirmação dele.
 3. Executar só com o `previewId` (uso único, 10 minutos, mesma conta e usuário):
 ```
 holdprint_action_execute { previewId: "..." }
