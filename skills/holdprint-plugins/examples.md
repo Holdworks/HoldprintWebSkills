@@ -540,3 +540,19 @@ Pedido: "cria um plugin que mostra os orçamentos ganhos do mês por vendedor e 
    (as instalações já feitas continuam).
 5. Se o usuário pedir uma chave de serviço externo nesse plugin, explique que plugin enviado a outra conta não pode declarar `secrets` (`409 _74`) e ofereça a
    versão sem segredo.
+
+## 8. Duas pessoas, duas conversas (conta existente e conta nova)
+
+**Administrador de uma conta (já tem login).** Frase: "Cria um plugin que mostra os orçamentos ganhos do mês e manda para aprovação da Hold."
+1. `holdprint whoami` mostra usuário, conta e perfil Administrador: segue sem perguntar nada.
+2. Cria, valida e faz `deploy` como no exemplo 1 (sem `secrets`, com `listing`); depois de aprovado o consentimento, `holdprint plugin release`.
+3. Como ele pediu aprovação da Hold: `holdprint plugin submit --note "Orçamentos ganhos do mês por vendedor"`.
+4. Diz: "Mandei para a Hold analisar. Quando aprovar, aparece para todas as gráficas. Peça 'como está o pedido' quando quiser." Acompanha com
+   `holdprint plugin submission` (`Em análise pela Hold`, `No Marketplace` ou `Recusado: <motivo>`; recusado: corrige e pede de novo).
+
+**Pessoa sem conta (vibe coder).** Frase: "Quero um plugin de painel de vendas e publicar para outras gráficas. Ainda não tenho conta."
+1. `holdprint whoami` diz que não há login. Pergunta uma vez: "Você já tem conta no Holdprint?" Resposta: "Não."
+2. Começa mesmo assim no simulador: `holdprint plugin create`, `holdprint dev` com a Gráfica Exemplo, e mostra a tela a ele.
+3. Quando ele quer publicar: "Para publicar você precisa de uma conta de teste grátis. Abra `<endereço do Holdprint>/holdai/register`, crie a conta, ative pelo
+   e-mail e me avise." Ele avisa; `holdprint login` (código e link no navegador), `holdprint plugin deploy`, link de consentimento para o Administrador (ele mesmo).
+4. Só depois do pedido dele ("publica para todo mundo"): `holdprint plugin release`, `holdprint plugin submit --note "..."` e o acompanhamento do exemplo acima.

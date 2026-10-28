@@ -1,9 +1,26 @@
 ---
 name: holdprint-plugins
-description: Use quando o usuário pedir para criar, alterar, publicar ou depurar um plugin do Holdprint — "cria um plugin", "plugin do Holdprint", "extensão do Holdprint", "faz uma telinha dentro do Holdprint", "painel customizado no Holdprint", "publica o plugin". Ensina o fluxo da CLI `holdprint plugin create/dev/deploy`, o SDK (`Holdprint.connect()`), o manifesto `holdprint.plugin.json`, o catálogo de escopos, a API /v1, ações no orçamento e em Novo registro com modal (`contributes.actions`) e, para automação sem tela aberta, funções, agendas, segredos e hooks (`holdprint plugin secrets/run/logs`) e, para mostrar o plugin a outras contas, vitrine (`listing`), Marketplace e link (`publish --unlisted`, `plugin links`).
+description: Use quando o usuário pedir para criar, alterar, publicar ou depurar um plugin do Holdprint — "cria um plugin", "plugin do Holdprint", "extensão do Holdprint", "faz uma telinha dentro do Holdprint", "painel customizado no Holdprint", "publica o plugin". Ensina o fluxo da CLI `holdprint plugin create/dev/deploy`, o SDK (`Holdprint.connect()`), o manifesto `holdprint.plugin.json`, o catálogo de escopos, a API /v1, ações no orçamento e em Novo registro com modal (`contributes.actions`) e, para automação sem tela aberta, funções, agendas, segredos e hooks (`holdprint plugin secrets/run/logs`) e, para mostrar o plugin a outras contas, vitrine (`listing`), Marketplace e link (`publish --unlisted`, `plugin links`) e, para todas as gráficas, o pedido de publicação à Hold (`plugin submit`, `plugin submission`).
 ---
 
 # Plugins do Holdprint
+
+## Começo da conversa
+
+Faça isto **antes de qualquer outra coisa**, sem perguntar nada técnico. O usuário pode não ser programador: fale simples, sem jargão.
+
+1. Rode `holdprint whoami`.
+   - **Logado:** siga direto para o pedido.
+   - **Sem login:** pergunte **uma vez só**: "Você já tem conta no Holdprint?"
+     - **Tem:** rode `holdprint login`, mostre o código e o link que a CLI imprimir e espere a pessoa aprovar no navegador.
+     - **Não tem:** comece já, sem esperar: desenhe e teste o plugin no simulador (`holdprint dev`, com dados de exemplo, sem conta e sem rede).
+       Quando ele quiser usar de verdade ou publicar, explique em uma frase: "Para colocar no seu Holdprint ou publicar, você precisa de uma conta de
+       teste grátis." e mande abrir **`<endereço do Holdprint>/holdai/register`** (no ambiente local: http://localhost:8003/holdai/register), criar a conta,
+       ativar pelo e-mail que chega e voltar avisando. Depois rode `holdprint login`. Não crie a conta por ele, não peça senha e não tente contornar o login.
+2. **Quando o plugin estiver pronto** (e só então), ofereça uma vez: "Quer publicar para todas as gráficas?" e siga o passo 7 do Fluxo. Se ele disser que
+   não, ou não responder, não insista e não publique.
+
+Quando a CLI recusar por falta de login, ela mesma imprime esse caminho (login ou conta de teste): leia a mensagem ao usuário em palavras simples.
 
 ## O que é um plugin
 
@@ -75,6 +92,21 @@ Se o pedido é só ler dados do ERP sem criar tela, use `holdprint-mcp` ou `hold
 6. **Conferir:** depois de aprovado, os próximos deploys sem mudança de escopo imprimem `Abra: <endereço>/plugins/<installationId>`
    (sem `#`). `holdprint plugin list` mostra o estado: `ativo`, `desligado`, `aguardando consentimento` ou
    `pede novas permissões`. Siga o checklist abaixo.
+7. **Publicar para todas as gráficas (pedido de publicação).** Isto é **diferente** de instalar na própria conta e do link (`publish --unlisted`):
+   aqui a **Hold analisa** e, se aprovar, o plugin aparece no Marketplace de **todas** as contas, na seção **Da comunidade**.
+   **Só faça quando o usuário pedir** ("manda para aprovação", "quero publicar para todo mundo", "coloca no Marketplace"). Nunca por conta própria.
+   Pré-requisitos (confira antes e corrija o que faltar):
+   - bloco `listing` no manifesto (resumo e categoria, em português; veja a seção Vitrine);
+   - **nenhum `secrets`** no manifesto (plugin com segredo não vai para outras contas);
+   - uma **versão liberada**: `holdprint plugin release` (ou `holdprint plugin deploy --release`);
+   - quem pede é **Administrador** da conta (`holdprint whoami` mostra o perfil).
+   Comando: `holdprint plugin submit [pasta|id] --note "o que o plugin faz, em uma frase"`. A CLI responde
+   `Pedido de publicação enviado (vN). A Hold vai analisar; acompanhe com holdprint plugin submission.`
+   O que dizer ao usuário: "Mandei para a Hold analisar. Quando ela aprovar, o plugin aparece para todas as gráficas. Você acompanha comigo pedindo
+   'como está o pedido'." Para acompanhar rode `holdprint plugin submission`: `Em análise pela Hold`, `No Marketplace` ou `Recusado: <motivo>`
+   (também aparece na coluna `publicacao` de `holdprint plugin list` e como selo na tela Plugins).
+   **Recusado:** mostre o motivo com as palavras da Hold, corrija o que ele pede (resumo, segredo, versão), libere a versão nova e peça de novo com `plugin submit`.
+   Para tirar do Marketplace: `holdprint plugin submit --withdraw` (quem já instalou continua com o plugin). Não tente contornar bloqueio da Hold.
 
 **Mudou escopo:** um novo `deploy` com escopos diferentes pede **novo consentimento** (só o texto do propósito não pede).
 A CLI imprime de novo o link `/plugins/consent/<id>` (mesmo que diga `Sem mudancas` para o código) e a tela Plugins
@@ -272,8 +304,8 @@ Escreva sempre o `listing` quando o usuário quiser mostrar o plugin a outras pe
 caracteres, `category` do catálogo, até 5 `highlights` curtos e `support` (e-mail ou `https://`). Texto puro, sem HTML nem markdown, sem promessa
 ("o melhor", "aumenta suas vendas em 30%", "garantido"): descreva só o que o plugin faz. Mudar o `listing` não pede novo consentimento.
 
-**Marketplace.** No menu Plugins existe o item **Marketplace** (Administrador ou quem tem Plugins: Gerenciar), com três seções:
-**Da sua conta** (publicados pela conta, instalados ou não), **Recebidos por link** e **Destaques da Hold** (vazia por enquanto).
+**Marketplace.** No menu Plugins existe o item **Marketplace** (Administrador ou quem tem Plugins: Gerenciar), com quatro seções:
+**Da sua conta** (publicados pela conta, instalados ou não), **Da comunidade** (plugins de outras contas que a Hold aprovou; veja o passo 7 do Fluxo), **Recebidos por link** e **Destaques da Hold** (vazia por enquanto).
 Instalar pela vitrine leva ao mesmo consentimento de sempre (serve também para reinstalar um plugin desinstalado). A tela Plugins mostra a coluna
 **Origem** (Da sua conta, Marketplace ou Link).
 
@@ -449,8 +481,14 @@ Erro de plataforma vem como `[{ type: 53, errorType: <n>, errorCode: "HOLD_PLUGI
 | `404 _72` / `409 _73` no link | Link inválido, revogado ou vencido (72) ou teto de contas atingido (73). Gere outro com `publish --unlisted` ou aumente `--max-accounts` (até 10). |
 | `403 HOLD_PLUGIN_PLATFORM_76` / `_77` | A Hold bloqueou este plugin (76) ou os plugins desta conta (77). Não tente contornar: nada de republicar com outro slug nem reinstalar. Mostre o motivo (`holdprint plugin list`) e oriente o usuário a falar com a Hold. |
 | `400 _78` / `_79` | Interno da Hold: bloqueio sem motivo (78) e destaque de plugin que não é de conta publicadora da Hold (79). Não aparecem no fluxo normal de quem cria plugin. |
+| `403 HOLD_PLUGIN_PLATFORM_97` | Pedido de publicação por quem não é Administrador. Peça a um Administrador da conta (ou o login de um) e rode `holdprint plugin submit` de novo. |
+| `409 HOLD_PLUGIN_PLATFORM_98` | A Hold bloqueou o plugin: mostre o motivo e oriente a falar com a Hold; não tente contornar. |
+| `409 HOLD_PLUGIN_PLATFORM_99` | Plugin com segredo não pode ir para outras contas: tire `secrets` do manifesto, `deploy`, `release` e peça de novo. |
+| `400 HOLD_PLUGIN_PLATFORM_100` | Faltou `listing` (resumo e categoria): preencha, `validate`, `deploy --release` e peça de novo. |
+| `409 HOLD_PLUGIN_PLATFORM_101` | Sem versão liberada: rode `holdprint plugin release` e peça de novo. |
+| Pedido `Recusado: <motivo>` | A Hold recusou. Mostre o motivo, corrija, libere versão nova e rode `holdprint plugin submit` de novo. |
 | Mudou o código e a tela não mudou | Rode `deploy` e recarregue o Holdprint (F5). |
-| `Voce ainda nao fez login` / `Sua sessao da CLI expirou` / `401` na CLI | Rode `holdprint login` de novo (o acesso renova sozinho; se o refresh venceu ou foi revogado em Acessos conectados, é preciso novo login). |
+| `Voce ainda nao fez login` (a mensagem traz o caminho: `holdprint login` se já tem conta, ou criar conta de teste grátis em `<Holdprint>/holdai/register`) / `Sua sessao da CLI expirou` / `401` na CLI | Rode `holdprint login` de novo (o acesso renova sozinho; se o refresh venceu ou foi revogado em Acessos conectados, é preciso novo login). |
 | App externo: `400 _80`/`_81`, CORS, `401 _82`/`_83`, `403 _87` | Veja a tabela de erros em `external-apps-reference.md`. |
 
 ## Checklist pós-deploy
@@ -466,6 +504,7 @@ Erro de plataforma vem como `[{ type: 53, errorType: <n>, errorCode: "HOLD_PLUGI
 - [ ] Plugin com ações: o botão aparece (orçamento > raio > Plugins, ou Novo registro), o id vem de `hold.context.launch`, `modal.confirm` só depois da escrita, e repetir a ação não duplica.
 - [ ] Plugin que vai para outra gráfica: `listing` preenchido, nenhum `secrets`, link do `publish --unlisted` entregue ao usuário (e não gravado em arquivo), explicado que o Administrador da outra conta instala e aprova, e `holdprint plugin links` conferido.
 - [ ] Plugin com app externo: `externalApps` com a origem real, `signIn` (sem senha nem token guardado), chamadas só em `api.<domínio técnico>`, consentimento mostrado ao usuário e o acesso conferido em Plugins > Acessos conectados.
+- [ ] Pedido de publicação (só se o usuário pediu): `listing` ok, sem `secrets`, versão liberada, `holdprint plugin submit` rodado e `holdprint plugin submission` conferido; o usuário sabe que a Hold analisa e como acompanhar (ou o motivo da recusa foi mostrado e corrigido).
 - [ ] Reportar ao usuário o que foi publicado e como abrir.
 
 ## Referências
