@@ -71,8 +71,8 @@ use as ferramentas.
 ```bash
 holdprint tools list [--json]                       # nome + descrição curta
 holdprint tools describe holdprint_report           # parâmetros legíveis (obrigatório/opcional, valores aceitos)
-holdprint tools run holdprint_report --name vendas_reais --de 2026-10-01 --ate 2026-10-31
-holdprint tools run holdprint_report --json '{"name":"saldo_estoque"}' --out /tmp/estoque.txt   # grava a saída; leia com jq/cat
+holdprint tools run holdprint_report --report vendas_reais --startDate 2026-10-01 --endDate 2026-10-31
+holdprint tools run holdprint_report --json '{"report":"saldo_estoque"}' --out /tmp/estoque.txt   # grava a saída; leia com jq/cat
 holdprint tools run holdprint_import --data @clientes.json
 ```
 
@@ -85,7 +85,7 @@ holdprint tools run holdprint_import --data @clientes.json
 
 | Quero | Comando |
 |---|---|
-| Relatório pronto (vendas, ticket médio, jobs atrasados, estoque, contas a pagar/receber, fluxo de caixa, rentabilidade, conversão, forecast) | `tools run holdprint_report --name <relatório>` (`tools describe holdprint_report` lista os nomes) |
+| Relatório pronto (vendas, ticket médio, jobs atrasados, estoque, contas a pagar/receber, fluxo de caixa, rentabilidade, conversão, forecast) | `tools run holdprint_report --report <relatório>` (`tools describe holdprint_report` lista os nomes) |
 | Checkup gerencial / ponto de equilíbrio | `tools run holdprint_checkup`, `tools run holdprint_breakeven` |
 | Importar clientes, fornecedores, financeiro, estoque, matéria-prima em lote (com dry-run) | `tools run holdprint_import`, `holdprint_import_financials`, `holdprint_import_stock`, `holdprint_import_feedstock` |
 | Adicionar item ao orçamento já calculado | `tools run holdprint_add_item` |
@@ -138,6 +138,44 @@ diferente dá erro 400. Nunca use timestamp ou aleatório puro "por garantia": i
 - Resposta traz `nextCursor` (query) ou `hasNextPage` (api). Nunca assuma que a primeira página é tudo; diga ao usuário quando
   cortou por `--max-pages`/`--limit`.
 
+### Receitas testadas de `tools run` (conta 429, 27/10/2026)
+
+O nome do campo vem do schema: o erro `-32602 ... expected string, received undefined` quer dizer argumento errado. A CLI já imprime
+o schema e um exemplo de `--json`; `holdprint tools describe <nome>` mostra o mesmo antes de errar.
+
+```bash
+# 1) describe: o argumento é "collection" (não "entity"); aceita nome da entidade ou termo em pt-BR
+holdprint tools run holdprint_describe --json '{"collection":"Budget"}'
+
+# 2) query com filtro em QUALQUER campo (o `holdprint query` só filtra por campo indexado; ex.: código do orçamento)
+holdprint tools run holdprint_query --json '{"collection":"Budget","filter":{"code":1064},"limit":1}'
+
+# 3) relatório: o argumento é "report" (não "name")
+holdprint tools run holdprint_report --json '{"report":"kpis_comerciais","startDate":"2026-01-01","endDate":"2026-10-31"}'
+```
+
+**Valor calculado (preço de venda) de cada orçamento**: não existe rota GET nem entidade de leitura para isso; o caminho é o
+relatório `valor_por_orcamento` (orçamentos abertos; para ganhos e perdidos use `valor_orcamentos_ganhos` e `valor_orcamentos_perdidos`
+com `startDate`/`endDate`). A saída é grande: grave em arquivo e leia com `jq`. A primeira linha do arquivo é um título e a
+segunda é vazia, então pule as duas com `sed`:
+
+```bash
+holdprint tools run holdprint_report --report valor_por_orcamento --out /tmp/vpo.json
+sed '1,2d' /tmp/vpo.json | jq -r '.orcamentos[] | select(.code==33) | .value'      # valor do orçamento 33
+sed '1,2d' /tmp/vpo.json | jq '{quantidade, total_em_reais}'                          # totais
+```
+
+Campos de cada item: `code`, `budgetTitle`, `value` (R$), `state`, `customer`, `wonDate`, `lostDate`. Se o código não aparece, o
+orçamento não está aberto (tente os relatórios de ganhos/perdidos com o período certo).
+
+Enum de `expenseOriginType` (corpo de `actions run ...ManualCreate`): 1 PurchaseOrder, 2 Commissions, 3 Outsourcing, 4 FixedExpense,
+**5 ManualCreation** (use este em lançamento manual), 6 Nfe, 7 Nfse, 8 PurchaseOrderTransportation, 9 Renegotiation, 10 CardInvoice.
+`actions describe` mostra os campos com enum e os valores numéricos (o schema da WebApi não traz os nomes) e não marca obrigatórios;
+se a escrita voltar 400 `HOLD_GENERAL_1 [Campo]`, a CLI diz qual campo faltou: inclua-o.
+
+**Dica de permissão:** o modo de permissão do Claude Code pode bloquear `$(...)` e crases dentro do comando. Prefira dois comandos
+separados (rode `actions list`, leia a chave, e só então `actions describe "<chave>"`) em vez de `holdprint actions describe "$(holdprint actions list ...)"`.
+
 ## Erros: como corrigir
 
 A CLI imprime o código e uma dica. Resumo:
@@ -151,7 +189,7 @@ A CLI imprime o código e uma dica. Resumo:
 | 91 | 409 | Aprovação não confere com o pedido | O corpo mudou depois de aprovado, ou a aprovação já foi usada. Peça nova aprovação com o corpo final. |
 | 92 | 429 | Teto diário de aprovações da conta | Pare; avise o usuário que o limite do dia foi atingido. |
 | 93 | 404 | Recurso de consulta não ligado | `holdprint query --list` e escolha um recurso ligado. |
-| 94 | 400 | Filtro em campo sem índice | Use só os filtros que `query --list` marca como permitidos; refine por outro campo ou por `--updated-since`. |
+| 94 | 400 | Filtro em campo sem índice | A própria mensagem já lista os filtros permitidos do recurso. Use um deles, ou busque tudo com `query <recurso> --paginate --fields ... > arq.json` e filtre com `jq`, ou use `tools run holdprint_query` (filtra qualquer campo; exemplo abaixo). |
 | 95 | 400 | Campo não permitido | Use os campos de `query --list`. |
 | 96 | 429 | Muitas escritas simultâneas na conta | Espere o `Retry-After` e repita **com a mesma chave**; não dispare escritas em paralelo. |
 

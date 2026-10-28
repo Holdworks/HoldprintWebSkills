@@ -94,10 +94,10 @@ para as demais entidades use `tools run holdprint_count` / `holdprint_aggregate`
 
 | Pergunta | Caminho |
 |---|---|
-| Quanto vendi no mês | `tools run holdprint_report --name vendas_reais ...` ou `query budgets --where state=3 --where wonDate>=<data> --paginate | jq` |
-| Jobs atrasados / a entregar | `tools run holdprint_report --name jobs_atrasados_real` |
-| Contas a pagar/receber, fluxo de caixa | `tools run holdprint_report --name contas_a_pagar` / `contas_a_receber` / `fluxo_de_caixa` |
-| Saldo de estoque | `tools run holdprint_report --name saldo_estoque` |
+| Quanto vendi no mês | `tools run holdprint_report --report vendas_reais ...` ou `query budgets --where state=3 --where wonDate>=<data> --paginate | jq` |
+| Jobs atrasados / a entregar | `tools run holdprint_report --report jobs_atrasados_real` |
+| Contas a pagar/receber, fluxo de caixa | `tools run holdprint_report --report contas_a_pagar` / `contas_a_receber` / `fluxo_de_caixa` |
+| Saldo de estoque | `tools run holdprint_report --report saldo_estoque` |
 | Saúde da empresa / equilíbrio | `tools run holdprint_checkup` / `holdprint_breakeven` |
 | Um registro por id | `api GET /api/<rota>/<id>` |
 | Quais campos tem a entidade X | `tools run holdprint_describe --entity X` |
