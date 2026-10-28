@@ -11,12 +11,16 @@ Faça isto **antes de qualquer outra coisa**, sem perguntar nada técnico. O usu
 
 1. Rode `holdprint whoami`.
    - **Logado:** siga direto para o pedido.
-   - **Sem login:** pergunte **uma vez só**: "Você já tem conta no Holdprint?"
-     - **Tem:** rode `holdprint login`, mostre o código e o link que a CLI imprimir e espere a pessoa aprovar no navegador.
+   - **Sem login:** pergunte **uma vez só**: "Você já tem conta no Holdprint?" e **pare para esperar a resposta**. Não crie
+     projeto, não abra simulador e não escreva código antes de ela responder.
+     - **Tem:** rode **você mesmo** `holdprint login` (nunca peça para a pessoa digitar comando). Ele abre o navegador e fica
+       esperando a aprovação: rode com tempo limite de 10 minutos (ou em segundo plano) e, enquanto espera, diga em uma frase:
+       "Abri uma página no seu navegador: confira se o código é XXXX-XXXX e clique em Aprovar." Depois de aprovado, construa
+       direto na conta dela (sem passar pelo simulador).
      - **Não tem:** comece já, sem esperar: desenhe e teste o plugin no simulador (`holdprint dev`, com dados de exemplo, sem conta e sem rede).
        Quando ele quiser usar de verdade ou publicar, explique em uma frase: "Para colocar no seu Holdprint ou publicar, você precisa de uma conta de
        teste grátis." e mande abrir **`<endereço do Holdprint>/holdai/register`** (no ambiente local: http://localhost:8003/holdai/register), criar a conta,
-       ativar pelo e-mail que chega e voltar avisando. Depois rode `holdprint login`. Não crie a conta por ele, não peça senha e não tente contornar o login.
+       ativar pelo e-mail que chega e voltar avisando. Depois rode você mesmo `holdprint login`, como no caso acima. Não crie a conta por ele, não peça senha e não tente contornar o login.
 2. **Quando o plugin estiver pronto** (e só então), ofereça uma vez: "Quer publicar para todas as gráficas?" e siga o passo 7 do Fluxo. Se ele disser que
    não, ou não responder, não insista e não publique.
 
