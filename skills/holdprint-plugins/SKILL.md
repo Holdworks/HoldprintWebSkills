@@ -55,6 +55,17 @@ Se o pedido é só ler dados do ERP sem criar tela, use `holdprint-mcp` ou `hold
 
 ## Fluxo
 
+**Diga ao usuário em que etapa ele está, com palavras simples.** Ele pode não saber o que é publicar, prévia ou modo desenvolvedor:
+- **Antes do primeiro `deploy`:** "Vou publicar a primeira versão só na sua conta. Ninguém vê nada até você aprovar no link que eu vou te mandar;
+  depois de aprovado, você e os perfis que marcar já podem usar."
+- **Ajustes depois de aprovado:** ofereça primeiro o modo desenvolvedor: "Quer ver as mudanças ao vivo antes de publicar? Eu abro o plugin
+  rodando do seu computador, só na sua janela e só para leitura." (`holdprint plugin dev --account`). Para mostrar a outros administradores,
+  publique como prévia (`deploy`): "Publiquei a versão N como prévia: só administradores veem; a equipe continua na versão anterior." Só rode
+  `holdprint plugin release` quando ele disser que pode liberar para a equipe. Num plugin que a equipe já usa, não use `holdprint plugin dev` sem
+  `--account`: ele libera cada salvamento para todo mundo.
+- **Pedido à Hold:** deixe claro que só é preciso para levar o plugin a **outras gráficas** pelo Marketplace. Para a própria gráfica, a aprovação
+  do Administrador basta.
+
 1. **Entrar (uma vez):** `holdprint login` (no macOS abre o navegador; `--no-open` só imprime). A CLI usa o **device code**: imprime
    `Codigo de confirmacao: XXXX-XXXX` e `Aprove em: <Holdprint>/identity/device?code=...`; o usuário abre no navegador já logado no
    Holdprint (o código vem preenchido), confere "Holdprint CLI", a conta e as permissões e clica em **Aprovar**. A CLI responde
