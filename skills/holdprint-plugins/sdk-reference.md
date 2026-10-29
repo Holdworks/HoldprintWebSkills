@@ -18,15 +18,96 @@ hold.context // { user:{id,name}, account:{id,name}, installationId, pluginId, l
 ```
 `locale` vale `pt-BR` na maioria das contas. Use para saudar o usuário e formatar datas.
 
-Quando o plugin abre por um botão (`contributes.actions`) ou por deep link, o contexto ganha dois campos:
+Um único HTML (`ui.entry`) serve a todos os lugares onde o plugin aparece. O contexto diz **onde** ele foi aberto:
 
 ```js
-hold.context.surface // "page" ou "modal"
-hold.context.launch  // { actionId, actionTitle, target: "budget"|"new-record", entity: { type, id, code, title } } ou null
+hold.context.surface // "page" | "modal" | "tab" | "card"
+hold.context.page    // id da página aberta (só em surface "page"); "main" no plugin de página única (`page` legado)
+hold.context.tab     // id da aba (só em surface "tab")
+hold.context.card    // id do card (só em surface "card")
+hold.context.launch  // null, ou { actionId?, actionTitle?, target, entity?, entities? }
 ```
-`launch` é **validado no servidor** (orçamento da conta e visível ao usuário). Use `hold.context.launch.entity.id` e **nunca** leia o id de
-`location`/query/hash. Em ação `new-record`, `launch.entity` é `null`. Sem ação (menu lateral), `launch` é `null` (nunca `undefined`) e
-`surface` é `"page"`. O deep link `<endereço do Holdprint>/plugins/<instalação>?acao=<id>&id=<orçamento>` (sem `#`) chega com o mesmo `launch` e `surface: "page"`.
+
+| `surface` | Quando | `launch` |
+|---|---|---|
+| `page` | Item do menu (`pages`/`page`) ou ação com `open: "page"` | `null` no menu; com ação, o `launch` da ação |
+| `modal` | Ação com `open: "modal"` | o `launch` da ação |
+| `tab` | Aba no orçamento ou no cliente | `entity` do registro aberto, **sem** `actionId` |
+| `card` | Card da Visão Geral | `null` |
+
+`surface` desconhecida vira `"page"`; `page`, `tab` e `card` só vêm preenchidos na surface certa (nas outras ficam `undefined`).
+
+**Decida o que desenhar pelo contexto**, não por URL:
+
+```js
+const hold = await Holdprint.connect();
+const { surface, page, tab, card, launch } = hold.context;
+if (surface === 'card') desenharCard(card);
+else if (surface === 'tab') desenharAba(tab, launch.entity);        // aba: launch.entity sempre existe
+else if (launch?.entities) desenharLote(launch.entities);            // ação de lote (-list)
+else if (launch?.entity) desenharRegistro(launch.entity);            // botão no detalhe
+else desenharPagina(page);                                           // menu: page = id declarado
+```
+
+### launch
+
+```js
+hold.context.launch // { actionId, actionTitle, target: "budget"|"customer"|"job"|"expense"|"income"|"job-list"|...|"new-record", entity, entities }
+launch.entity   // { type, id, code, title, subtype? } ou null
+launch.entities // lote: [{ type, id, code, title, subtype? }, ...] (até 100) ou null
+```
+
+| Campo de `entity` | O que é |
+|---|---|
+| `type` | `budget`, `customer`, `job`, `expense`, `income` e os demais alvos (`feedstock`, `purchase-order`, `supplier`, `invoice`, `contract`...) |
+| `id` | Id do registro (use para ler por `hold.api.get`) |
+| `code` | Código legível quando existe (orçamento e job); `null` em cliente, conta a pagar e a receber |
+| `title` | Texto legível: título do orçamento, nome do cliente, descrição da conta... |
+| `subtype` | Só `invoice`: `nfe`, `nfse`, `nfce`, `mdfe` ou `commercial-invoice` |
+
+- **Detalhe** (`target` sem `-list`): `entity` preenchido, `entities` é `null`. **Lote** (`target` `<alvo>-list`): `entity` é `null` e `entities` traz os itens marcados
+  pelo usuário (1 a 100; acima de 100 o SDK corta); ação `new-record`: os dois são `null`.
+- `launch` é **validado no servidor** (registro da conta e visível ao usuário: orçamento do vendedor, cliente da carteira, tela liberada para job/conta). Use
+  `hold.context.launch.entity.id` e **nunca** leia o id de `location`/query/hash. Sem ação (menu lateral), `launch` é `null` (nunca `undefined`).
+- O deep link `<endereço do Holdprint>/plugins/<instalação>?acao=<id>&id=<orçamento>` (sem `#`) chega com o mesmo `launch` e `surface: "page"`.
+
+### Ler o registro aberto
+
+`GET /v1/<recurso>/<id>` com o id de `launch.entity.id`, com o escopo da tela (`jobs:read`, `expenses:read`...). Só campos de negócio: nunca vem CPF/RG, salário,
+dado bancário ou segredo.
+
+| `entity.type` | Leitura | Escopo |
+|---|---|---|
+| `budget` | `hold.api.get('/budgets/' + id)` | `budgets:read` |
+| `customer` | `hold.api.get('/customers/' + id)` | `customers:read` |
+| `job` | `hold.api.get('/jobs/' + id)` | `jobs:read` |
+| `expense` | `hold.api.get('/expenses/' + id)` | `expenses:read` |
+| `income` | `hold.api.get('/incomes/' + id)` | `incomes:read` |
+| outros | `hold.api.get('/<recurso no plural>/' + id)` (ex.: `/purchase-orders/<id>`, `/suppliers/<id>`, `/invoices/<id>`) | `<recurso>:read` |
+
+O recurso é o prefixo do escopo (não o nome do alvo). Toda resposta traz `id`, `title` e `name`; `code`, `status` e `createdAt` vêm quando o registro tem.
+
+| `entity.type` | Recurso | Campos principais (além de id, title, name) |
+|---|---|---|
+| `feedstock` | `/feedstocks/<id>` | code, description, status, physicalQuantityType, unitUse |
+| `purchase-order` | `/purchase-orders/<id>` | code, status, total, dateOfNeed, supplierId |
+| `stock-movement` | `/stock-movements/<id>` | description, amount, price, balance, feedstockPublicId |
+| `stock-central` | `/stock-centrals/<id>` | status, stockCentralType |
+| `supplier`, `agency` | `/suppliers/<id>`, `/agencies/<id>` | fullName, active, mainPhoneNumber, mainEmail, site |
+| `employee` | `/employees/<id>` | active (só isso: sem e-mail, telefone ou salário) |
+| `cost-center` | `/cost-centers/<id>` (id numérico, ex.: `1`) | type, costCenterMethodId, totalAmount |
+| `equipment`, `product` | `/equipments/<id>`, `/products/<id>` | code, description, status |
+| `process`, `outsourced` | `/processes/<id>`, `/outsourceds/<id>` | code, description, processCategory, costCenterId |
+| `fixed-expense`, `commission` | `/fixed-expenses/<id>`, `/commissions/<id>` | description, originalAmount, amountPayable, dueDate |
+| `financial-transaction` | `/financial-transactions/<id>` | description, amount, date, financialAccountId |
+| `company-card` | `/credit-cards/<id>` | brand, limit, availableLimit, dueDay |
+| `bank-reconciliation` | `/bank-reconciliations/<id>` | period, status, totalTransactions, reconciliationSummary |
+| `invoice` | `/invoices/<id>` | `launch.entity.subtype` (nfe, nfse, nfce, mdfe, commercial-invoice), code, series, status |
+| `contract` | `/contracts/<id>` | code, status, expirationDate, budgetId |
+
+Em lote, leia cada item pelo id (`for (const e of launch.entities) await hold.api.get(...)`), com poucas chamadas por vez (a cota é de 300 por minuto).
+Listar por filtro: `POST /v1/jobs/query` e `/v1/expenses/query` existem; `/v1/incomes/query` ainda responde `93` (sem índice), então use o `GET` por id.
+Detalhes das rotas em `api-v1-reference.md`.
 
 ## hold.api
 
@@ -109,13 +190,13 @@ Limites: 256 KiB por registro, 5 mil registros por plugin. `collection`: minúsc
 
 ## hold.ui
 
-- `hold.ui.resize(height?)`: ajusta a altura do quadro. Sem argumento, mede o documento. Chame após renderizar.
+- `hold.ui.resize(height?)`: ajusta a altura do quadro. Sem argumento, mede o documento. Chame após renderizar. **Em aba e card é o que define a altura** (não há cabeçalho nem rolagem do host): o card cresce até o teto do `size` (`small` 200 px, `medium` 360, `large` 560) e o que passar disso rola dentro do quadro; a aba cresce até o conteúdo.
 - `hold.ui.toast(message, level)`: **a mensagem vem primeiro**; `level` é `'success' | 'info' | 'warning' | 'error'`
   (padrão `'info'`); mensagem em pt-BR. Ex.: `hold.ui.toast('Salvo', 'success')`.
 
 ## hold.nav
 
-`hold.nav.open(target, id)` com `target` em `'budget' | 'task' | 'customer'` abre o registro na tela do Holdprint.
+`hold.nav.open(target, id)` com `target` em `'budget' | 'task' | 'customer'` abre o registro na tela do Holdprint (não há abertura para os demais tipos, como job ou conta).
 
 `hold.nav.openExternal(appId, { entity })` abre um app externo declarado em `contributes.externalApps` numa janela nova, com um contexto
 assinado de 2 minutos (`<primeira origem do app>#hold_ctx=<jws>`). `entity` é **só** `{ type: 'budget', id }` (outro tipo: o SDK
@@ -131,7 +212,7 @@ await hold.nav.openExternal('tv', { entity: { type: 'budget', id: hold.context.l
 
 ## hold.modal
 
-Só tem efeito quando `hold.context.surface === "modal"`; em página, `confirm` e `cancel` são **ignorados** sem erro.
+Só tem efeito quando `hold.context.surface === "modal"`; em página, **aba e card**, `confirm` e `cancel` são **ignorados** sem erro, e a tecla Esc não fecha nada.
 
 - `hold.modal.isModal`: `true` se o plugin está num modal.
 - `hold.modal.confirm(result?)`: fecha como **confirmado**. `result` é JSON de até 16 KiB (maior que isso, não vai). O Holdprint recarrega o orçamento e as tarefas e mostra "<ação> concluída".
@@ -183,7 +264,7 @@ Holdprint publicado: `Holdprint.connect()` e `hold.*` se comportam igual.
 
 - **Simulador:** `hold.context` traz a Gráfica Exemplo e um usuário fictício; `hold.api`, `hold.sync` e `hold.storage` falam com uma
   API simulada em memória (mesmos escopos, cursor, `updated_since` e códigos de erro do `/v1`); `hold.nav.open` mostra um aviso na
-  moldura em vez de navegar. Com ações de orçamento declaradas, o simulador mostra um orçamento fictício com o botão de cada ação; o modal é emulado, `hold.context.launch` traz esse orçamento e `confirm`/`cancel` mostram o toast do resultado; as ações de Novo registro ficam no botão **Novo registro** da moldura.
+  moldura em vez de navegar. O simulador tem menu por grupos (as páginas do plugin entram no grupo declarado), Visão Geral com os cards, listas com caixas de seleção e botões de lote, e telas fictícias de orçamento, cliente (com abas do plugin), ordem de produção, conta a pagar e conta a receber com os botões de cada ação; `/v1` simulada responde `jobs`, `expenses` e `incomes`. Com ações de orçamento declaradas, o simulador mostra um orçamento fictício com o botão de cada ação; o modal é emulado, `hold.context.launch` traz esse orçamento e `confirm`/`cancel` mostram o toast do resultado; as ações de Novo registro ficam no botão **Novo registro** da moldura.
 - **Modo desenvolvedor:** os dados são os reais da conta, mas só leitura. `hold.api.get`, `hold.api.list` e `hold.sync.pull` funcionam (o marcador do `sync.pull` fica só na memória da janela, então cada janela nova lê tudo de novo);
   `post`, `put`, `delete` e a escrita em `hold.storage` dão `HoldApiError` com `status` 403 (`HOLD_PLUGIN_PLATFORM_51`). O `HoldApiError.message` já vem explicado em português (também para `HOLD_PLUGIN_PLATFORM_9`, escopo não declarado no manifesto, e `_49`, modo desenvolvedor encerrado); `error.body` traz a lista de erros do `/v1`. Trate esse erro
   como esperado ao testar. Se a CLI parar, as chamadas passam a dar 410 (`HOLD_PLUGIN_PLATFORM_49`) e o Holdprint recarrega a versão publicada.

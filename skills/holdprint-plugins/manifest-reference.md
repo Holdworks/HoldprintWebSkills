@@ -23,9 +23,12 @@ Schema oficial: `schemas/holdprint.plugin.schema.json` no repo holdprint-plugins
 | `slug` | 3 a 40 caracteres, minúsculas, números e hifens, sem hifen nas pontas. Identifica o plugin do autor. O `deploy` faz upsert por slug. **Não** é o `pluginId`. |
 | `name`, `description` | Pt-BR, curtos (nome até 60, descrição até 280). Aparecem na tela Plugins. |
 | `scopes[]` | Cada item com `scope` (do catálogo) e `purpose` (por que precisa, em pt-BR). Só o necessário. |
-| `contributes.page` | `menuTitle` (texto do menu) e `icon` (nome em kebab-case, ex.: `chart-bar`). **Opcional** se houver ao menos uma ação. Campos desconhecidos no manifesto são recusados. |
+| `contributes.page` | Uma página só: `menuTitle` (texto do menu, grupo Plugins) e `icon` (kebab-case, ex.: `chart-bar`). **Opcional**. Campos desconhecidos no manifesto são recusados. Para várias páginas ou outro grupo do menu use `pages` (não os dois juntos). |
+| `contributes.pages[]` | Opcional, até 5. Páginas no menu, cada uma no grupo escolhido (Produção, Financeiro...). Veja a seção abaixo. |
 | `contributes.externalApps[]` | Opcional, até 3. Apps fora do Holdprint (TV, celular) que entram com a conta Holdprint. Veja a seção abaixo. |
-| `contributes.actions[]` | Opcional, até 5. Botões no orçamento e em Novo registro. Veja a seção abaixo. |
+| `contributes.actions[]` | Opcional, até 10. Botões em Novo registro e nas telas do Holdprint (orçamento, cliente, ordem de produção, contas e mais), no detalhe ou em lote. Veja a seção abaixo. |
+| `contributes.tabs[]` | Opcional, até 3. Abas no orçamento e no cliente. |
+| `contributes.cards[]` | Opcional, até 3. Cards na Visão Geral. |
 | `ui.dir` / `ui.entry` | Pasta estática (`public`) e página inicial (`index.html`). |
 | `functions` | Opcional. `entry` (`functions/index.ts`) e, se quiser, `schedules`, `events.path` e `hooks`. Só crie quando a tela não resolve; veja a seção abaixo e `functions-reference.md`. |
 | `secrets[]` | Nomes dos segredos que a função usa (nunca o valor). Veja a seção abaixo. |
@@ -93,7 +96,7 @@ Opcional. Quando existe, `summary` e `category` são obrigatórios.
 
 - Tudo é **texto puro**: sem HTML, sem markdown, sem promessa ("o melhor", "garantido", números de ganho). Descreva só o que o plugin faz.
 - Fora das regras, `validate`/`deploy` recusam (`400 HOLD_PLUGIN_PLATFORM_70`; `validate` falha antes, na CLI).
-- Mudar o `listing` **não** pede novo consentimento. O ícone da vitrine vem de `contributes.page.icon` (não há imagem própria).
+- Mudar o `listing` **não** pede novo consentimento. O ícone da vitrine vem do ícone da (primeira) página (`contributes.page.icon` ou `contributes.pages[0].icon`) (não há imagem própria).
 - Plugin que vai para **outra gráfica** não declara `secrets` (`409 _74` ao instalar por link; `409 _75` no deploy que acrescenta segredo com instalação alheia).
 
 ## `contributes.externalApps`
@@ -121,13 +124,50 @@ Opcional. Quando existe, `summary` e `category` são obrigatórios.
 **Consentimento:** app novo ou origem nova pede novo consentimento ("Acessa de fora do Holdprint: <app> em <origem>"). Remover não pede.
 Guia completo: `external-apps-reference.md`.
 
+## `contributes.pages` (páginas no menu, por grupo)
+
+```json
+"contributes": {
+  "pages": [
+    { "id": "relatorio", "menuTitle": "Relatório de produção", "icon": "chart-bar", "group": "production" },
+    { "id": "painel", "menuTitle": "Painel do plugin", "icon": "layout-dashboard" }
+  ]
+}
+```
+
+| Campo | Regra |
+|---|---|
+| `id` | `^[a-z][a-z0-9-]{0,39}$`, único no plugin. É o `hold.context.page` que o plugin recebe. |
+| `menuTitle` | Texto do item no menu, até 40 caracteres. |
+| `icon` | Opcional, kebab-case, até 40. |
+| `group` | Opcional (padrão `plugins`). Em qual grupo do menu lateral a página aparece (tabela abaixo). Grupo fora da lista dá `107`. |
+| Limite | Até **5 páginas** por plugin. |
+
+| `group` | O usuário vê no menu |
+|---|---|
+| `plugins` (padrão) | Plugins |
+| `register` | Cadastros |
+| `defrayal` | Custeio |
+| `crm` | CRM |
+| `production` | Produção |
+| `financial` | Financeiro |
+| `stock` | Estoque |
+| `reports` | Relatórios |
+
+- Todas as páginas abrem o **mesmo** `ui.entry`; o plugin decide o que desenhar por `hold.context.page` (veja `sdk-reference.md`).
+- `page` (uma página só, sem `id` nem `group`) **continua valendo** e equivale a `pages: [{ id: "main", group: "plugins", ... }]`
+  (o plugin recebe `context.page === "main"`). **`page` e `pages` juntos dão erro `108`**: escolha um.
+- Só-abas, só-cards ou só-ações (sem página) é permitido; o plugin só não aparece no menu.
+
 ## `contributes.actions`
 
 ```json
 "contributes": {
   "actions": [
     { "id": "gerar-proposta", "title": "Gerar proposta", "icon": "file-text", "target": "budget", "open": "modal", "modal": { "size": "lg" } },
-    { "id": "proposta-rapida", "title": "Proposta rápida", "icon": "bolt", "target": "new-record", "open": "page" }
+    { "id": "proposta-rapida", "title": "Proposta rápida", "icon": "bolt", "target": "new-record", "open": "page" },
+    { "id": "avisar-grafica", "title": "Avisar a produção", "target": "job", "open": "modal" },
+    { "id": "enviar-lote", "title": "Enviar selecionados", "target": "job-list", "open": "modal" }
   ]
 }
 ```
@@ -136,21 +176,119 @@ Guia completo: `external-apps-reference.md`.
 |---|---|
 | `id` | 2 a 39 caracteres: minúsculas, números e hifens, começando por letra ou número (`^[a-z0-9][a-z0-9-]{1,38}$`, o mesmo das agendas); único no plugin. É o `actionId` que o plugin recebe em `hold.context.launch` e o `acao=` do deep link. |
 | `title`, `icon` | Texto do botão (pt-BR, até 60 caracteres; o toast de sucesso é "<title> concluída") e ícone opcional em kebab-case (até 40). |
-| `target` | `budget` (menu do ícone de raio do orçamento) ou `new-record` (menu Novo registro). `budget` **exige `budgets:read`** em `scopes`. |
-| `open` | `modal` ou `page`. `page` abre a tela do plugin (`ui.entry`) como página inteira, com o mesmo `launch`; não precisa de `contributes.page`. |
+| `target` | Em que tela o botão aparece (tabela de alvos abaixo). **Exige o escopo de leitura da entidade** em `scopes`. |
+| `open` | `modal` ou `page`. `page` abre a tela do plugin (`ui.entry`) como página inteira, com o mesmo `launch`; não precisa de `contributes.pages`. |
 | `modal.size` | Só com `open: "modal"` (com `page` dá `66`): `md` (640 px), `lg` (960) ou `xl` (1200); altura 85vh. Omitido = `md`. |
-| Limites | Até **5 ações**; o plugin precisa de **página, ação ou funções**. Fora disso o `validate`/`deploy` recusa (`400 HOLD_PLUGIN_PLATFORM_66`). |
+| Limites | Até **10 ações**; o plugin precisa de **página, ação, aba, card, funções ou app externo**. Fora disso o `validate`/`deploy` recusa (`400 HOLD_PLUGIN_PLATFORM_66`, com mensagem em português). |
 
-- Plugin **só de ação** (sem `contributes.page`) não aparece no menu lateral; fica na tela Plugins e nos botões.
-- Mudar ações **não** pede novo consentimento (é lugar na tela, não acesso a dado). Acrescentar escopo continua pedindo.
+- Plugin **só de ação** (sem página) não aparece no menu lateral; fica na tela Plugins e nos botões.
 - O botão só aparece para quem pode usar o plugin, e some quando o plugin é desligado (cache de até 60 s).
-- Template da CLI para este caso: `holdprint plugin create <pasta> --template acao` (uma ação de orçamento em modal).
-- Exemplo completo: `examples/gerar-proposta` no repositório holdprint-plugins (só de ações: modal no orçamento e página em Novo registro).
+- Template da CLI: `holdprint plugin create <pasta> --template acao` (uma ação de orçamento em modal). Exemplo completo: `examples/gerar-proposta` no repositório holdprint-plugins.
 
-## Catálogo de escopos (fatia 1)
+### Alvos (`target`): onde o botão aparece
 
-`budgets:read`, `customers:read`, `funnels:read`, `users:read`, `tasks:read`, `tasks:write`.
+Cada tela tem dois alvos: o **detalhe** (`<alvo>`, um registro aberto: o plugin recebe `launch.entity`) e o **lote** (`<alvo>-list`,
+na lista, sobre os itens **marcados**: o plugin recebe `launch.entities`). Regra para escolher: pediu "na ordem de produção" ou "no cliente"
+= `<alvo>`; pediu "nos selecionados" ou "em vários" = `<alvo>-list`. O lote vale só onde a tabela diz que há lista.
+
+| `target` | Tela (o que o usuário vê) | Escopo exigido | `entity.type` |
+|---|---|---|---|
+| `new-record` | Menu **Novo registro** do topo | nenhum | sem entidade (`entity: null`) |
+| `budget` / `budget-list` | Orçamento (ícone de raio), proposta, item / painel de Negociações em modo lista | `budgets:read` | `budget` |
+| `customer` / `customer-list` | Cliente / lista de Clientes | `customers:read` | `customer` |
+| `job` / `job-list` | Ordem de produção (inclui e-commerce e o ícone de quebra-cabeça de cada card do Atendimento por tipo) / lista de Jobs | `jobs:read` | `job` |
+| `expense` / `expense-list` | Conta a pagar (janela de edição) / Contas a pagar e relatório | `expenses:read` | `expense` |
+| `income` / `income-list` | Conta a receber / Contas a receber e relatório | `incomes:read` | `income` |
+| `feedstock` / `feedstock-list` | Insumo / Insumos | `feedstocks:read` | `feedstock` |
+| `purchase-order` / `purchase-order-list` | Pedido de compra / Pedidos de compra | `purchase-orders:read` | `purchase-order` |
+| `stock-movement` / `stock-movement-list` | Movimentação de estoque / Movimentações de estoque | `stock-movements:read` | `stock-movement` |
+| `stock-central` / `stock-central-list` | Central de estoque / Centrais | `stock-centrals:read` | `stock-central` |
+| `supplier` / `supplier-list` | Fornecedor / Fornecedores | `suppliers:read` | `supplier` |
+| `employee` / `employee-list` | Funcionário / Funcionários | `employees:read` | `employee` |
+| `agency` / `agency-list` | Agência / Agências | `agencies:read` | `agency` |
+| `cost-center` / `cost-center-list` | Centro de custo (id numérico) / Centros de custo | `cost-centers:read` | `cost-center` |
+| `equipment` / `equipment-list` | Equipamento / Equipamentos | `equipments:read` | `equipment` |
+| `process` / `process-list` | Processo / Processos | `processes:read` | `process` |
+| `product` / `product-list` | Produto / Produtos | `products:read` | `product` |
+| `outsourced` / `outsourced-list` | Terceirizado / Terceirizados | `outsourceds:read` | `outsourced` |
+| `fixed-expense` / `fixed-expense-list` | Despesa fixa / Despesas fixas | `fixed-expenses:read` | `fixed-expense` |
+| `financial-transaction` / `financial-transaction-list` | Movimentação financeira / Extratos (banco, caixa) | `financial-transactions:read` | `financial-transaction` |
+| `company-card` / `company-card-list` | Cartão da empresa (menu de cada cartão) / lista de cartões | `credit-cards:read` | `company-card` |
+| `commission` / `commission-list` | Comissão / Controle de comissões | `commissions:read` | `commission` |
+| `bank-reconciliation` / `bank-reconciliation-list` | Conciliação (detalhe) / lista de conciliações | `bank-reconciliations:read` | `bank-reconciliation` |
+| `invoice` / `invoice-list` | Documento de cada nota / lista de cada aba de notas | `invoices:read` | `invoice` (+ `entity.subtype`: `nfe`, `nfse`, `nfce`, `mdfe`, `commercial-invoice`) |
+| `contract` / `contract-list` | Contrato (painel lateral) / Contratos | `contracts:read` | `contract` |
+
+- Alvo que não está na tabela (ex.: `order`) dá erro `66` listando os válidos; `holdprint plugin validate` mostra a lista completa da sua versão da CLI.
+- **O botão só aparece para quem tem a permissão da tela** (ex.: quem não vê Contas a pagar não vê o botão de `expense`), mesmo com o escopo concedido.
+- Ficam de fora, de propósito: Atendimento/Conversas, PDV, Ajustes (usuários, empresas), relatórios só de exportação e telas descontinuadas.
+
+## `contributes.tabs` (abas dentro de uma tela)
+
+```json
+"tabs": [ { "id": "historico", "title": "Histórico", "target": "customer" } ]
+```
+
+| Campo | Regra |
+|---|---|
+| `id` | `^[a-z][a-z0-9-]{0,39}$`, único no plugin. É o `hold.context.tab`. |
+| `title` | Nome da aba, até 30 caracteres. |
+| `target` | `budget` (aba no orçamento) ou `customer` (aba no cliente). Outro valor dá `109`. |
+| Limite | Até **3 abas**. A aba exige o mesmo escopo do alvo (`budgets:read` / `customers:read`); sem ele, `109`. |
+
+A aba só carrega quando o usuário clica nela e recebe `launch.entity` (o orçamento ou cliente aberto), sem `actionId`.
+
+## `contributes.cards` (cards na Visão Geral)
+
+```json
+"cards": [ { "id": "meta", "title": "Meta do mês", "size": "small" } ]
+```
+
+| Campo | Regra |
+|---|---|
+| `id` | `^[a-z][a-z0-9-]{0,39}$`, único no plugin. É o `hold.context.card`. |
+| `title` | Até 40 caracteres. |
+| `size` | `small` (altura até 200 px), `medium` (até 360 px, **padrão**) ou `large` (até 560 px). O card ocupa a altura que o plugin pede com `hold.ui.resize`, até esse teto. |
+| Limite | Até **3 cards**. Não exige escopo. |
+
+Aparecem numa seção **Plugins** no fim da Visão Geral (gestão e operacional). Card não recebe entidade (`launch` é `null`).
+
+## Erros novos de manifesto e de abertura
+
+Todos com mensagem em português no campo `message` (a CLI mostra no `validate`).
+
+| Código | Quando |
+|---|---|
+| `107` (400) | `pages` inválido: mais de 5, id repetido ou fora do padrão, título/ícone grandes, grupo que não existe (a mensagem lista os válidos). |
+| `108` (400) | `page` e `pages` no mesmo manifesto. |
+| `109` (400) | `tabs` inválido: mais de 3, alvo que não aceita aba, título grande, ou aba sem o escopo do alvo. |
+| `110` (400) | `cards` inválido: mais de 3, `size` fora de small/medium/large, título grande. |
+| `111` (400) | Ao abrir: `surface` desconhecida (use `page`, `modal`, `tab` ou `card`). |
+| `112` (404) | Ao abrir: página, aba ou card que a versão do plugin não declara. |
+| `66` (400) | `actions` inválido (agora também em português): alvo inexistente, escopo faltando, mais de 10, id repetido. |
+| `68` (404) | Entidade que não existe ou que o usuário não pode ver (em lote, qualquer uma delas derruba a abertura). |
+
+## Reconsentimento
+
+- **Não pede** novo consentimento: mudar `page`/`pages`, `actions`, `tabs` ou `cards` (é lugar na tela, não acesso a dado).
+- **Pede**: escopo novo (inclusive o escopo exigido por um alvo novo), como sempre. Declare o escopo no mesmo deploy da ação ou aba.
+- A tela de aprovação mostra "Onde o plugin aparece": páginas com o grupo, ações com a tela, abas e cards.
+
+## Catálogo de escopos
+
+Fatia 1: `budgets:read`, `customers:read`, `funnels:read`, `users:read`, `tasks:read`, `tasks:write`.
+Fatia 16 (leitura por tela, cada um exige a permissão de tela equivalente do usuário): `jobs:read`, `expenses:read`, `incomes:read` e, para os alvos
+adicionais da tabela acima, `feedstocks:read`, `purchase-orders:read`, `stock-movements:read`, `stock-centrals:read`, `suppliers:read`, `employees:read`,
+`agencies:read`, `cost-centers:read`, `equipments:read`, `processes:read`, `products:read`, `outsourceds:read`, `fixed-expenses:read`,
+`financial-transactions:read`, `credit-cards:read`, `commissions:read`, `bank-reconciliations:read`, `invoices:read`, `contracts:read`.
 `storage` é implícito e `me` vale sempre: não declare (nem para funções). Escopo fora da lista faz a validação falhar.
+
+Leitura do registro: `hold.api.get('/<recurso>/<id>')` (ex.: `/jobs/<id>`, `/expenses/<id>`), só com `_id`, sem dado pessoal, salário, bancário ou segredo.
+`POST /<recurso>/query` existe só onde a API tem índice (hoje `jobs` e `expenses`; `incomes` ainda **não**: a consulta responde `93`, mas o
+botão e o `GET /incomes/<id>` funcionam). Detalhes em `sdk-reference.md` e `api-v1-reference.md`.
+
+> Nota de versão (29/10/2026): a tabela de alvos acima segue o escopo final da Onda 2. Os alvos depois de `income` entram na WebApi e na CLI
+> pela frente G; se `holdprint plugin validate` recusar um alvo da tabela com erro `66`, a sua CLI/API ainda não o tem: use só os alvos que ele lista.
 
 ## O que a CLI faz com o manifesto
 

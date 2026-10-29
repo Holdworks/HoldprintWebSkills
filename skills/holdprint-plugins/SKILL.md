@@ -1,6 +1,6 @@
 ---
 name: holdprint-plugins
-description: Use quando o usuário pedir para criar, alterar, publicar ou depurar um plugin do Holdprint — "cria um plugin", "plugin do Holdprint", "extensão do Holdprint", "faz uma telinha dentro do Holdprint", "painel customizado no Holdprint", "publica o plugin". Ensina o fluxo da CLI `holdprint plugin create/dev/deploy`, o SDK (`Holdprint.connect()`), o manifesto `holdprint.plugin.json`, o catálogo de escopos, a API /v1, ações no orçamento e em Novo registro com modal (`contributes.actions`) e, para automação sem tela aberta, funções, agendas, segredos e hooks (`holdprint plugin secrets/run/logs`) e, para mostrar o plugin a outras contas, vitrine (`listing`), Marketplace e link (`publish --unlisted`, `plugin links`) e, para todas as gráficas, o pedido de publicação à Hold (`plugin submit`, `plugin submission`).
+description: Use quando o usuário pedir para criar, alterar, publicar ou depurar um plugin do Holdprint — "cria um plugin", "plugin do Holdprint", "extensão do Holdprint", "faz uma telinha dentro do Holdprint", "painel customizado no Holdprint", "publica o plugin". Ensina o fluxo da CLI `holdprint plugin create/dev/deploy`, o SDK (`Holdprint.connect()`), o manifesto `holdprint.plugin.json`, o catálogo de escopos, a API /v1, páginas no menu por grupo (`contributes.pages`), botões em várias telas (orçamento, cliente, ordem de produção, contas, em detalhe ou em lote) e em Novo registro com modal (`contributes.actions`), abas (`tabs`) e cards na Visão Geral (`cards`) e, para automação sem tela aberta, funções, agendas, segredos e hooks (`holdprint plugin secrets/run/logs`) e, para mostrar o plugin a outras contas, vitrine (`listing`), Marketplace e link (`publish --unlisted`, `plugin links`) e, para todas as gráficas, o pedido de publicação à Hold (`plugin submit`, `plugin submission`).
 ---
 
 # Plugins do Holdprint
@@ -239,21 +239,62 @@ Detalhes, manifesto e exemplos em `functions-reference.md`. O essencial:
   confere HMAC); trocar segredo na stack local reinicia o plugin ~1 s (uma execução pode falhar uma vez e é refeita); na nuvem os
   Registros levam até ~60 s. Detalhes em `functions-reference.md`.
 
+## Onde o plugin aparece no Holdprint
+
+O plugin pode se encaixar em vários lugares, todos declarados em `contributes` (campo a campo em `manifest-reference.md`). **Escolha o lugar pelo
+que o usuário pediu**, em palavras dele, e confirme em uma frase ("Vou pôr um botão na ordem de produção, tudo bem?").
+
+| O usuário diz | Use | Exemplo |
+|---|---|---|
+| "uma tela / um relatório / um painel no menu" | `pages` com o `group` certo: Produção (`production`), Financeiro (`financial`), Estoque (`stock`), CRM (`crm`), Cadastros (`register`), Custeio (`defrayal`), Relatórios (`reports`); sem grupo vai para Plugins | página "Relatório de produção" no menu Produção |
+| "um botão na ordem de produção / no cliente / na conta a pagar" | `actions` com `target` da tela (`job`, `customer`, `expense`...) | "Avisar a produção" na ordem |
+| "um botão nos itens que eu marcar / em vários de uma vez" | `actions` com `target` `<alvo>-list` (ex.: `job-list`); o plugin recebe a lista em `launch.entities` | "Enviar selecionados" nos jobs |
+| "um botão ao criar algo novo" | `actions` com `target: "new-record"` | "Proposta rápida" |
+| "uma aba no orçamento / no cliente" | `tabs` (`budget` ou `customer`) | aba "Histórico" no cliente |
+| "um indicador / resumo na tela inicial" | `cards` (`small` 200 px, `medium` 360 px, `large` 560 px) | card "Meta do mês" na Visão Geral |
+
+Regras para escolher:
+- **Detalhe ou lote?** "Na ordem de produção" é o detalhe (`job`); "nos selecionados" é o lote (`job-list`). Se ele pedir os dois, declare as duas ações.
+- **Botão ou aba?** Botão faz uma coisa (abre modal ou página); aba mostra informação do registro aberto o tempo todo.
+- **Todos os alvos** (orçamento, cliente, job, contas a pagar e a receber, insumo, pedido de compra, fornecedor, nota fiscal, contrato e outros) estão na tabela de
+  `manifest-reference.md`. Cada alvo **exige o escopo de leitura da entidade** (`jobs:read`, `expenses:read`...) e só aparece para quem tem a permissão da tela.
+- Um único HTML (`ui.entry`) serve a todos os lugares: o plugin **decide o que desenhar** por `hold.context.surface` (`page`, `modal`, `tab`, `card`) e por
+  `hold.context.page/tab/card` (ver `sdk-reference.md` e o exemplo 9 de `examples.md`).
+- Limites: até 5 páginas, 10 ações, 3 abas e 3 cards por plugin. `page` (uma página só) segue valendo, mas não junto com `pages`.
+- Mudar lugar (páginas, ações, abas, cards) **não** pede reconsentimento; escopo novo pede, então declare o escopo junto com a ação.
+
+Escopos de leitura por tela (o usuário precisa ter a permissão de tela equivalente):
+
+| Escopo | Tela / permissão |
+|---|---|
+| `budgets:read` | Negociações (orçamentos) |
+| `customers:read` | Clientes |
+| `jobs:read` | Jobs / ordens de produção |
+| `expenses:read` | Contas a pagar |
+| `incomes:read` | Contas a receber |
+| `feedstocks:read`, `purchase-orders:read`, `stock-movements:read`, `stock-centrals:read` | Insumos, pedidos de compra, movimentações e centrais de estoque |
+| `suppliers:read`, `employees:read`, `agencies:read` | Fornecedores, funcionários, agências |
+| `cost-centers:read`, `equipments:read`, `processes:read`, `products:read`, `outsourceds:read` | Centros de custo, equipamentos, processos, produtos, terceirizados |
+| `fixed-expenses:read`, `financial-transactions:read`, `credit-cards:read`, `commissions:read`, `bank-reconciliations:read` | Despesas fixas, movimentações e extratos, cartões, comissões, conciliação |
+| `invoices:read`, `contracts:read` | Notas fiscais, contratos |
+
+Depois de abrir o plugin por um botão ou aba, leia o registro por `hold.api.get('/<recurso>/<id>')` com o id de `hold.context.launch.entity` (nunca da URL).
+
 ## Ação no orçamento e modal
 
-Além da página no menu, o plugin pode pôr **botões** no Holdprint com `contributes.actions` (campo a campo em `manifest-reference.md`):
+Além da página no menu, o plugin pode pôr **botões** no Holdprint com `contributes.actions` (campo a campo em `manifest-reference.md`). O texto abaixo usa o orçamento como caso; vale igual para os outros alvos (cliente, job, contas...), trocando `launch.entity.type`:
 
-- **Onde aparece:** `target: "budget"` põe o botão no menu do ícone de raio do orçamento, na seção **Plugins**; `target: "new-record"` põe no menu **Novo registro** do topo.
-- **Como abre:** `open: "modal"` (janela por cima da tela, `modal.size` `md`, `lg` ou `xl`) ou `open: "page"` (a tela do plugin, `ui.entry`, abre como página inteira; **não** precisa de `contributes.page`).
-- **Limites:** até **5 ações** por plugin; ação de orçamento (`target: "budget"`) exige `budgets:read` nos `scopes`; `contributes.page` é opcional
-  (o plugin precisa de página, ação **ou** funções). Plugin **só de ação não aparece no menu lateral**: só na tela Plugins e nos botões.
+- **Onde aparece:** `target: "budget"` põe o botão no menu do ícone de raio do orçamento, na seção **Plugins**; `target: "new-record"` põe no menu **Novo registro** do topo; os demais alvos (`customer`, `job`, `expense`, `income`...) põem na tela da própria entidade, e `<alvo>-list` na lista, sobre os itens marcados (veja a seção anterior).
+- **Como abre:** `open: "modal"` (janela por cima da tela, `modal.size` `md`, `lg` ou `xl`) ou `open: "page"` (a tela do plugin, `ui.entry`, abre como página inteira; **não** precisa de página no menu).
+- **Limites:** até **10 ações** por plugin; ação de uma tela exige o escopo de leitura dela nos `scopes` (orçamento: `budgets:read`; job: `jobs:read`...); página no menu é opcional
+  (o plugin precisa de página, ação, aba, card **ou** funções). Plugin **só de ação não aparece no menu lateral**: só na tela Plugins e nos botões.
   Crie com `holdprint plugin create <pasta> --template acao`.
 - **Consentimento:** mudar só as ações **não** pede reconsentimento (é lugar na tela, não acesso a dado). Escopo novo continua pedindo.
 - **Quem vê o botão:** só quem pode usar o plugin (perfil liberado + **Plugins: Usar**). Em sessão personificada pelo suporte e na sandbox não há botão.
 
 **Qual orçamento foi aberto: `hold.context.launch`, nunca a URL.** O Holdprint valida no servidor que o orçamento é da conta e que o usuário
 pode vê-lo, e entrega o resultado em `hold.context.launch` (`{ actionId, actionTitle, target, entity: { type, id, code, title } }`).
-`hold.context.surface` diz se o plugin abriu como `"modal"` ou `"page"`. **Não leia id de `location`, query string ou hash:** a URL do quadro
+`hold.context.surface` diz se o plugin abriu como `"modal"`, `"page"`, `"tab"` ou `"card"`. Em ação de **lote** (`-list`), `launch.entity` é `null` e `launch.entities` traz até 100 itens `{ type, id, code, title }`. **Não leia id de `location`, query string ou hash:** a URL do quadro
 só carrega identificadores sem validação e pode ser trocada; o id confiável vem do contexto. Aberto pelo menu lateral, `launch` é `null`;
 por uma ação de **Novo registro**, `launch` vem com `target: "new-record"` e `entity: null`: mostre um seletor (lista de `/budgets`).
 
@@ -438,7 +479,7 @@ Quando o usuário pede de uma vez "um painel no menu, um botão no orçamento qu
    token na mão, `postMessage` manual ou leitura do `window.parent`.
 2. **Escopos só do catálogo, cada um com propósito.** Declare no manifesto o mínimo necessário e escreva, em
    português, para que serve cada um. Catálogo: `budgets:read`, `customers:read`, `funnels:read`,
-   `users:read`, `tasks:read`, `tasks:write` e, da Fatia 3, `budgets:move-step`. Ação de orçamento exige `budgets:read`. `storage` (dados do próprio plugin) e `me` são implícitos.
+   `users:read`, `tasks:read`, `tasks:write`, `budgets:move-step` e os escopos de leitura por tela (`jobs:read`, `expenses:read`, `incomes:read` e os da tabela em "Onde o plugin aparece"). Ação ou aba numa tela exige o escopo dela. `storage` (dados do próprio plugin) e `me` são implícitos.
 3. **Sem domínio externo na tela.** A CSP é `connect-src 'self'`: nada de CDN, fonte do Google, analytics, imagem ou API de
    terceiros. Coloque bibliotecas e fontes dentro de `public/`. Serviço externo só por **função**, em domínio declarado em `network.domains`.
 4. **Dado do plugin em `hold.storage`.** Nunca `localStorage`/`sessionStorage`/IndexedDB para dado de negócio (some
@@ -479,9 +520,12 @@ Erro de plataforma vem como `[{ type: 53, errorType: <n>, errorCode: "HOLD_PLUGI
 | `400 HOLD_PLUGIN_PLATFORM_41` / `_42` / `503 _43` | `updated_since` inválido / cursor inválido ou de outro recurso (recomece a leitura) / consulta passou de 5 s (use intervalo menor). |
 | `400 HOLD_PLUGIN_PLATFORM_44` / `_45` | Mover etapa: `stepId` de outro funil / orçamento que não está aberto. |
 | `400 HOLD_PLUGIN_PLATFORM_53` / `_55` / `_56` / `410 _54` | Eventos: cursor inválido / URL de webhook inválida / tipo desconhecido / cursor com mais de 30 dias (releia por `hold.sync.pull`). |
-| `400 HOLD_PLUGIN_PLATFORM_66` (no deploy) | `contributes.actions` inválido: `target`/`open`/`modal.size` fora do catálogo, mais de 5 ações, id repetido ou fora do padrão, ação de orçamento sem `budgets:read`, `modal` com `open: "page"`, ou plugin sem página, ação e funções. Corrija o manifesto (`holdprint plugin validate` já aponta). |
+| `400 HOLD_PLUGIN_PLATFORM_66` (no deploy) | `contributes.actions` inválido: `target`/`open`/`modal.size` fora do catálogo, mais de 10 ações, id repetido ou fora do padrão, ação sem o escopo da tela (`budgets:read`, `jobs:read`...), `modal` com `open: "page"`, ou plugin sem página, ação, aba, card e funções. Corrija o manifesto (`holdprint plugin validate` já aponta). |
 | `404 HOLD_PLUGIN_PLATFORM_67` / `_68` | Ao abrir pelo botão ou deep link: ação inexistente / orçamento fora da conta ou que o usuário não pode ver (não distingue os dois). Não é defeito do plugin. |
-| `400 HOLD_PLUGIN_PLATFORM_69` | Abertura com alvo errado: ação de orçamento sem id de entidade, ou "Novo registro" com id. |
+| `400 HOLD_PLUGIN_PLATFORM_69` | Abertura com alvo errado: ação de uma tela sem id de entidade, ou "Novo registro" com id. |
+| `400 HOLD_PLUGIN_PLATFORM_107` / `_108` | `pages` inválido (mais de 5, id repetido, grupo que não existe: a mensagem lista os válidos) / `page` e `pages` juntos. Escolha um e corrija. |
+| `400 HOLD_PLUGIN_PLATFORM_109` / `_110` | `tabs` inválido (mais de 3, alvo diferente de `budget`/`customer`, aba sem o escopo do alvo) / `cards` inválido (mais de 3, `size` fora de small/medium/large). |
+| `400 HOLD_PLUGIN_PLATFORM_111` / `404 _112` | Ao abrir: `surface` desconhecida / página, aba ou card que a versão do plugin não declara. Não é defeito do plugin: confira o `id` no manifesto. |
 | `400 HOLD_PLUGIN_PLATFORM_57` / `_58` / `_59` | Segredo: nome inválido / não declarado no manifesto (declare em `secrets`) / valor vazio ou acima de 4 KiB. |
 | `400 HOLD_PLUGIN_PLATFORM_60` / `404 _61` / `400 _62` | Agenda inválida (`every` fora do catálogo ou abaixo do mínimo) / agenda inexistente em "Executar agora" / domínio de rede inválido (IP, curinga, porta). |
 | `404 HOLD_PLUGIN_PLATFORM_63` / `413 _64` / `401 _65` | Hook não declarado / corpo acima de 256 KiB / chave de entrada da plataforma inválida (só o porteiro chama). |
@@ -520,6 +564,8 @@ Erro de plataforma vem como `[{ type: 53, errorType: <n>, errorCode: "HOLD_PLUGI
 - [ ] Textos em pt-BR, sem domínio externo, sem `localStorage` para dado de negócio.
 - [ ] Ações de escrita testadas uma vez e repetidas (idempotência) sem duplicar.
 - [ ] Plugin com agenda: `holdprint plugin run <agenda>` rodado **duas vezes** sem erro (a 2ª lê o que a 1ª gravou no `hold.storage`) e o resultado mostrado por `holdprint plugin logs`.
+- [ ] Plugin com páginas, abas ou cards: a página está no grupo do menu certo, a aba abre no registro certo e o card cabe na altura do `size`; o HTML decide por `hold.context.surface` e `page/tab/card`.
+- [ ] Cada ação, aba ou lote tem o escopo de leitura da tela em `scopes` e o botão aparece na tela escolhida (detalhe) ou nos itens marcados (`-list`, lendo `launch.entities`).
 - [ ] Plugin com ações: o botão aparece (orçamento > raio > Plugins, ou Novo registro), o id vem de `hold.context.launch`, `modal.confirm` só depois da escrita, e repetir a ação não duplica.
 - [ ] Plugin que vai para outra gráfica: `listing` preenchido, nenhum `secrets`, link do `publish --unlisted` entregue ao usuário (e não gravado em arquivo), explicado que o Administrador da outra conta instala e aprova, e `holdprint plugin links` conferido.
 - [ ] Plugin com app externo: `externalApps` com a origem real, `signIn` (sem senha nem token guardado), chamadas só em `api.<domínio técnico>`, consentimento mostrado ao usuário e o acesso conferido em Plugins > Acessos conectados.
@@ -528,10 +574,10 @@ Erro de plataforma vem como `[{ type: 53, errorType: <n>, errorCode: "HOLD_PLUGI
 
 ## Referências
 
-- `sdk-reference.md`: `Holdprint.connect()`, `hold.api`, `hold.storage`, `hold.ui`, `hold.nav`, `hold.modal`, `hold.context.launch`.
+- `sdk-reference.md`: `Holdprint.connect()`, `hold.api`, `hold.storage`, `hold.ui`, `hold.nav`, `hold.modal`, `hold.context.launch`, `hold.context.surface/page/tab/card`, `launch.entities` (lote).
 - `api-v1-reference.md`: rotas `/v1`, escopos, paginação, idempotência, erros.
-- `manifest-reference.md`: `holdprint.plugin.json` campo a campo (inclui `events` e `contributes.externalApps`).
+- `manifest-reference.md`: `holdprint.plugin.json` campo a campo (inclui `events`, `pages` com grupos, `actions` com a tabela de alvos, `tabs`, `cards` e `contributes.externalApps`).
 - `external-apps-reference.md`: apps externos (TV/celular), `HoldprintExternal.signIn`, `api.<domínio técnico>`, deep link assinado, `holdprint login/logout`, Acessos conectados e o exemplo do painel de TV.
 - `manifest-reference.md` também traz o bloco `listing` (vitrine) e as regras de validação.
 - `functions-reference.md`: funções, agendas, segredos, hooks, registros e `holdprint plugin run/logs/secrets`.
-- `examples.md` (seção 6: ação "Gerar proposta" com modal): painel de orçamentos por vendedor com follow-up; anotações com `hold.storage`; sincronização incremental e avançar etapa; eventos com `subscribe` e `sync.pull`; ciclo simulador, modo desenvolvedor e prévia; follow-up automático com função, agenda, segredo e hook.
+- `examples.md` (seção 6: ação "Gerar proposta" com modal): painel de orçamentos por vendedor com follow-up; anotações com `hold.storage`; sincronização incremental e avançar etapa; página em Produção + botão na ordem + lote + aba no cliente + card (exemplo 9); eventos com `subscribe` e `sync.pull`; ciclo simulador, modo desenvolvedor e prévia; follow-up automático com função, agenda, segredo e hook.

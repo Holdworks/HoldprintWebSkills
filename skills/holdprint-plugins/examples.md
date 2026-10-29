@@ -555,3 +555,110 @@ Pedido: "cria um plugin que mostra os orçamentos ganhos do mês por vendedor e 
 3. Quando ele quer publicar: "Para publicar você precisa de uma conta de teste grátis. Abra `<endereço do Holdprint>/holdai/register`, crie a conta, ative pelo
    e-mail e me avise." Ele avisa; `holdprint login` (código e link no navegador), `holdprint plugin deploy`, link de consentimento para o Administrador (ele mesmo).
 4. Só depois do pedido dele ("publica para todo mundo"): `holdprint plugin release`, `holdprint plugin submit --note "..."` e o acompanhamento do exemplo acima.
+
+## 9. Um plugin em vários lugares: página em Produção, botão na ordem, lote nos selecionados, aba no cliente e card na Visão Geral
+
+Pedido: "Quero um painel de conferência da produção: uma tela no menu Produção, um botão **Conferida** na ordem de produção, o mesmo botão para as ordens que eu marcar na lista,
+uma aba **Conferências** no cliente e um card na tela inicial com o que foi conferido hoje."
+Antes de escrever, diga ao usuário onde cada coisa vai aparecer (uma frase por lugar) e que o plugin vai **ler** jobs e clientes (escopos `jobs:read` e `customers:read`),
+sem escrever no ERP: a marca "conferida" fica só no próprio plugin (`hold.storage`).
+
+`holdprint.plugin.json` (um escopo por tela usada; `storage` é implícito):
+```json
+{
+  "schemaVersion": "2026-10-23",
+  "slug": "conferencia-producao-k3x9",
+  "name": "Conferência da produção",
+  "description": "Marca ordens de produção como conferidas, uma a uma ou em lote, e mostra o que foi conferido no cliente e na Visão Geral.",
+  "scopes": [
+    { "scope": "jobs:read", "purpose": "Ler a ordem de produção que está sendo conferida" },
+    { "scope": "customers:read", "purpose": "Mostrar o nome do cliente na aba Conferências" }
+  ],
+  "contributes": {
+    "pages": [
+      { "id": "painel", "menuTitle": "Conferência", "icon": "clipboard-check", "group": "production" }
+    ],
+    "actions": [
+      { "id": "conferir", "title": "Conferida", "icon": "check", "target": "job", "open": "modal", "modal": { "size": "md" } },
+      { "id": "conferir-lote", "title": "Conferir selecionadas", "icon": "check", "target": "job-list", "open": "modal", "modal": { "size": "lg" } }
+    ],
+    "tabs": [ { "id": "conferencias", "title": "Conferências", "target": "customer" } ],
+    "cards": [ { "id": "hoje", "title": "Conferidas hoje", "size": "small" } ]
+  },
+  "ui": { "dir": "public", "entry": "index.html" }
+}
+```
+(`group: "production"` coloca a página no menu **Produção**; `target: "job"` é o detalhe da ordem e `job-list` a lista, sobre as ordens marcadas.)
+
+`public/index.html`: só o contêiner, o SDK e o `app.js` (a CSP não aceita script no meio do HTML).
+```html
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><link rel="stylesheet" href="style.css"></head>
+<body><div id="app">Carregando...</div>
+<script src="/_hold/sdk/v1.js"></script><script src="app.js"></script></body></html>
+```
+
+`public/app.js`: **um HTML, várias telas**: quem decide é o `hold.context`.
+```js
+const app = document.getElementById('app');
+const hoje = () => new Date().toISOString().slice(0, 10);
+
+async function marcar(entidade) {
+  await hold.storage.set('conferidas', entidade.id, { id: entidade.id, codigo: entidade.code, titulo: entidade.title, dia: hoje() });
+}
+async function conferidas() { return (await hold.storage.list('conferidas')).map((r) => r.value); }
+function linha(c) { return `<li>#${c.codigo ?? c.id} ${c.titulo ?? ''} em ${c.dia.split('-').reverse().join('/')}</li>`; }
+
+function desenhar(html) { app.innerHTML = html; hold.ui.resize(); }
+
+async function modalUm(job) {          // botão na ordem de produção: launch.entity
+  const dados = await hold.api.get(`/jobs/${job.id}`);   // exige jobs:read
+  desenhar(`<h3>Conferir ordem ${job.code ?? ''}</h3><p>${dados.title ?? job.title ?? ''} (${dados.totalPrice != null ? 'R$ ' + dados.totalPrice : 'sem valor'})</p><button id="ok">Marcar como conferida</button>`);
+  document.getElementById('ok').onclick = async () => {
+    try { await marcar(job); hold.modal.confirm({ jobId: job.id }); }   // confirma DEPOIS de gravar
+    catch (e) { hold.ui.toast('Não foi possível marcar a ordem', 'error'); }
+  };
+}
+
+async function modalLote(itens) {      // botão em lote: launch.entities (até 100)
+  desenhar(`<h3>Conferir ${itens.length} ordens</h3><ul>${itens.map(linha2).join('')}</ul><button id="ok">Marcar todas</button>`);
+  document.getElementById('ok').onclick = async () => {
+    try { for (const j of itens) await marcar(j); hold.modal.confirm({ total: itens.length }); }
+    catch (e) { hold.ui.toast('Não foi possível marcar todas', 'error'); }
+  };
+}
+const linha2 = (j) => `<li>#${j.code ?? j.id} ${j.title ?? ''}</li>`;
+
+async function abaCliente(cliente) {   // aba: launch.entity é o cliente aberto (sem actionId)
+  const dados = await hold.api.get(`/customers/${cliente.id}`);   // exige customers:read
+  const todas = await conferidas();
+  desenhar(`<h3>${dados.fullName ?? dados.name ?? cliente.title}</h3><p>Conferências feitas no plugin:</p><ul>${todas.map(linha).join('') || '<li>Nenhuma ainda</li>'}</ul>`);
+}
+
+async function card() {                // card: sem launch; a altura vem do hold.ui.resize (teto do size)
+  const feitas = (await conferidas()).filter((c) => c.dia === hoje());
+  desenhar(`<strong>${feitas.length}</strong> conferidas hoje`);
+}
+
+async function pagina(id) {            // menu: hold.context.page é o id declarado em pages
+  const todas = (await conferidas()).sort((a, b) => b.dia.localeCompare(a.dia));
+  desenhar(`<h2>Conferência da produção</h2><ul>${todas.map(linha).join('') || '<li>Nenhuma ordem conferida</li>'}</ul>`);
+}
+
+let hold;
+(async () => {
+  hold = await Holdprint.connect();
+  const { surface, page, launch } = hold.context;
+  try {
+    if (surface === 'card') await card();
+    else if (surface === 'tab') await abaCliente(launch.entity);
+    else if (launch?.entities) await modalLote(launch.entities);
+    else if (launch?.entity) await modalUm(launch.entity);
+    else await pagina(page);
+  } catch (e) { desenhar('<p>Não foi possível carregar. Tente de novo.</p>'); }
+})();
+```
+
+Passo a passo para o usuário: `holdprint plugin validate` (a CLI explica em português qualquer erro de grupo, alvo ou escopo), `holdprint dev` para ver no simulador (menu Produção,
+lista de ordens com caixas de seleção e o botão de lote, cliente com a aba, Visão Geral com o card) e `holdprint plugin deploy`. Como `jobs:read` e `customers:read` são escopos **novos**
+no plugin, o Administrador precisa aprovar em `/plugins/consent/<id>`; a tela mostra "Onde o plugin aparece" com a página em Produção, as duas ações, a aba e o card.
+Depois: ordem de produção > botão **Plugins** > Conferida (no Atendimento por tipo, o ícone de quebra-cabeça no canto do card da ordem); lista de Jobs > marcar > Conferir selecionadas; cliente > aba Conferências; Visão Geral > seção Plugins.
