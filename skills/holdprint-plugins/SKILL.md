@@ -141,8 +141,12 @@ Outros comandos: `holdprint plugin list` (id da instalação, pluginId, nome, at
 
 - **Abrir o plugin não é baixar tudo.** Use `hold.sync.pull("budgets")` (também `"customers"` e `"tasks"`): na primeira vez
   traz tudo; nas seguintes só o que mudou desde a última sincronização (o SDK guarda o `syncToken` em `hold.storage`, coleção
-  `hold-sync`, chave `<recurso>:<id do usuário>`: cada usuário tem o seu token). Devolve `{ changed, deleted, syncToken }` já sem duplicados. Mantenha o espelho local do plugin em `hold.storage` e aplique
-  `changed` (por `id`) e `deleted` (remover). **Nunca** varra a lista inteira a cada abertura.
+  `hold-sync`, chave `<recurso>:<id do usuário>`: cada usuário tem o seu token). Devolve `{ changed, deleted, syncToken }` já sem duplicados. Mantenha o espelho
+  **em memória** (um `Map` na tela): ao abrir, `hold.sync.pull("budgets", { full: true })`; depois, a cada evento, `hold.sync.pull("budgets")` (só o que mudou)
+  e aplique `changed` (por `id`) e `deleted` (remover). Não releia a lista inteira a cada evento.
+- **Nunca grave dado do ERP (orçamentos, clientes, tarefas, valores) em `hold.storage`.** Ele é **compartilhado entre todos os usuários da conta**: uma cópia
+  feita quando o Administrador abriu a tela ficaria legível para um Vendedor que não pode ver aqueles orçamentos. `hold.storage` é para dado do próprio plugin
+  (preferências, anotações, progresso de agenda).
 - **Lista grande ou sob demanda:** `for await (const b of hold.api.list("/budgets", { state: "open" })) { ... }` segue o
   `nextCursor` sozinho (até 100 por página). Com `updated_since`, os excluídos voltam com `deleted: true`.
 - **Mover etapa do orçamento:** `PUT /budgets/{id}/step` com `{ stepId }` e `Idempotency-Key`. Exige o escopo **novo e estreito**

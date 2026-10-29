@@ -64,11 +64,18 @@ Em `429` o SDK espera o `Retry-After` e repete **uma única vez**; se persistir,
 - A visibilidade do usuário vale (Vendedor só sincroniza o que a tela dele mostra).
 - Limite: só enxerga escritas feitas pela WebApi do Holdprint; mudanças feitas por integrações externas à API podem não aparecer.
 
+- O espelho fica **em memória**, na tela de quem abriu. Nunca grave orçamento, cliente ou tarefa em `hold.storage`: ele é compartilhado entre os usuários
+  da conta e furaria a visibilidade de cada perfil.
+
 ```js
-const { changed, deleted } = await hold.sync.pull('budgets');
-for (const b of changed) espelho.set(b.id, b);
-for (const b of deleted) espelho.delete(b.id);
-await hold.storage.set('cache', 'budgets', [...espelho.values()]); // 256 KiB por registro: guarde só o que a tela usa
+const espelho = new Map();
+async function sincronizar(completa) {
+  const { changed, deleted } = await hold.sync.pull('budgets', completa ? { full: true } : {});
+  for (const b of changed) espelho.set(b.id, b);
+  for (const b of deleted) espelho.delete(b.id);
+}
+await sincronizar(true);
+hold.events.subscribe(['budget.won', 'budget.step_changed'], () => sincronizar(false), { onResync: () => sincronizar(true) });
 await hold.api.put(`/budgets/${id}/step`, { stepId }, { idempotencyKey: `step-${id}-${stepId}` });
 ```
 

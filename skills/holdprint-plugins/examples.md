@@ -155,14 +155,13 @@ document.getElementById('salvar').addEventListener('click', async () => {
 `public/app.js`
 ```js
 const hold = await Holdprint.connect();
-const espelho = new Map(((await hold.storage.get('cache', 'budgets')) || []).map((b) => [b.id, b]));
+const espelho = new Map(); // só em memória: hold.storage é compartilhado entre os usuários da conta
 
-async function atualizar() {
+async function atualizar(completa) {
   try {
-    const { changed, deleted } = await hold.sync.pull('budgets'); // 1ª vez: tudo; depois: só o que mudou
+    const { changed, deleted } = await hold.sync.pull('budgets', completa ? { full: true } : {}); // ao abrir: tudo; depois: só o que mudou
     for (const b of changed) espelho.set(b.id, b);
     for (const b of deleted) espelho.delete(b.id);
-    await hold.storage.set('cache', 'budgets', [...espelho.values()].map((b) => ({ id: b.id, code: b.code, title: b.title, stepId: b.stepId, stepName: b.stepName })));
     desenhar([...espelho.values()].filter((b) => b.budgetState === 1));
   } catch (e) {
     hold.ui.toast(e.status === 429 ? 'Limite de chamadas atingido, tente de novo em instantes' : 'Não foi possível atualizar', 'error');
@@ -175,7 +174,7 @@ async function avancarEtapa(budget, proximaEtapaId) {
   espelho.set(atualizado.id, { ...budget, ...atualizado });
   desenhar([...espelho.values()].filter((b) => b.budgetState === 1));
 }
-await atualizar();
+await atualizar(true);
 ```
 Pontos: botão "Atualizar" chama `atualizar()` (não recarrega a lista inteira); a etapa vem de `GET /funnels/{id}` (`steps`);
 `400 _44` = etapa de outro funil, `400 _45` = orçamento não aberto, `404 _30` = orçamento que o usuário não vê.
