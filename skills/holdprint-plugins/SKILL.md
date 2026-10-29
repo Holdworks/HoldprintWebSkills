@@ -14,9 +14,10 @@ Faça isto **antes de qualquer outra coisa**, sem perguntar nada técnico. O usu
    - **Sem login:** pergunte **uma vez só**: "Você já tem conta no Holdprint?" e **pare para esperar a resposta**. Não crie
      projeto, não abra simulador e não escreva código antes de ela responder.
      - **Tem:** rode **você mesmo** `holdprint login` (nunca peça para a pessoa digitar comando). Ele abre o navegador e fica
-       esperando a aprovação: rode com tempo limite de 10 minutos (ou em segundo plano) e, enquanto espera, diga em uma frase:
-       "Abri uma página no seu navegador: confira se o código é XXXX-XXXX e clique em Aprovar." Depois de aprovado, construa
-       direto na conta dela (sem passar pelo simulador).
+       esperando a aprovação, então **rode em segundo plano** (no Claude Code, `run_in_background`), leia a saída até aparecer
+       `Codigo de confirmacao: XXXX-XXXX` e diga em uma frase: "Abri uma página no seu navegador: confira se o código é XXXX-XXXX
+       e clique em Aprovar." Se o navegador não abriu, mostre também o link `Aprove em: ...` da saída. Espere o comando terminar
+       com `Login feito como ...` antes de seguir. Depois de aprovado, construa direto na conta dela (sem passar pelo simulador).
      - **Não tem:** comece já, sem esperar: desenhe e teste o plugin no simulador (`holdprint dev`, com dados de exemplo, sem conta e sem rede).
        Quando ele quiser usar de verdade ou publicar, explique em uma frase: "Para colocar no seu Holdprint ou publicar, você precisa de uma conta de
        teste grátis." e mande abrir **`<endereço do Holdprint>/holdai/register`** (no ambiente local: http://localhost:8003/holdai/register), criar a conta,
@@ -424,6 +425,9 @@ Dois jeitos de ver a tela sem publicar versão. Comece sempre pelo simulador.
   **Gráfica Exemplo**, dados fictícios (4 vendedores, cerca de 300 orçamentos, funil de 5 etapas, tarefas). Não precisa de login, não
   usa rede, não toca em conta nenhuma. A tela do plugin recarrega sozinha a cada salvamento. Escritas (mover etapa, criar tarefa,
   `hold.storage`) valem só no simulador e ficam em `.holdprint/sim-state.json` na pasta do plugin; `--reset` volta ao início.
+  **O simulador é um servidor que não termina sozinho:** rode `holdprint dev --no-open` **em segundo plano** (no Claude Code,
+  `run_in_background`), espere a linha com o endereço e mande o link ao usuário. Nunca rode em primeiro plano (o turno trava) e
+  pare o processo quando terminar de usar. O mesmo vale para `holdprint plugin dev --account` e `holdprint plugin listen`.
   Use para desenhar e depurar a tela, e para a maior parte do trabalho.
 - **Para ver com dados reais: `holdprint plugin dev --account [pasta]`.** Exige `holdprint login` como **Administrador**, e que o
   plugin já tenha sido publicado (`deploy`) e aprovado pelo consentimento. A CLI imprime um link

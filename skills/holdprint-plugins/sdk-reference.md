@@ -107,6 +107,17 @@ O recurso é o prefixo do escopo (não o nome do alvo). Toda resposta traz `id`,
 
 Em lote, leia cada item pelo id (`for (const e of launch.entities) await hold.api.get(...)`), com poucas chamadas por vez (a cota é de 300 por minuto).
 Listar por filtro: `POST /v1/jobs/query` e `/v1/expenses/query` existem; `/v1/incomes/query` ainda responde `93` (sem índice), então use o `GET` por id.
+O catálogo de cada recurso (campos, filtros e operadores permitidos, ordenações) vem de `GET /v1/query`; leia uma vez em vez de adivinhar.
+Formato do corpo:
+```js
+const res = await hold.api.post('/jobs/query', {
+  where: { isFinalized: { eq: false }, deliveryNeeded: { lte: new Date().toISOString() } },
+  fields: ['id', 'code', 'title', 'customerId', 'deliveryNeeded', 'totalPrice'],
+  sort: 'deliveryNeeded',
+  limit: 100
+}); // { data: [...], nextCursor } — para a página seguinte repita com { ..., cursor: res.nextCursor }
+```
+Filtro fora do catálogo do recurso responde `400` com a lista dos filtros permitidos.
 Detalhes das rotas em `api-v1-reference.md`.
 
 ## hold.api
