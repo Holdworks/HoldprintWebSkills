@@ -106,7 +106,7 @@ O recurso é o prefixo do escopo (não o nome do alvo). Toda resposta traz `id`,
 | `contract` | `/contracts/<id>` | code, status, expirationDate, budgetId |
 
 Em lote, leia cada item pelo id (`for (const e of launch.entities) await hold.api.get(...)`), com poucas chamadas por vez (a cota é de 300 por minuto).
-Listar por filtro: `POST /v1/jobs/query` e `/v1/expenses/query` existem; `/v1/incomes/query` ainda responde `93` (sem índice), então use o `GET` por id.
+Listar por filtro: `POST /v1/jobs/query`, `/v1/expenses/query` e `/v1/incomes/query` funcionam. Contas a pagar e a receber exigem os filtros `accountStatusId` e `active` (e aceitam `dueDate` com `gte`/`lte`, ordenado por vencimento); sem eles a resposta é o erro `94`. Para ler uma conta só, use o `GET` por id.
 O catálogo de cada recurso (campos, filtros e operadores permitidos, ordenações) vem de `GET /v1/query`; leia uma vez em vez de adivinhar.
 Formato do corpo:
 ```js
