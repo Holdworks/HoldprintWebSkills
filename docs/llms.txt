@@ -1,0 +1,53 @@
+# Holdprint Docs
+
+> Documentação pública do Holdprint (ERP para gráficas) para IAs e desenvolvedores: conectar uma IA pelo MCP hospedado, instalar as skills oficiais, chamar a API REST com API Key e criar plugins que rodam dentro do Holdprint. Cada página tem uma versão em Markdown no mesmo endereço terminado em .md.
+
+Regras para a IA que cria plugins: instale e siga a skill `holdprint-plugins` (`npx @holdprint/skills install`); rode `holdprint whoami` antes de tudo; use um `slug` novo e único por plugin; declare o mínimo de escopos, cada um com `purpose` em português; nunca peça senha, token ou valor de segredo no chat; nunca grave dado do ERP em `hold.storage` (é compartilhado por todos os usuários da conta); escrita sempre com `idempotencyKey` derivada do fato e corpo idêntico; o id do registro vem de `hold.context.launch`, nunca da URL; sem domínio externo na tela; depois do primeiro `deploy`, mostre o link `/plugins/consent/<id>` e espere a aprovação; só peça publicação no Marketplace quando o usuário pedir.
+
+## Começar
+
+- [Começar · Visão geral](https://docs.holdworks.ai/index.md): Os três caminhos para construir sobre o Holdprint: conectar a sua IA, usar a API e criar plugins.
+- [Começar · Início rápido](https://docs.holdworks.ai/comecar/inicio-rapido.md): Dois passos: instalar as skills e conectar a IA ao MCP do Holdprint.
+- [Começar · Perguntas frequentes](https://docs.holdworks.ai/comecar/perguntas-frequentes.md): Programação, segurança, MCP versus banco read-only e ferramentas compatíveis.
+
+## Conectar IA
+
+- [Conectar IA · Visão geral](https://docs.holdworks.ai/conectar-ia.md): MCP hospedado com login pelo navegador ou banco somente leitura: qual usar e como funciona.
+- [Conectar IA · Claude Code](https://docs.holdworks.ai/conectar-ia/claude-code.md): Adicionar o servidor MCP do Holdprint no Claude Code, fazer login e verificar.
+- [Conectar IA · claude.ai e ChatGPT](https://docs.holdworks.ai/conectar-ia/claude-ai-e-chatgpt.md): Conector personalizado no claude.ai e no ChatGPT apontando para o MCP do Holdprint.
+- [Conectar IA · Instalar as skills](https://docs.holdworks.ai/conectar-ia/skills.md): Instalar as skills oficiais do Holdprint em Claude Code, Codex, Cursor, Gemini CLI e Copilot.
+- [Conectar IA · Como usar](https://docs.holdworks.ai/conectar-ia/como-usar.md): Perguntas que funcionam de imediato depois de conectar a IA.
+- [Conectar IA · Tools do MCP](https://docs.holdworks.ai/conectar-ia/tools-do-mcp.md): Referência das 28 tools do MCP do Holdprint, de leitura e de escrita, com parâmetros.
+- [Conectar IA · Skills e domínio](https://docs.holdworks.ai/conectar-ia/dominio.md): Regras do domínio do Holdprint que a IA erraria sozinha: custo do orçamento, campos dinâmicos, enums.
+- [Conectar IA · Banco read-only](https://docs.holdworks.ai/conectar-ia/banco-read-only.md): Conexão MongoDB somente leitura para casos avançados, liberada sob demanda.
+
+## API
+
+- [API · Visão geral](https://docs.holdworks.ai/api.md): As duas APIs do Holdprint: a /v1, que serve à CLI, ao MCP e aos plugins, e a API Key legada; qual usar e como começar pela CLI.
+- [API · API /v1](https://docs.holdworks.ai/api/v1.md): Endereço, autenticação (SDK, token de instalação, Hold Identity), rotas, paginação, eventos, storage, ações de escrita, cotas e formato de erro.
+- [API · Consultas por recurso](https://docs.holdworks.ai/api/v1/consultas.md): POST /v1/{recurso}/query recurso a recurso: campos, filtros, ordenações, exemplo HTTP e comando da CLI; leitura por id.
+- [API · Ações pela CLI e MCP](https://docs.holdworks.ai/api/acoes.md): Como a IA procura, descreve, confere (--dry-run) e executa as ações do Holdprint pela CLI e pelo MCP, com exemplos e índice por área.
+- [API · Visão geral](https://docs.holdworks.ai/api/chave.md): API com chave fixa: URL base, autenticação por x-api-key, formato de resposta, erros e códigos de status.
+- [API · Clientes](https://docs.holdworks.ai/api/clientes.md): Consultar, criar e atualizar clientes pela API Key.
+- [API · Fornecedores](https://docs.holdworks.ai/api/fornecedores.md): Consultar fornecedores e suas categorias.
+- [API · Orçamentos](https://docs.holdworks.ai/api/orcamentos.md): Consultar orçamentos com propostas, itens e produtos.
+- [API · Jobs](https://docs.holdworks.ai/api/jobs.md): Consultar jobs de produção com custos, tarefas e insumos.
+- [API · Contas a pagar](https://docs.holdworks.ai/api/contas-a-pagar.md): Consultar, criar, editar e dar baixa em contas a pagar.
+- [API · Contas a receber](https://docs.holdworks.ai/api/contas-a-receber.md): Consultar, criar, editar e dar baixa em contas a receber.
+- [API · Cadastros financeiros](https://docs.holdworks.ai/api/cadastros-financeiros.md): Listas de apoio: contas, categorias, centros de custo e formas de pagamento.
+
+## Plugins
+
+- [Plugins · Visão geral](https://docs.holdworks.ai/plugins.md): O que é um plugin, onde ele aparece no Holdprint, quem pode criar e como a segurança funciona.
+- [Plugins · Comece com a sua IA](https://docs.holdworks.ai/plugins/comece-com-sua-ia.md): Skills, CLI, login, prompts prontos e o que a IA faz e o que você aprova, por assistente.
+- [Plugins · CLI holdprint](https://docs.holdworks.ai/plugins/cli.md): Todos os comandos e opções da CLI holdprint, com saídas típicas.
+- [Plugins · Manifesto](https://docs.holdworks.ai/plugins/manifesto.md): O holdprint.plugin.json campo a campo: páginas, ações, abas, cards, eventos, funções e vitrine.
+- [Plugins · SDK](https://docs.holdworks.ai/plugins/sdk.md): Holdprint.connect e tudo que o plugin usa: contexto, API, sincronização, eventos, armazenamento, interface e funções.
+- [Plugins · API /v1](https://docs.holdworks.ai/api/v1.md): 
+- [Plugins · Escopos](https://docs.holdworks.ai/plugins/escopos.md): Os escopos declaráveis, o que cada um libera e a permissão de tela exigida.
+- [Plugins · Publicação](https://docs.holdworks.ai/plugins/publicacao.md): Consentimento, versões, release, rollback, vitrine, link não listado, Marketplace e pedido de publicação.
+- [Plugins · Erros](https://docs.holdworks.ai/plugins/erros.md): Todos os códigos de erro da plataforma de plugins com HTTP, significado e correção.
+
+## Opcional
+
+- [Tudo em um arquivo](https://docs.holdworks.ai/llms-full.txt): todas as páginas acima concatenadas

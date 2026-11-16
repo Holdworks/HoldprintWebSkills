@@ -1,0 +1,29 @@
+<!-- legacy-id: quickstart -->
+<h2>Início rápido</h2>
+      <p class="section-sub">Dois passos: ensine a LLM a falar “Holdprint” (skills) e conecte ela aos seus dados (MCP).</p>
+      <div class="steps">
+        <div class="step"><div class="step-num"></div><div class="step-body">
+          <h3>Instale as skills</h3>
+          <p>Um comando ensina sua LLM o domínio do ERP (orçamento, custeio, campos dinâmicos).</p>
+          <div class="code" data-copy>
+            <div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">terminal</span></div>
+            <pre><code>npx @holdprint/skills install</code></pre>
+          </div>
+        </div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body">
+          <h3>Conecte ao MCP</h3>
+          <p>No Claude Code, um comando. No claude.ai/ChatGPT, um conector. O login abre no navegador.</p>
+          <div class="code" data-copy>
+            <div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">terminal</span></div>
+            <pre><code>claude mcp add <span class="f">--transport</span> http holdprint https://mcp.holdprint.net/mcp</code></pre>
+          </div>
+        </div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body">
+          <h3>Pergunte</h3>
+          <p>Pronto. Fale em português com a IA.</p>
+          <div class="code" data-copy>
+            <div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">prompt</span></div>
+            <pre><code>Quanto eu faturei este ano e qual meu saldo em caixa?</code></pre>
+          </div>
+        </div></div>
+      </div>

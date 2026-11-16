@@ -37,7 +37,7 @@ Se a tela só precisa abrir dentro do Holdprint, **não** use app externo: use `
 | `id` | Mesmo formato das ações (`^[a-z0-9][a-z0-9-]{1,38}$`), único no plugin. |
 | `name` | Nome que a pessoa vê na tela de aprovação (pt-BR, curto). |
 | `kind` | `device` ou `web`. |
-| `origins[]` | Origens do app (`esquema://host[:porta]`, sem caminho). `https://`; `http://localhost` só no ambiente local. Só estas origens recebem CORS. |
+| `origins[]` | Origens do app (`esquema://host[:porta]`, sem caminho). `https://`; `http://localhost` só em desenvolvimento, na máquina de quem desenvolve. Só estas origens recebem CORS. |
 | `redirectUris[]` | Obrigatório em `web` (endereços exatos para onde o Holdprint devolve o `code`). Em `device` não existe. |
 | `scopes[]` | **Subconjunto** dos `scopes` do manifesto. Escopo que o plugin não declarou é recusado. |
 | Limites | Até **3 apps** por plugin. Fora das regras: `400 HOLD_PLUGIN_PLATFORM_80` (`ExternalAppInvalid`). |
@@ -61,13 +61,14 @@ aprovados e a **visibilidade do usuário** (Vendedor só vê o que a tela dele m
 
 Carregue o SDK pelo endereço `id.` do porteiro. O SDK usa esse mesmo endereço para o login e troca `id.` por `api.` para os dados:
 
-| Ambiente | SDK | Login (`identityBase`) | Dados (`apiBase`) |
-|---|---|---|---|
-| Local | `http://id.plugins.localhost:8787/sdk/external-v1.js` | `http://id.plugins.localhost:8787` | `http://api.plugins.localhost:8787` |
-| Nuvem de teste | `https://id.hold.market/sdk/external-v1.js` | `https://id.hold.market` | `https://api.hold.market` |
+| SDK | Login (`identityBase`) | Dados (`apiBase`) |
+|---|---|---|
+| `https://id.<domínio técnico>/sdk/external-v1.js` | `https://id.<domínio técnico>` | `https://api.<domínio técnico>` |
+
+O `<domínio técnico>` aparece na tela de aprovação do plugin e na saída do `deploy`.
 
 ```html
-<script src="http://id.plugins.localhost:8787/sdk/external-v1.js"></script>
+<script src="https://id.<domínio técnico>/sdk/external-v1.js"></script>
 ```
 
 ```js
@@ -150,10 +151,10 @@ if (jws) {
 
 ## 7. CLI: `holdprint login`, `logout` e Acessos conectados
 
-- `holdprint login` usa o **device code**. A CLI imprime `Codigo de confirmacao: XXXX-XXXX` e
+- `holdprint login` usa o **device code**. A CLI imprime `Código de confirmação: XXXX-XXXX` e
   `Aprove em: <endereço do Holdprint>/identity/device?code=...` (no macOS abre o navegador sozinha; `--no-open` não abre) e fica em
-  `Aguardando a aprovacao no navegador...`. O usuário, já logado no Holdprint, confere "Holdprint CLI", a conta e as permissões e
-  clica em **Aprovar**; a CLI responde `Login feito como <e-mail> (conta <n>). A sessao renova sozinha.` Sem senha na CLI.
+  `Aguardando a aprovação no navegador...`. O usuário, já logado no Holdprint, confere "Holdprint CLI", a conta e as permissões e
+  clica em **Aprovar**; a CLI responde `Login feito como <e-mail> (conta <n>). A sessão renova sozinha.` Sem senha na CLI.
 - A credencial vai para o **Keychain do macOS** (serviço `holdprint-cli`). Se não houver Keychain, cai num arquivo `0600` **com aviso**.
   O `~/.holdprint/config.json` não guarda token. Nunca copie, imprima ou cole o token da CLI.
 - O acesso dura 1 h e a CLI renova sozinha (refresh de 30 dias); depois disso, `holdprint login` de novo. `holdprint whoami` mostra
@@ -233,7 +234,7 @@ Passos que o agente faz e diz ao usuário:
 2. Mostrar o link de consentimento. Dizer o que o Administrador vai aprovar: `budgets:read` ("Mostrar os orçamentos ganhos hoje") e
    "Acessa de fora do Holdprint: Painel da produção em http://localhost:4791".
 3. Servir a pasta `external/` na origem registrada (porta **4791**), com o `pluginId` de `.holdprint/deploy.json`, e abrir
-   `http://localhost:4791`. No repositório `holdprint-plugins` isso é `node scripts/serve-external.mjs`.
+   `http://localhost:4791`.  Qualquer servidor estático serve (por exemplo `npx serve external -l 4791`).
 4. A TV mostra "Entrar com Holdprint" → código e QR. O usuário aprova no Holdprint; a lista aparece e continua atualizando sozinha.
 5. Para tirar o acesso: **Plugins > Acessos conectados**.
 

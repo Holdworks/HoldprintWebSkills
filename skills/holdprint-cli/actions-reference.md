@@ -4,8 +4,8 @@
 
 ```bash
 holdprint actions list [--search texto] [--risk low|medium|high]
-holdprint actions describe <acao>
-holdprint actions run <acao> [--param nome=valor] [--data @corpo.json|-] [--dry-run] [--no-wait] [--interval SEGUNDOS] [--timeout SEGUNDOS]
+holdprint actions describe <ação>
+holdprint actions run <ação> [--param nome=valor] [--data @corpo.json|-] [--dry-run] [--no-wait] [--interval SEGUNDOS] [--timeout SEGUNDOS]
 ```
 
 A chave da ação é a de `actions list` (ex.: `ExpensesController.Liquidate:POST:api/expenses/liquidate`, rótulo "Liquidar
@@ -22,18 +22,18 @@ query.
 ## Fluxo
 
 1. `holdprint actions list --search <assunto>` e escolha a ação (a busca é pelo rótulo, ex.: "Ganhar orçamento").
-2. `holdprint actions describe <acao>`: leia risco e schema.
+2. `holdprint actions describe <ação>`: leia risco e schema.
 3. Antes de escrever, **leia** o que vai mexer (`query`/`api GET /api/...`) e confirme a entidade.
-4. Grave o corpo em arquivo e ensaie: `holdprint actions run <acao> --data @corpo.json --dry-run`. Em dinheiro, nota fiscal ou
+4. Grave o corpo em arquivo e ensaie: `holdprint actions run <ação> --data @corpo.json --dry-run`. Em dinheiro, nota fiscal ou
    mensagem externa, mostre o resultado ao usuário e espere o OK.
-5. `holdprint actions run <acao> --data @corpo.json`: **executa direto** e devolve o resultado.
+5. `holdprint actions run <ação> --data @corpo.json`: **executa direto** e devolve o resultado.
 6. Releia o registro para provar que a escrita pegou; não confie só no 200.
 
 ## Aprovação (caso raro)
 
 Nenhuma rota pede aprovação por padrão. Só se a plataforma marcar uma rota (`approval: sim` em `actions list`, ou o 428 / erro 89):
 
-1. A CLI cria o pedido (`POST /v1/actions/approvals`) e imprime `Link de aprovacao: <Holdprint>/aprovacoes/<id>`.
+1. A CLI cria o pedido (`POST /v1/actions/approvals`) e imprime `Link de aprovação: <Holdprint>/aprovacoes/<id>`.
 2. Mostre o link ao usuário e **espere**: a CLI consulta o estado (`pending`, `approved`, `rejected`, `expired`, `consumed`) a cada
    3 s (`--interval`), até 1800 s (`--timeout`). Aprovada, repete a MESMA chamada com `x-hold-approval` (uma execução só).
 3. Recusada, expirada (30 min), já usada ou teto diário (92): a CLI sai com erro. Reporte e pare.

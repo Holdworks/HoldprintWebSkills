@@ -1,0 +1,9 @@
+<!-- legacy-id: faq -->
+<h2>Perguntas frequentes</h2>
+      <div class="faq">
+        <details open><summary>Preciso saber programar?</summary><div class="faq-a"><p>Não. Você conversa em português com a LLM; ela usa as tools do MCP (ou o banco read-only) para responder, gerar relatórios e montar integrações.</p></div></details>
+        <details><summary>Qual a diferença entre MCP e banco read-only?</summary><div class="faq-a"><p>O MCP é o caminho recomendado: simples e seguro, com login por OAuth e tools prontas. O banco read-only é para casos avançados que precisam de queries diretas no MongoDB.</p></div></details>
+        <details><summary>É seguro? A IA pode alterar meus dados?</summary><div class="faq-a"><p>Pelo MCP, ações que alteram dados rodam primeiro em prévia (dry-run) e exigem confirmação. O acesso ao banco é somente leitura. Você continua no controle.</p></div></details>
+        <details><summary>As skills funcionam em quais ferramentas?</summary><div class="faq-a"><p>Claude Code, Codex, Cursor, Gemini CLI e GitHub Copilot. O comando <code class="inline">npx @holdprint/skills install</code> detecta o que você tem instalado.</p></div></details>
+        <details><summary>Meus dados ficam expostos publicamente?</summary><div class="faq-a"><p>Não. O acesso é por conta: o login OAuth identifica você e a IA só enxerga os dados da sua empresa. As credenciais não são compartilhadas com o aplicativo de IA.</p></div></details>
+      </div>

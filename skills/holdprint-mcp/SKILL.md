@@ -110,18 +110,16 @@ Ache o `budgetId` com `holdprint_query` em `Budget`.
 
 ## Conexão pelo Hold Identity (sem senha)
 
-Vale quando o servidor MCP roda com `HOLDPRINT_MCP_IDENTITY=hold` (a stack local sobe assim; sem a variável, o servidor continua no
-modo `password`). Quando o MCP está no modo **`hold`** (`HOLDPRINT_MCP_IDENTITY=hold`), conectar abre a tela de autorização do **próprio Holdprint**, onde
+Quando o MCP está no modo **`hold`**, conectar abre a tela de autorização do **próprio Holdprint**, onde
 o usuário já está logado: ele confere o acesso e aprova. **Não há campo de senha** e o MCP não guarda senha nem JWT do ERP (só um
 refresh do Hold Identity, cifrado). As tools respondem com os dados e a visibilidade do usuário.
-- Para conectar: `claude mcp add --transport http <nome> <url do MCP>/mcp` (local: `claude mcp add --transport http holdprint-local
-  http://localhost:3045/mcp`) e autorizar pela tela que abrir (`/mcp` na sessão do Claude Code, ou `claude mcp login <nome>`). A tela é
+- Para conectar: `claude mcp add --transport http <nome> <url do MCP>/mcp` e autorizar pela tela que abrir (`/mcp` na sessão do Claude Code, ou `claude mcp login <nome>`). A tela é
   "Holdprint MCP" com a conta, o usuário, "Ler dados do Holdprint como você" e "Executar ações permitidas como você", e o botão **Permitir**. **Nunca** peça a senha ao usuário
   nem a coloque em configuração, mesmo que o servidor aceite (modos `password` e `jwt` seguem existindo, mas o padrão do usuário é `hold`).
 - Para **revogar**: **Plugins > Acessos conectados** no Holdprint, linha do MCP. A próxima tool pede nova conexão (até 60 s).
 - Se uma tool responder que a sessão expirou ou foi revogada, peça ao usuário para reconectar o MCP; não tente contornar.
 - A CLI do plugin (`holdprint login`) é outra concessão, também listada em Acessos conectados.
-- No modo hold (stack local), toda escrita leva uma `Idempotency-Key` **estável por conteúdo** e a WebApi guarda a resposta por
+- No modo hold, toda escrita leva uma `Idempotency-Key` **estável por conteúdo** e a WebApi guarda a resposta por
   **24 horas**: repetir a mesma escrita (mesmos argumentos) dentro dessa janela devolve o resultado da primeira, sem duplicar.
   Para repetir de propósito (ex.: a mesma movimentação de estoque duas vezes), mude algo que identifique a operação (observação,
   descrição). As escritas executam direto; só uma rota marcada para aprovação devolve "Aprovação necessária: <link>" (caso raro): mostre o

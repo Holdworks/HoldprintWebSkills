@@ -1,0 +1,393 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-13T20:41:48Z",
+  "title": "Design System: Holdworks Docs",
+  "extensions": {
+    "colorMeta": {
+      "holdprint-blue": {
+        "role": "primary",
+        "displayName": "Holdprint Blue",
+        "canonical": "#2563eb",
+        "tonalRamp": [
+          "#172554",
+          "#1e3a8a",
+          "#1d4ed8",
+          "#2563eb",
+          "#3b82f6",
+          "#60a5fa",
+          "#bfdbfe",
+          "#eff6ff"
+        ]
+      },
+      "holdprint-blue-ink": {
+        "role": "primary",
+        "displayName": "Link Blue",
+        "canonical": "#1d4ed8",
+        "tonalRamp": [
+          "#172554",
+          "#1e3a8a",
+          "#1e40af",
+          "#1d4ed8",
+          "#2563eb",
+          "#60a5fa",
+          "#93c5fd",
+          "#dbeafe"
+        ]
+      },
+      "blue-wash": {
+        "role": "primary",
+        "displayName": "Blue Wash",
+        "canonical": "#eff6ff",
+        "tonalRamp": [
+          "#1e3a8a",
+          "#1d4ed8",
+          "#3b82f6",
+          "#93c5fd",
+          "#bfdbfe",
+          "#dbeafe",
+          "#eff6ff",
+          "#f8fbff"
+        ]
+      },
+      "ground": {
+        "role": "neutral",
+        "displayName": "Ground",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#0b0f17",
+          "#0f172a",
+          "#334155",
+          "#64748b",
+          "#cbd5e1",
+          "#e2e8f0",
+          "#f1f5f9",
+          "#ffffff"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#0f172a",
+        "tonalRamp": [
+          "#020617",
+          "#0f172a",
+          "#1e293b",
+          "#334155",
+          "#475569",
+          "#64748b",
+          "#94a3b8",
+          "#cbd5e1"
+        ]
+      },
+      "hairline": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "#e2e8f0",
+        "tonalRamp": [
+          "#1e2735",
+          "#2c384a",
+          "#475569",
+          "#94a3b8",
+          "#cbd5e1",
+          "#e2e8f0",
+          "#f1f5f9",
+          "#f8fafc"
+        ]
+      },
+      "code-slate": {
+        "role": "neutral",
+        "displayName": "Code Slate",
+        "canonical": "#0d1424",
+        "tonalRamp": [
+          "#0a0f1a",
+          "#0d1424",
+          "#111a2e",
+          "#1e293b",
+          "#334155",
+          "#64748b",
+          "#94a3b8",
+          "#e2e8f0"
+        ]
+      },
+      "pending-line": {
+        "role": "semantic",
+        "displayName": "Pending Amber",
+        "canonical": "#f59e0b",
+        "tonalRamp": [
+          "#451a03",
+          "#78350f",
+          "#92400e",
+          "#b45309",
+          "#d97706",
+          "#f59e0b",
+          "#fcd34d",
+          "#fef3c7"
+        ]
+      },
+      "caution-ink": {
+        "role": "semantic",
+        "displayName": "Caution",
+        "canonical": "#b45309",
+        "tonalRamp": [
+          "#451a03",
+          "#78350f",
+          "#92400e",
+          "#b45309",
+          "#d97706",
+          "#fbbf24",
+          "#fde68a",
+          "#fffbeb"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Page H1, max 28ch, balanced."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Article H2."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Article H3."
+      },
+      "lede": {
+        "displayName": "Lede",
+        "purpose": "One 18px summary under the H1."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Prose in the 45rem column."
+      },
+      "ui": {
+        "displayName": "UI",
+        "purpose": "Nav, tabs, table cells."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Figure captions and rail titles."
+      },
+      "code": {
+        "displayName": "Code",
+        "purpose": "Panels and inline literals."
+      },
+      "endpoint-path": {
+        "displayName": "Endpoint path",
+        "purpose": "Mono path beside the method badge."
+      }
+    },
+    "shadows": [
+      {
+        "name": "overlay-pop-light",
+        "value": "0 0 0 1px #e2e8f0, 0 2px 3px rgba(15,23,42,.1)",
+        "purpose": "Search dialog, toast, open drawer (light)."
+      },
+      {
+        "name": "overlay-pop-dark",
+        "value": "0 0 0 1px var(--line), 0 2px 3px rgba(0,0,0,.45)",
+        "purpose": "Same overlays in dark."
+      },
+      {
+        "name": "map-ring",
+        "value": "0 0 0 2px #2563eb, 0 0 0 6px rgba(37,99,235,.18)",
+        "purpose": "Plugin-map highlight ring inside the illustration."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease",
+        "value": "cubic-bezier(.2, .8, .2, 1)",
+        "purpose": "All transitions."
+      },
+      {
+        "name": "hover",
+        "value": "120ms",
+        "purpose": "Color, border and background on interactive elements."
+      },
+      {
+        "name": "chevron",
+        "value": "200ms",
+        "purpose": "Nav chevron, arrow nudge, drawer slide."
+      },
+      {
+        "name": "map-ring-move",
+        "value": "260ms",
+        "purpose": "Plugin-map ring transform and resize."
+      },
+      {
+        "name": "panel-in",
+        "value": "160ms opacity fade",
+        "purpose": "Map panel and search dialog entrance."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "rail-off",
+        "value": "1279px"
+      },
+      {
+        "name": "endpoint-two-col",
+        "value": "1360px (min)"
+      },
+      {
+        "name": "tabs-off",
+        "value": "1099px"
+      },
+      {
+        "name": "drawer",
+        "value": "899px"
+      },
+      {
+        "name": "mobile",
+        "value": "639px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Page-meta action such as Copiar para a IA.",
+      "html": "<button class=\"ds-btn\">Copiar para a IA</button>",
+      "css": ".ds-btn{display:inline-flex;align-items:center;height:32px;padding:0 11px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--text-2);font:500 13px var(--sans);cursor:pointer;transition:background 120ms,border-color 120ms,color 120ms}.ds-btn:hover{border-color:var(--line-strong);color:var(--ink);background:var(--bg-subtle)}.ds-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}"
+    },
+    {
+      "name": "Search Trigger",
+      "kind": "input",
+      "refersTo": "search-trigger",
+      "description": "Topbar button that opens the Cmd+K dialog.",
+      "html": "<button class=\"ds-search\"><span>Buscar na documentação</span><kbd class=\"ds-kbd\">⌘K</kbd></button>",
+      "css": ".ds-search{display:flex;align-items:center;gap:10px;width:300px;height:36px;padding:0 8px 0 11px;border:1px solid var(--line);border-radius:8px;background:var(--bg-subtle);color:var(--text-3);font:400 14px var(--sans);cursor:pointer}.ds-search span{flex:1;text-align:left}.ds-search:hover{border-color:var(--line-strong);background:var(--bg)}.ds-kbd{font:500 12px/1 var(--sans);color:var(--text-3);border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:3px 5px;background:var(--bg)}"
+    },
+    {
+      "name": "Top Tab",
+      "kind": "nav",
+      "refersTo": "",
+      "description": "Section tab with accent inset underline when current.",
+      "html": "<nav class=\"ds-tabs\"><a>Começar</a><a aria-current=\"page\">Plugins</a></nav>",
+      "css": ".ds-tabs{display:flex;height:60px}.ds-tabs a{display:flex;align-items:center;padding:0 13px;color:var(--text-2);font:500 14px var(--sans);box-shadow:inset 0 -2px 0 transparent;transition:color 120ms}.ds-tabs a:hover{color:var(--ink)}.ds-tabs a[aria-current]{color:var(--ink);box-shadow:inset 0 -2px 0 var(--accent)}"
+    },
+    {
+      "name": "Code Figure",
+      "kind": "card",
+      "refersTo": "code-figure",
+      "description": "Dark slate panel with caption bar and copy button.",
+      "html": "<figure class=\"ds-code\"><figcaption><span>Terminal</span><button>Copiar</button></figcaption><pre>holdprint plugin init</pre></figure>",
+      "css": ".ds-code{margin:0;border-radius:10px;overflow:hidden;background:#0d1424;border:1px solid #1e293b;color:#e2e8f0}.ds-code figcaption{display:flex;justify-content:space-between;align-items:center;min-height:40px;padding:6px 6px 6px 14px;background:#111a2e;border-bottom:1px solid #1e293b;font:500 12.5px var(--sans);color:#94a3b8}.ds-code button{height:28px;padding:0 9px;border:0;border-radius:6px;background:transparent;color:#94a3b8;font:500 12.5px var(--sans);cursor:pointer}.ds-code button:hover{background:rgba(255,255,255,.07);color:#fff}.ds-code pre{margin:0;padding:14px 16px 16px;font:400 13.5px/1.7 var(--mono)}"
+    },
+    {
+      "name": "Prompt Figure",
+      "kind": "card",
+      "refersTo": "prompt-figure",
+      "description": "Cole na sua IA card with a copyable natural-language prompt.",
+      "html": "<figure class=\"ds-prompt\"><figcaption><span>Cole na sua IA</span><button>Copiar</button></figcaption><pre>Crie um plugin que adiciona uma aba no cliente.</pre></figure>",
+      "css": ".ds-prompt{margin:0;border-radius:10px;background:var(--accent-weak);border:1px solid var(--accent-line)}.ds-prompt figcaption{display:flex;justify-content:space-between;align-items:center;min-height:40px;padding:6px 6px 6px 14px;font:600 12.5px var(--sans);color:var(--accent-ink)}.ds-prompt button{height:28px;padding:0 9px;border:0;border-radius:6px;background:transparent;color:var(--accent-ink);font:500 12.5px var(--sans);cursor:pointer}.ds-prompt button:hover{background:color-mix(in srgb,var(--accent) 12%,transparent)}.ds-prompt pre{margin:0;padding:2px 16px 16px;white-space:pre-wrap;font:400 15px/1.6 var(--sans);color:var(--ink)}"
+    },
+    {
+      "name": "Callout (warn)",
+      "kind": "card",
+      "refersTo": "callout-warn",
+      "description": "Caution aside with icon and title.",
+      "html": "<aside class=\"ds-callout\"><div><p class=\"t\">Atenção</p><p>Esta rota escreve dados.</p></div></aside>",
+      "css": ".ds-callout{padding:14px 16px;border:1px solid var(--warn-line);border-radius:10px;background:var(--warn-bg);font:15px/1.6 var(--sans);color:var(--text)}.ds-callout p{margin:0 0 8px}.ds-callout .t{color:var(--ink);font-weight:600}"
+    },
+    {
+      "name": "Method Badge and Endpoint Head",
+      "kind": "chip",
+      "refersTo": "method-badge",
+      "description": "Semantic HTTP method pill beside the mono path.",
+      "html": "<div class=\"ds-ep\"><span class=\"ds-m\">GET</span><code>/v1/jobs</code></div>",
+      "css": ".ds-ep{display:flex;align-items:center;gap:12px}.ds-m{font:600 12px/1 var(--mono);letter-spacing:.02em;padding:5px 7px;border-radius:5px;background:var(--get-bg);color:var(--get-ink)}.ds-ep code{font:600 1.1875rem/1.4 var(--mono);color:var(--ink)}"
+    },
+    {
+      "name": "Pending Chip",
+      "kind": "chip",
+      "refersTo": "pending-chip",
+      "description": "Amber dashed marker for undefined production values.",
+      "html": "<span class=\"ds-ph\">{BASE_URL}</span>",
+      "css": ".ds-ph{font:.86em/1.4 var(--mono);color:var(--ph-ink);background:var(--ph-bg);border:1px dashed var(--ph-line);border-radius:4px;padding:0 .28em;white-space:nowrap;cursor:help}"
+    },
+    {
+      "name": "Pager Card",
+      "kind": "card",
+      "refersTo": "pager-card",
+      "description": "Previous/next page link.",
+      "html": "<a class=\"ds-pager\"><span>Próxima</span><strong>Manifesto</strong></a>",
+      "css": ".ds-pager{display:flex;flex-direction:column;gap:2px;padding:14px 16px;border:1px solid var(--line);border-radius:10px;text-decoration:none;transition:border-color 120ms,background 120ms}.ds-pager:hover{border-color:var(--accent-line);background:var(--bg-subtle)}.ds-pager span{font-size:13px;color:var(--text-3)}.ds-pager strong{font-size:15px;font-weight:600;color:var(--ink)}"
+    },
+    {
+      "name": "Map Picker Pill",
+      "kind": "chip",
+      "refersTo": "",
+      "description": "Plugin-map surface selector; selected state inverts to Ink.",
+      "html": "<div class=\"ds-pick\"><button aria-selected=\"true\">Ação</button><button aria-selected=\"false\">Aba</button></div>",
+      "css": ".ds-pick{display:flex;gap:6px}.ds-pick button{height:32px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--text-2);font:500 13.5px var(--sans);cursor:pointer;transition:background 120ms,color 120ms,border-color 120ms}.ds-pick button:hover{border-color:var(--line-strong);color:var(--ink)}.ds-pick button[aria-selected=true]{background:var(--ink);border-color:var(--ink);color:var(--bg)}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Workbench",
+    "overview": "docs.holdworks.ai is a workbench that the reader's AI executes while the human approves. Every page pairs reference with a copy-ready action: a command, a prompt or a request. The look is the documentation category's canon: white ground, slate ink, one Holdprint blue, slate hairlines. Light and dark themes are equal citizens.\n\nDensity is calm and reference-grade. Depth comes from 1px hairlines and tonal steps; the only dark objects are the code panels. Confirmed rejections: no marketing hero on the docs home, no single endless scrolling page, no gradients, no glass.",
+    "keyCharacteristics": [
+      "One accent (Holdprint blue) on a slate neutral ramp; other hues only carry meaning.",
+      "Hairline borders and tonal fills define structure; shadows exist only on overlays.",
+      "Inter for prose and UI, JetBrains Mono for literals.",
+      "Every page ends in an action: copy buttons and page-level Copiar para a IA / Markdown.",
+      "A signature interaction: the plugin map."
+    ],
+    "rules": [
+      {
+        "name": "The One Accent Rule",
+        "body": "Blue is the only brand color. Other hues appear only as method, caution or pending semantics, never as decoration.",
+        "section": "colors"
+      },
+      {
+        "name": "The Dark Code Rule",
+        "body": "Code panels are dark slate in light and dark themes alike.",
+        "section": "colors"
+      },
+      {
+        "name": "The Pending Marker Rule",
+        "body": "An undecided value renders as an amber dashed monospace chip with a help cursor, never as an invented host.",
+        "section": "colors"
+      },
+      {
+        "name": "The Literal Is Mono Rule",
+        "body": "Anything a reader or an AI will paste, type or match is set in JetBrains Mono. Everything else is Inter.",
+        "section": "typography"
+      },
+      {
+        "name": "The No Uppercase Rule",
+        "body": "Labels are sentence case at a small size and heavier weight; no uppercase or letter-spaced micro-label style.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Page Rule",
+        "body": "Page content never carries a shadow. A shadow means this floats above the page.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do pair every concept with a copy-ready action: a code figure, a prompt figure or both, each with a copy button.",
+      "Do use only the tokens above. Blue (#2563eb) is the sole accent, and slate carries everything else.",
+      "Do set literals in JetBrains Mono, and everything else in Inter at 400 to 720.",
+      "Do build structure with 1px hairlines and Ground/Subtle/Muted steps.",
+      "Do keep code panels dark slate in both themes and make light and dark equally finished.",
+      "Do render undecided production URLs as amber dashed pending chips.",
+      "Do use the 120ms transition with the cubic-bezier(.2,.8,.2,1) ease, and honor prefers-reduced-motion.",
+      "Do keep keyboard focus visible (2px accent outline, 2px offset)."
+    ],
+    "donts": [
+      "Don't put a marketing hero, gradient headline or fake chat demo on the docs home.",
+      "Don't put one endless scrolling page in place of addressable per-topic pages.",
+      "Don't use gradients, glass or blur, or shadows on page content.",
+      "Don't add a second accent hue or decorative color.",
+      "Don't theme the code panel to light.",
+      "Don't use uppercase or letter-spaced micro-labels above headings.",
+      "Don't use emoji or glyph icons; icons are the inline stroke SVG set.",
+      "Don't invent hosts, ports, accounts or keys in examples; use a placeholder chip."
+    ]
+  }
+}

@@ -1,0 +1,31 @@
+<!-- legacy-id: skills -->
+<h2>Instalar as skills</h2>
+      <p class="section-sub">As skills ensinam a LLM a entender o domínio do Holdprint: onde fica o custo (CostMemento), como resolver campos dinâmicos, blocos e medidas. Sem elas, a IA chuta.</p>
+      <div class="steps">
+        <div class="step"><div class="step-num"></div><div class="step-body">
+          <h3>Instale com um comando</h3>
+          <p>Detecta os harnesses instalados (Claude Code, Codex, Cursor, Gemini CLI, Copilot) e copia as skills para cada um.</p>
+          <div class="code" data-copy>
+            <div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">terminal</span></div>
+            <pre><code>npx @holdprint/skills install</code></pre>
+          </div>
+        </div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body">
+          <h3>Alvos específicos & manutenção</h3>
+          <div class="code" data-copy>
+            <div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">terminal</span></div>
+            <pre><code>npx @holdprint/skills install <span class="f">--harness</span>=claude,codex
+npx @holdprint/skills check
+npx @holdprint/skills update</code></pre>
+          </div>
+        </div></div>
+      </div>
+      <h3>O que vem instalado</h3>
+      <div class="tools">
+        <div class="tool"><code>holdprint-mcp</code><span>Operar o ERP pelo MCP (as 28 tools).</span></div>
+        <div class="tool"><code>holdprint-mongo</code><span>Ler o ERP por conexão MongoDB read-only.</span></div>
+      </div>
+      <div class="callout info">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        <div><p class="ct-title">Reinicie o harness</p><p>Depois de instalar, reinicie a ferramenta (ou abra uma nova sessão) para ela carregar as skills.</p></div>
+      </div>

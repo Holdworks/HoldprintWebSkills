@@ -1,0 +1,14 @@
+[
+  { "key": "CustomersController.Create:POST:api/customers", "label": "Cadastrar cliente" },
+  { "key": "CustomersController.UpdateAsync:PUT:api/customers/{id}", "label": "Atualizar cliente" },
+  { "key": "BudgetsController.Create:POST:api/budgets", "label": "Criar orçamento" },
+  { "key": "BudgetsController.Won:POST:api/budgets/won", "label": "Ganhar orçamento" },
+  { "key": "BudgetsController.Lost:POST:api/budgets/lost", "label": "Perder orçamento" },
+  { "key": "ExpensesController.CreateExpenseInstallments:POST:api/expenses/create-expense-installments", "label": "Lançar conta a pagar (com parcelas)" },
+  { "key": "IncomesController.CreateIncomeInstallments:POST:api/incomes/create-income-installments", "label": "Lançar conta a receber (com parcelas)" },
+  { "key": "FeedstockController.ChangeFeedstocksPrices:POST:api/feedstocks/change-feedstocks-prices", "label": "Mudar o preço de insumos" },
+  { "key": "PurchaseOrdersController.CreateStockEntry:PUT:api/purchase-orders/stock-entry/{id}", "label": "Dar entrada no estoque pelo pedido de compra" },
+  { "key": "JobsController.Finalize:POST:api/jobs/finalize", "label": "Finalizar jobs" },
+  { "key": "AccountFilesController.PostAsync:POST:api/account-files", "label": "Anexar arquivo à conta" },
+  { "key": "NfeController.PutNfesSendAsync:PUT:api/nfes/send/{id}", "label": "Enviar NF-e para a Sefaz" }
+]

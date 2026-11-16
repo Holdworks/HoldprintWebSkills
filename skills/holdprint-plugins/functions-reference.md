@@ -33,7 +33,7 @@ Depois: `holdprint plugin validate`, `holdprint dev` (simulador, com "Executar a
 | Campo | Regra |
 |---|---|
 | `functions.entry` | Obrigatório para ter agenda, `events.path` ou hooks. |
-| `schedules[].every` | Só estes valores: `1m`, `15m`, `30m`, `1h`, `6h`, `12h`, `1d`. O servidor tem um mínimo: 15 min em produção (`1m` só vale na stack local, que usa 60 s). Fora do catálogo ou abaixo do mínimo dá `400 HOLD_PLUGIN_PLATFORM_60`. A tela de aprovação mostra `<description>, <frequência>` (ex.: "Follow-up, todo dia"). |
+| `schedules[].every` | Só estes valores: `1m`, `15m`, `30m`, `1h`, `6h`, `12h`, `1d`. O servidor tem um mínimo: 15 min em produção (`1m` não é aceito). Fora do catálogo ou abaixo do mínimo dá `400 HOLD_PLUGIN_PLATFORM_60`. A tela de aprovação mostra `<description>, <frequência>` (ex.: "Follow-up, todo dia"). |
 | `schedules[].id`, `hooks[].name` | `^[a-z0-9][a-z0-9-]{1,38}$`. Até 5 agendas e 5 hooks. |
 | `path` | Começa com `/api/`. |
 | `events.path` | Exige `events.subscribe` (tipos do catálogo). A função recebe um POST por evento. |
@@ -118,7 +118,7 @@ falha com mensagem clara; avise o usuário de qual nome falta e como gravar.
 ## Hooks de terceiros (receber chamada de fora)
 
 Um serviço externo (cobrança, formulário) pode chamar o plugin em `POST https://hooks.<domínio da Hold>/<installationId>/<nome>`
-(na stack local, `http://hooks.plugins.localhost:8787/<installationId>/<nome>`; a URL exata aparece na tela de aprovação). O porteiro
+(a URL exata aparece na tela de aprovação). O porteiro
 aceita só POST de até 256 KiB (acima disso, 413), descarta cookies e cabeçalhos internos, guarda a chamada e responde `202 {id}`.
 Hook não declarado (ou instalação desligada) dá `404 _63`. A função recebe depois, com `x-hold-trigger: hook`, o corpo e os
 cabeçalhos do terceiro (ex.: `x-signature`).
@@ -133,9 +133,7 @@ const ok = await hold.verifyHmac(corpo, request.headers.get("x-signature") ?? ""
 if (!ok) return Response.json({ erro: "assinatura_invalida" }, { status: 401 });
 ```
 
-Sem conferir, qualquer pessoa que descubra a URL dispara a função. Para testar localmente:
-`node scripts/hook-sender.mjs <installationId> cobranca --budget <id>` (no repositório holdprint-plugins; gera o segredo, grava no
-plugin sem mostrar e manda o POST assinado; `--target teste` usa `https://hooks.hold.market`).
+Sem conferir, qualquer pessoa que descubra a URL dispara a função. Para testar, peça ao serviço de cobrança um envio de teste para a URL do hook, assinado com o segredo (o valor nunca passa pelo chat).
 
 ## Testar
 
@@ -175,6 +173,5 @@ Assinatura da plataforma recusada com 401 (`platform_signature` nos registros): 
 
 - O `console` é capturado globalmente: execuções simultâneas no mesmo isolate podem misturar linhas nos Registros.
 - O corpo do hook é guardado como texto UTF-8: corpo binário é alterado e a assinatura HMAC do terceiro não confere.
-- Na stack local, o porteiro de saída não manda `x-hold-installation` à WebApi (quem identifica a instalação é o token).
-- Trocar um segredo reinicia o plugin por ~1 s na stack local: uma execução em curso pode falhar uma vez e a entrega tenta de novo.
-- Na nuvem, os Registros podem levar até ~60 s para aparecer (`holdprint plugin logs --follow` alcança sozinho).
+- Trocar um segredo reinicia o plugin por ~1 s: uma execução em curso pode falhar uma vez e a entrega tenta de novo.
+- Os Registros podem levar até ~60 s para aparecer (`holdprint plugin logs --follow` alcança sozinho).

@@ -1,0 +1,88 @@
+<!-- legacy-id: api-jobs -->
+<h2>Jobs · Produção</h2><p class="section-sub">Consulta de jobs (trabalhos/pedidos) com custos em 4 fases (orçado, aprovado, planejado, realizado) e dados completos de produção: progresso, tasks e insumos consumidos.</p>
+
+<div class="ref">
+  <div class="ref-head"><span class="ref-tag get">GET</span><code>/api-key/jobs/data</code></div>
+  <div class="ref-body">
+    <p>Consulta dados detalhados de jobs com paginação, filtros por data e tradução de campos. Retorna custos em diferentes fases e informações de produção (status, progresso, tasks, feedstocks). Autenticação via API Key no header <code>x-api-key</code>.</p>
+    <div class="callout warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg><div><p class="ct-title">Filtro padrão</p><p>Sem datas, retorna apenas jobs do <strong>mês corrente</strong>. Para jobs históricos, informe <code>startDate</code> e <code>endDate</code> explicitamente.</p></div></div>
+    <h3>Parâmetros de Consulta</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Padrão</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>page</td><td>integer</td><td>1</td><td>Número da página (mínimo: 1)</td></tr>
+      <tr><td>pageSize</td><td>integer</td><td>20</td><td>Registros por página (mínimo: 1, máximo: 100)</td></tr>
+      <tr><td>startDate</td><td>datetime</td><td>1º dia do mês</td><td>Data inicial do filtro (ISO 8601)</td></tr>
+      <tr><td>endDate</td><td>datetime</td><td>último dia do mês</td><td>Data final do filtro (ISO 8601)</td></tr>
+      <tr><td>language</td><td>string</td><td>"pt-BR"</td><td>Idioma para tradução de campos</td></tr>
+    </tbody></table>
+    <h3>Exemplos</h3>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash · mês atual</span></div><pre><code>curl -X GET "https://api.holdworks.ai/api-key/jobs/data?page=1&amp;pageSize=20" \
+  -H "x-api-key: sua_api_key_aqui"</code></pre></div>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash · todos (sem filtro de data)</span></div><pre><code>curl -X GET "https://api.holdworks.ai/api-key/jobs/data?page=1&amp;pageSize=100&amp;startDate=2000-01-01&amp;endDate=2099-12-31" \
+  -H "x-api-key: sua_api_key_aqui"</code></pre></div>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash · período específico</span></div><pre><code>curl -X GET "https://api.holdworks.ai/api-key/jobs/data?page=1&amp;pageSize=10&amp;startDate=2025-10-01&amp;endDate=2025-10-31&amp;language=pt-BR" \
+  -H "x-api-key: sua_api_key_aqui"</code></pre></div>
+    <h3>Estrutura da Resposta — JobDataModel</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>id</td><td>string</td><td>Identificador único (ObjectId) do job</td></tr>
+      <tr><td>code</td><td>integer</td><td>Código sequencial do job</td></tr>
+      <tr><td>title</td><td>string</td><td>Título/descrição do job</td></tr>
+      <tr><td>customerName</td><td>string</td><td>Nome do cliente associado</td></tr>
+      <tr><td>responsibleName</td><td>string</td><td>Nome do responsável pelo job</td></tr>
+      <tr><td>commercialResponsibleName</td><td>string</td><td>Nome do responsável comercial</td></tr>
+      <tr><td>creationTime</td><td>datetime</td><td>Data e hora de criação</td></tr>
+      <tr><td>deliveryNeeded</td><td>datetime?</td><td>Data necessária para entrega</td></tr>
+      <tr><td>deliveryExpected</td><td>datetime?</td><td>Data esperada de entrega</td></tr>
+      <tr><td>totalPrice</td><td>decimal</td><td>Preço total do job</td></tr>
+      <tr><td>paymentOption</td><td>string</td><td>Forma de pagamento selecionada</td></tr>
+      <tr><td>jobChargeStatus</td><td>string</td><td>Status de cobrança (Pending, Partial, Paid, Overdue)</td></tr>
+      <tr><td>jobInvoiceStatus</td><td>string</td><td>Status de faturamento (NotIssued, Partial, Issued, Cancelled)</td></tr>
+      <tr><td>isFinalized</td><td>boolean</td><td>Indica se o job foi finalizado</td></tr>
+      <tr><td>costs</td><td>object</td><td>Detalhes de custos em diferentes fases</td></tr>
+      <tr><td>production</td><td>object</td><td>Informações de produção (status, progresso, items, tasks)</td></tr>
+      <tr><td>products</td><td>array</td><td>Lista de produtos do job (do memento de custo)</td></tr>
+    </tbody></table>
+    <h3>JobCostDataModel — custos em 4 fases</h3>
+    <table class="dtable"><thead><tr><th>Fase</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>budgeted</td><td>Valores orçados (TotalPrice, ProductionCost, SellingCost, Profit, ProfitPercentual)</td></tr>
+      <tr><td>approved</td><td>Valores aprovados pelo cliente</td></tr>
+      <tr><td>planned</td><td>Valores planejados para produção</td></tr>
+      <tr><td>realized</td><td>Valores realizados (custos reais)</td></tr>
+    </tbody></table>
+    <h3>JobProductionDataModel</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>status</td><td>string</td><td>"Started" ou "NotStarted"</td></tr>
+      <tr><td>progressPercentage</td><td>decimal?</td><td>Percentual de progresso (0-100), por tasks finalizadas</td></tr>
+      <tr><td>startDate</td><td>datetime?</td><td>Menor data entre as tasks</td></tr>
+      <tr><td>endDate</td><td>datetime?</td><td>Maior data entre as tasks</td></tr>
+      <tr><td>items</td><td>array</td><td>Itens de produção com tasks e feedstocks</td></tr>
+    </tbody></table>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Cálculos automáticos</p><p><strong>progressPercentage</strong>: (tasks finalizadas / total) × 100. <strong>startDate</strong>: menor entre StartedDate/ReleasedDate/ScheduleStartDate. <strong>endDate</strong>: maior entre FinalizedDate/ScheduleEndDate.</p></div></div>
+    <h3>JobProductionTaskDataModel</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>publicId</td><td>integer</td><td>ID público da tarefa</td></tr>
+      <tr><td>name</td><td>string</td><td>Nome da tarefa</td></tr>
+      <tr><td>processPublicId</td><td>integer</td><td>ID público do processo associado</td></tr>
+      <tr><td>productionStatus</td><td>string</td><td>NotStarted, InProgress, Paused, Finalized, Cancelled</td></tr>
+      <tr><td>duration</td><td>decimal</td><td>Duração estimada/real (minutos)</td></tr>
+      <tr><td>scheduleStartDate</td><td>datetime?</td><td>Data agendada de início</td></tr>
+      <tr><td>scheduleEndDate</td><td>datetime?</td><td>Data agendada de término</td></tr>
+      <tr><td>startedDate</td><td>datetime?</td><td>Data real de início</td></tr>
+      <tr><td>finalizedDate</td><td>datetime?</td><td>Data real de finalização</td></tr>
+    </tbody></table>
+    <h3>JobProductionFeedstockDataModel</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>feedstockId</td><td>string</td><td>ID único (ObjectId) do feedstock</td></tr>
+      <tr><td>publicId</td><td>integer</td><td>ID público do feedstock</td></tr>
+      <tr><td>comercialId</td><td>integer</td><td>ID comercial do feedstock</td></tr>
+      <tr><td>options</td><td>object</td><td>Dicionário com opções traduzidas (ex.: "Largura": "210mm")</td></tr>
+    </tbody></table>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Boas práticas</p><ul><li>Sempre especifique <code>startDate</code>/<code>endDate</code> para jobs históricos</li><li>Use <code>pageSize</code> entre 20 e 50 para otimizar performance</li><li>Verifique <code>hasNextPage</code> antes da próxima página</li><li>Implemente cache local para reduzir chamadas</li></ul></div></div>
+    <h3>Diferenças vs. Orçamentos</h3>
+    <table class="dtable"><thead><tr><th>Aspecto</th><th>Jobs</th></tr></thead><tbody>
+      <tr><td>Filtro de data</td><td>Padrão = mês corrente (Orçamentos não têm filtro padrão)</td></tr>
+      <tr><td>Custos</td><td>4 fases (budgeted, approved, planned, realized)</td></tr>
+      <tr><td>Produção</td><td>Dados completos (items, tasks, feedstocks, progresso)</td></tr>
+      <tr><td>Produtos</td><td>Do memento de custo (Orçamentos usam produtos de catálogo)</td></tr>
+    </tbody></table>
+  </div>
+</div>

@@ -1,4 +1,4 @@
-# API /v1 (fatia 1)
+# API /v1
 
 Chamada pelo SDK: `hold.api.get('/budgets?...')` vira `/_hold/v1/budgets` na própria origem e chega na WebApi em
 `api/v1/budgets`. O token do quadro vai no Bearer; a WebApi confere assinatura, expiração, instalação ativa e escopo.
@@ -24,7 +24,7 @@ Só existe o que está nesta página: nenhuma rota `api/...` do ERP é acessíve
 | `PUT /v1/tasks/{id}/complete` | `tasks:write` | Conclui a tarefa |
 | `GET/PUT/DELETE /v1/storage/...` | implícito | Dados do plugin (use `hold.storage`) |
 
-## Fatia 3 — sincronização, mover etapa e cotas
+## Sincronização, mover etapa e cotas
 
 Confira o contrato real em `GET /anonymous-api/plugin-platform/openapi/v1.json` (sem token; cada operação traz `x-hold-scopes`
 e, nas escritas, `x-hold-idempotent`).
@@ -139,7 +139,7 @@ Fora da cota diária; conta nos 300 por minuto. Entrega ao menos uma vez, sem or
 
 ```json
 { "type": "budget.won", "timestamp": "2026-10-30T14:02:11Z",
-  "data": { "id": "evt_8f3c...", "accountId": 429, "budgetId": "6a62...", "budgetCode": 1234,
+  "data": { "id": "evt_8f3c...", "accountId": 1234, "budgetId": "6a62...", "budgetCode": 1234,
             "actor": { "type": "user", "id": "...", "name": "Fulano", "viaPluginId": null } } }
 ```
 

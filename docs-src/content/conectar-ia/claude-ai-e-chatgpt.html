@@ -1,0 +1,70 @@
+<!-- legacy-id: install-web -->
+<h2>Instalar no claude.ai & ChatGPT</h2>
+      <p class="section-sub">Pelo navegador, sem instalar nada. Adicione um conector personalizado apontando para o MCP.</p>
+
+      <div class="tabs" id="webTabs">
+        <div class="tab-bar">
+          <button class="tab-btn active" data-tab="cai"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M7 12h10"/></svg>claude.ai</button>
+          <button class="tab-btn" data-tab="gpt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>ChatGPT</button>
+        </div>
+
+        <div class="tab-panel active" data-panel="cai">
+          <div class="steps">
+            <div class="step"><div class="step-num"></div><div class="step-body">
+              <h3>Abra os conectores</h3>
+              <p>Em claude.ai: <strong>Configurações → Conectores → Adicionar conector personalizado</strong>.</p>
+            </div></div>
+            <div class="step"><div class="step-num"></div><div class="step-body">
+              <h3>Cole o endpoint</h3>
+              <p>Informe um nome e a URL do MCP. Salve.</p>
+              <div class="shot"><div class="shot-bar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="shot-url">claude.ai/settings/connectors</span></div>
+                <div class="shot-body">
+                  <div class="connector-card">
+                    <p class="cc-h">Adicionar conector personalizado</p>
+                    <p class="cc-sub">Conecte uma ferramenta via MCP.</p>
+                    <div class="field-label">Nome</div>
+                    <div class="field">Holdprint ERP</div>
+                    <div class="field-label">URL do servidor MCP</div>
+                    <div class="field">https://mcp.holdprint.net/mcp</div>
+                    <div class="fake-btn">Adicionar</div>
+                  </div>
+                </div>
+              </div>
+            </div></div>
+            <div class="step"><div class="step-num"></div><div class="step-body">
+              <h3>Faça login (OAuth)</h3>
+              <p>Ao conectar, abre a tela de login da Holdprint. Entre com seu e-mail e senha do ERP e autorize. O conector fica <strong>Conectado</strong>.</p>
+            </div></div>
+            <div class="step"><div class="step-num"></div><div class="step-body">
+              <h3>Use no chat</h3>
+              <p>As tools <code class="inline">holdprint_*</code> ficam disponíveis. Pergunte em português.</p>
+            </div></div>
+          </div>
+        </div>
+
+        <div class="tab-panel" data-panel="gpt">
+          <div class="steps">
+            <div class="step"><div class="step-num"></div><div class="step-body">
+              <h3>Abra os conectores</h3>
+              <p>No ChatGPT (planos com conectores): <strong>Settings → Connectors → Add custom / MCP server</strong>.</p>
+            </div></div>
+            <div class="step"><div class="step-num"></div><div class="step-body">
+              <h3>Cole o endpoint</h3>
+              <p>Tipo <code class="inline">http</code> (streamable), URL abaixo. Autenticação: OAuth.</p>
+              <div class="code" data-copy>
+                <div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">endpoint</span></div>
+                <pre><code>https://mcp.holdprint.net/mcp</code></pre>
+              </div>
+            </div></div>
+            <div class="step"><div class="step-num"></div><div class="step-body">
+              <h3>Faça login e use</h3>
+              <p>O login da Holdprint abre automaticamente. Depois é só pedir à IA.</p>
+            </div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+        <div><p class="ct-title">Endpoint a confirmar</p><p>A URL oficial de produção do MCP será confirmada na publicação. Se não responder, peça a URL atual ao suporte Holdprint.</p></div>
+      </div>

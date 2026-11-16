@@ -23,6 +23,8 @@ Quatro caminhos:
 
 ## Entrar e conferir quem sou
 
+0. A CLI precisa de **Node.js 22 ou mais novo**. Se `holdprint --version` não responder: `npm install -g @holdprint/cli`. Não há `--target` nem chave para configurar: tudo vale para a conta de quem fez login.
+
 1. `holdprint login` (device code: a CLI imprime um código e um endereço; o usuário abre no navegador já logado, confere e clica
    em **Aprovar**). Nunca peça a senha, nunca leia nem copie o token da CLI.
 2. `holdprint whoami` mostra usuário, conta, perfil e escopos. Rode antes de qualquer coisa: se faltar `erp:read` ou
@@ -54,9 +56,9 @@ Resumo; os detalhes estão nas referências.
 holdprint query --list                                   # recursos ligados, campos, filtros e ordenações permitidos
 holdprint query budgets --where state=Open --fields id,code,customer,businessValue --sort -creationTime --limit 50
 holdprint actions list --search cliente --risk medium    # o que dá para escrever
-holdprint actions describe <acao>                        # schema do corpo, risco, se pede aprovação
-holdprint actions run <acao> --data @corpo.json --dry-run   # mostra método, rota final, corpo, risco e impacto SEM enviar
-holdprint actions run <acao> --data @corpo.json          # executa direto
+holdprint actions describe <ação>                        # schema do corpo, risco, se pede aprovação
+holdprint actions run <ação> --data @corpo.json --dry-run   # mostra método, rota final, corpo, risco e impacto SEM enviar
+holdprint actions run <ação> --data @corpo.json          # executa direto
 holdprint api --help | holdprint query --help | holdprint actions --help   # uso exato de cada comando
 ```
 
@@ -76,7 +78,7 @@ holdprint tools run holdprint_report --json '{"report":"saldo_estoque"}' --out /
 holdprint tools run holdprint_import --data @clientes.json
 ```
 
-- URL do MCP: `--mcp-url`, `HOLDPRINT_MCP_URL` ou `mcpBase` no config; no ambiente local é `http://localhost:3045/mcp`.
+- URL do MCP: `--mcp-url`, `HOLDPRINT_MCP_URL` ou `mcpBase` no config; o `holdprint login` já grava o endereço do MCP da sua conta.
 - Argumentos: `--json '{...}'`, `--data @arquivo.json` ou `--campo valor` (aninhado com ponto: `--filtro.estado Open`; números, `true`,
   `[...]` e `{...}` são entendidos como JSON). Os flags valem por cima de `--json/--data`.
 - O texto devolvido pela ferramenta sai como texto. Em resposta grande use `--out arquivo` e fatie com `jq`/`head`.
@@ -112,7 +114,7 @@ para você:
 - Para o resto (cadastro, mover etapa, tarefa), execute e relate o que gravou; releia o registro para provar.
 - Nunca escreva o que o usuário não pediu; nunca reenvie com outra Idempotency-Key para "furar" a proteção contra duplicar.
 - **Caso raro: aprovação.** Só uma rota que a plataforma marcou para aprovação responde 428 (erro 89). Aí a CLI imprime
-  `Link de aprovacao: <Holdprint>/aprovacoes/<id>` e **espera**; mostre o link ao usuário (só um Administrador aprova, na tela;
+  `Link de aprovação: <Holdprint>/aprovacoes/<id>` e **espera**; mostre o link ao usuário (só um Administrador aprova, na tela;
   vale uma execução, 30 minutos, para exatamente aquele corpo). Recusada ou expirada: diga ao usuário e pare. Não contorne com
   outra rota nem divida a ação.
 
@@ -138,7 +140,7 @@ diferente dá erro 400. Nunca use timestamp ou aleatório puro "por garantia": i
 - Resposta traz `nextCursor` (query) ou `hasNextPage` (api). Nunca assuma que a primeira página é tudo; diga ao usuário quando
   cortou por `--max-pages`/`--limit`.
 
-### Receitas testadas de `tools run` (conta 429, 27/10/2026)
+### Receitas testadas de `tools run` (testadas em 27/10/2026)
 
 O nome do campo vem do schema: o erro `-32602 ... expected string, received undefined` quer dizer argumento errado. A CLI já imprime
 o schema e um exemplo de `--json`; `holdprint tools describe <nome>` mostra o mesmo antes de errar.

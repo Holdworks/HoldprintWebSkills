@@ -284,15 +284,13 @@ Holdprint publicado: `Holdprint.connect()` e `hold.*` se comportam igual.
 ## HoldprintExternal (apps fora do Holdprint)
 
 Outro SDK, para a página do **app externo** (TV, celular), não para o plugin dentro do Holdprint: carregue
-`<id.domínio técnico>/sdk/external-v1.js` (local: `http://id.plugins.localhost:8787/sdk/external-v1.js`; nuvem de teste:
-`https://id.hold.market/sdk/external-v1.js`). `Holdprint.connect()` **não** funciona fora do Holdprint.
+`<id.domínio técnico>/sdk/external-v1.js` (o endereço exato aparece na tela de aprovação do plugin). `Holdprint.connect()` **não** funciona fora do Holdprint.
 
 - `HoldprintExternal.init({ pluginId, appId, identityBase?, apiBase?, persist? })`: sem `identityBase`, usa o endereço de onde o script veio;
   `persist` é `'session'` (padrão), `'local'` (TV/quiosque que continua logado depois de recarregar) ou `'memory'`.
 - `app.signIn({ onCode, signal })`: com `onCode` é o fluxo `device` (`onCode` recebe `{ userCode, verificationUri, qrUrl, qrSvg, expiresIn, interval }`:
   mostre `userCode` e desenhe o QR com `el.innerHTML = info.qrSvg`; **`qrUrl` é o TEXTO dentro do QR, não uma imagem**, nunca `img.src`); sem `onCode` é o fluxo `web` (redireciona; na volta, `app.handleRedirect()` troca `code`/`state`, PKCE feito pelo SDK).
-- `app.api.get/post/put/del(path)`: `/v1` pelo `api.<domínio técnico>` (local `http://api.plugins.localhost:8787`, nuvem de teste
-  `https://api.hold.market`), com renovação automática. Só ali. Sessão sem volta dá `ExternalAuthError`; erro de dados, `HoldApiError`.
+- `app.api.get/post/put/del(path)`: `/v1` pelo `api.<domínio técnico>` (o endereço exato aparece na tela de aprovação do plugin), com renovação automática. Só ali. Sessão sem volta dá `ExternalAuthError`; erro de dados, `HoldApiError`.
 - `HoldprintExternal.qrSvg(texto, { size?, margin?, dark?, light? })`: SVG de QR gerado localmente (sem CDN); `info.qrSvg` já vem pronto.
 - `app.isSignedIn()`, `app.signOut()` (revoga) e `app.verifyContext(jws)` (deep link assinado, conferido pelo JWKS; recusa com `ExternalContextError.reason`).
 - **Nunca** peça senha, nem guarde token ou refresh fora do que o SDK guarda. Detalhes, exemplo e erros: `external-apps-reference.md`.

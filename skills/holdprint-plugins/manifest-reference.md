@@ -1,6 +1,6 @@
 # Manifesto `holdprint.plugin.json`
 
-Schema oficial: `schemas/holdprint.plugin.schema.json` no repo holdprint-plugins. Valide com `holdprint plugin validate [pasta]`.
+Valide com `holdprint plugin validate [pasta]`.
 
 ```json
 {
@@ -19,7 +19,7 @@ Schema oficial: `schemas/holdprint.plugin.schema.json` no repo holdprint-plugins
 
 | Campo | Regra |
 |---|---|
-| `schemaVersion` | `"2026-10-23"` na fatia 1. |
+| `schemaVersion` | `"2026-10-23"`. |
 | `slug` | 3 a 40 caracteres, minúsculas, números e hifens, sem hifen nas pontas. Identifica o plugin do autor. O `deploy` faz upsert por slug. **Não** é o `pluginId`. |
 | `name`, `description` | Pt-BR, curtos (nome até 60, descrição até 280). Aparecem na tela Plugins. |
 | `scopes[]` | Cada item com `scope` (do catálogo) e `purpose` (por que precisa, em pt-BR). Só o necessário. |
@@ -62,14 +62,13 @@ A tela de aprovação mostra "Recebe avisos: ..." e "Envia avisos para: <host>" 
 | Campo | Regra |
 |---|---|
 | `schedules[].id`, `hooks[].name` | `^[a-z0-9][a-z0-9-]{1,38}$`; até 5 agendas e 5 hooks. |
-| `schedules[].every` | `1m`, `15m`, `30m`, `1h`, `6h`, `12h`, `1d`; o servidor impõe um mínimo: 15 min em produção, 60 s só na stack local (`400 _60`). `description` aparece na aprovação como "<description>, <frequência>" (ex.: "Follow-up, todo dia"). |
+| `schedules[].every` | `1m`, `15m`, `30m`, `1h`, `6h`, `12h`, `1d`; o servidor impõe um mínimo: 15 min em produção, `1m` não é aceito (`400 _60`). `description` aparece na aprovação como "<description>, <frequência>" (ex.: "Follow-up, todo dia"). |
 | `path` (agenda, evento, hook) | Começa com `/api/`. |
 | `schedules`, `events.path`, `hooks` | Exigem `functions.entry`. `events.path` exige `events.subscribe`. |
 | `secrets[].name` | `^[A-Z][A-Z0-9_]{1,63}$`, até 20; só nomes declarados aqui podem ser gravados. O **valor** nunca vai no manifesto nem no chat (veja `functions-reference.md`). |
 | `network.domains[]` | Até 10 sites públicos; sem IP, curinga, porta nem sufixo interno (`400 _62`). Domínio fora da lista dá 403 na saída. |
 
-Exemplo completo: `examples/follow-up-automatico` no repositório holdprint-plugins (agenda, evento `budget.won`, hook `cobranca`,
-dois segredos e um domínio).
+Exemplo com agenda, evento `budget.won`, hook `cobranca`, dois segredos e um domínio: veja `examples.md`, seção 5.
 
 **Consentimento:** domínio novo, primeira agenda, agenda nova ou hook novo pedem novo consentimento (remover não pede). A tela de
 aprovação mostra "Hospedado pela Hold (Cloudflare)", "Roda sozinho: …", "Fala com: …" (selo **Novo**) e "Recebe chamadas de: <URL do hook>".
@@ -116,7 +115,7 @@ Opcional. Quando existe, `summary` e `category` são obrigatórios.
 | `id` | `^[a-z0-9][a-z0-9-]{1,38}$`, único no plugin. É o `appId` do SDK e de `hold.nav.openExternal`. |
 | `name` | Pt-BR, curto; aparece na aprovação e em Acessos conectados. |
 | `kind` | `device` (TV, sem teclado) ou `web` (navegador normal). |
-| `origins[]` | `https://` ou `http://localhost` (só no ambiente local); `esquema://host[:porta]`, sem caminho. |
+| `origins[]` | `https://` ou `http://localhost` (só em desenvolvimento); `esquema://host[:porta]`, sem caminho. |
 | `redirectUris[]` | Obrigatório em `web`; endereços exatos. Em `device` é recusado. |
 | `scopes[]` | Subconjunto dos `scopes` do manifesto; escopo fora dele dá `400 HOLD_PLUGIN_PLATFORM_80`. |
 | Limites | Até 3 apps. Fora das regras: `400 _80` (`ExternalAppInvalid`). |
@@ -183,7 +182,7 @@ Guia completo: `external-apps-reference.md`.
 
 - Plugin **só de ação** (sem página) não aparece no menu lateral; fica na tela Plugins e nos botões.
 - O botão só aparece para quem pode usar o plugin, e some quando o plugin é desligado (cache de até 60 s).
-- Template da CLI: `holdprint plugin create <pasta> --template acao` (uma ação de orçamento em modal). Exemplo completo: `examples/gerar-proposta` no repositório holdprint-plugins.
+- Template da CLI: `holdprint plugin create <pasta> --template acao` (uma ação de orçamento em modal).
 
 ### Alvos (`target`): onde o botão aparece
 
@@ -276,8 +275,8 @@ Todos com mensagem em português no campo `message` (a CLI mostra no `validate`)
 
 ## Catálogo de escopos
 
-Fatia 1: `budgets:read`, `customers:read`, `funnels:read`, `users:read`, `tasks:read`, `tasks:write`.
-Fatia 16 (leitura por tela, cada um exige a permissão de tela equivalente do usuário): `jobs:read`, `expenses:read`, `incomes:read` e, para os alvos
+Básicos: `budgets:read`, `customers:read`, `funnels:read`, `users:read`, `tasks:read`, `tasks:write`.
+Leitura por tela (cada um exige a permissão de tela equivalente do usuário): `jobs:read`, `expenses:read`, `incomes:read` e, para os alvos
 adicionais da tabela acima, `feedstocks:read`, `purchase-orders:read`, `stock-movements:read`, `stock-centrals:read`, `suppliers:read`, `employees:read`,
 `agencies:read`, `cost-centers:read`, `equipments:read`, `processes:read`, `products:read`, `outsourceds:read`, `fixed-expenses:read`,
 `financial-transactions:read`, `credit-cards:read`, `commissions:read`, `bank-reconciliations:read`, `invoices:read`, `contracts:read`.
@@ -287,8 +286,7 @@ Leitura do registro: `hold.api.get('/<recurso>/<id>')` (ex.: `/jobs/<id>`, `/exp
 `POST /<recurso>/query` existe só onde a API tem índice (hoje `jobs` e `expenses`; `incomes` ainda **não**: a consulta responde `93`, mas o
 botão e o `GET /incomes/<id>` funcionam). Detalhes em `sdk-reference.md` e `api-v1-reference.md`.
 
-> Nota de versão (29/10/2026): a tabela de alvos acima segue o escopo final da Onda 2. Os alvos depois de `income` entram na WebApi e na CLI
-> pela frente G; se `holdprint plugin validate` recusar um alvo da tabela com erro `66`, a sua CLI/API ainda não o tem: use só os alvos que ele lista.
+> Se `holdprint plugin validate` recusar um alvo da tabela com erro `66`, a sua CLI está desatualizada: rode `npm install -g @holdprint/cli` e use só os alvos que ela lista.
 
 ## O que a CLI faz com o manifesto
 

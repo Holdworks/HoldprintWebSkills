@@ -5,6 +5,10 @@ description: Use quando o usuário pedir para criar, alterar, publicar ou depura
 
 # Plugins do Holdprint
 
+## Instalar a CLI
+
+A CLI `holdprint` precisa de **Node.js 22 ou mais novo**. Se `holdprint --version` não responder, instale com `npm install -g @holdprint/cli`. Não há `--target` nem chave de publicação: `holdprint plugin deploy` publica pela **conta de quem fez `holdprint login`**, sem nenhuma chave guardada na máquina.
+
 ## Começo da conversa
 
 Faça isto **antes de qualquer outra coisa**, sem perguntar nada técnico. O usuário pode não ser programador: fale simples, sem jargão.
@@ -15,12 +19,12 @@ Faça isto **antes de qualquer outra coisa**, sem perguntar nada técnico. O usu
      projeto, não abra simulador e não escreva código antes de ela responder.
      - **Tem:** rode **você mesmo** `holdprint login` (nunca peça para a pessoa digitar comando). Ele abre o navegador e fica
        esperando a aprovação, então **rode em segundo plano** (no Claude Code, `run_in_background`), leia a saída até aparecer
-       `Codigo de confirmacao: XXXX-XXXX` e diga em uma frase: "Abri uma página no seu navegador: confira se o código é XXXX-XXXX
+       `Código de confirmação: XXXX-XXXX` e diga em uma frase: "Abri uma página no seu navegador: confira se o código é XXXX-XXXX
        e clique em Aprovar." Se o navegador não abriu, mostre também o link `Aprove em: ...` da saída. Espere o comando terminar
        com `Login feito como ...` antes de seguir. Depois de aprovado, construa direto na conta dela (sem passar pelo simulador).
      - **Não tem:** comece já, sem esperar: desenhe e teste o plugin no simulador (`holdprint dev`, com dados de exemplo, sem conta e sem rede).
        Quando ele quiser usar de verdade ou publicar, explique em uma frase: "Para colocar no seu Holdprint ou publicar, você precisa de uma conta de
-       teste grátis." e mande abrir **`<endereço do Holdprint>/holdai/register`** (no ambiente local: http://localhost:8003/holdai/register), criar a conta,
+       teste grátis." e mande abrir **`<endereço do Holdprint>/holdai/register`**, criar a conta,
        ativar pelo e-mail que chega e voltar avisando. Depois rode você mesmo `holdprint login`, como no caso acima. Não crie a conta por ele, não peça senha e não tente contornar o login.
 2. **Quando o plugin estiver pronto** (e só então), ofereça uma vez: "Quer publicar para todas as gráficas?" e siga o passo 7 do Fluxo. Se ele disser que
    não, ou não responder, não insista e não publique.
@@ -43,7 +47,7 @@ terceiro ou "Executar agora". Veja a seção "Funções, agenda e segredos" e `f
 - **Evento de teste:** `holdprint plugin trigger <tipo> [--entity <id>]` na pasta do plugin (ou `--installation <id>`), ex.:
   `holdprint plugin trigger budget.won --entity <id do orçamento>`. Sai marcado `test:true` e só a instalação deste plugin na
   conta recebe (função e webhook dela; aparece em Registros com gatilho evento). Nada vai ao feed de outra instalação. A CLI
-  imprime `Evento de teste budget.won enviado para a instalacao <id> ... eventId: <id>`. Tipo desconhecido = erro 400.
+  imprime `Evento de teste budget.won enviado para a instalação <id> ... eventId: <id>`. Tipo desconhecido = erro 400.
 - **Gravar no modo desenvolvedor:** `holdprint plugin dev --account --allow-writes`. Sem a flag, o modo dev só lê (escrita = 403
   51). Com ela, até **100 escritas por sessão** (a 101ª é recusada com 51), gravadas como "via plugin <nome> em desenvolvimento,
   por <usuário>". `--allow-writes` sem `--account` é recusado.
@@ -68,9 +72,9 @@ Se o pedido é só ler dados do ERP sem criar tela, use `holdprint-mcp` ou `hold
   do Administrador basta.
 
 1. **Entrar (uma vez):** `holdprint login` (no macOS abre o navegador; `--no-open` só imprime). A CLI usa o **device code**: imprime
-   `Codigo de confirmacao: XXXX-XXXX` e `Aprove em: <Holdprint>/identity/device?code=...`; o usuário abre no navegador já logado no
+   `Código de confirmação: XXXX-XXXX` e `Aprove em: <Holdprint>/identity/device?code=...`; o usuário abre no navegador já logado no
    Holdprint (o código vem preenchido), confere "Holdprint CLI", a conta e as permissões e clica em **Aprovar**. A CLI responde
-   `Login feito como <e-mail> (conta <n>). A sessao renova sozinha.` O acesso é renovado sozinho (1 h, com refresh de 30 dias) e a
+   `Login feito como <e-mail> (conta <n>). A sessão renova sozinha.` O acesso é renovado sozinho (1 h, com refresh de 30 dias) e a
    credencial fica no **Keychain** do macOS, nunca em `config.json`. `holdprint logout` revoga a concessão; o usuário também revoga em
    **Plugins > Acessos conectados**. Nunca peça a senha do usuário, nunca leia nem copie o token da CLI e não tente logar por conta própria.
 2. **Criar:** `holdprint plugin create <pasta> [--name "Nome"]` gera o projeto (manifesto, `public/`, `CLAUDE.md` do
@@ -192,8 +196,8 @@ Outros comandos: `holdprint plugin list` (id da instalação, pluginId, nome, at
 - **Testar sem esperar:** `holdprint plugin listen [--types budget.won,...]` mostra os eventos da conta em tempo real;
   `--forward-to http://localhost:9000/hook` entrega assinado ao seu receptor local (a CLI imprime um segredo efêmero no começo).
   `holdprint plugin webhook-secret [--rotate]` mostra o segredo uma vez. No simulador (`holdprint dev`) as escritas também emitem eventos.
-  Para conferir assinaturas na sua máquina: `node scripts/webhook-receiver.mjs --secret whsec_...` (do repositório holdprint-plugins);
-  `http://localhost` como `webhook.url` só vale na stack local, em produção é `https` público.
+  `http://localhost` como `webhook.url` só vale em desenvolvimento; em produção é `https` público.
+  Para conferir a assinatura na sua máquina, use um receptor seu com a biblioteca Standard Webhooks e o segredo `whsec_...`.
 - **Custo:** o feed do `subscribe` não gasta a cota diária de 10 mil (conta só no limite de 300 por minuto) e pausa com a aba escondida;
   um `subscribe` por tela basta. O Vendedor só recebe eventos dos orçamentos dele (a mesma visibilidade da tela).
 - **Erros:** `53` cursor de eventos inválido (400, recomece com `cursor=now`); `54` cursor mais velho que 30 dias (410, o SDK
@@ -230,15 +234,15 @@ Detalhes, manifesto e exemplos em `functions-reference.md`. O essencial:
   (os mesmos dados da tela **Registros**, 7 dias). Mostre ao usuário o resultado, não só "rodou".
 - **Hook de terceiro:** `POST https://hooks.<domínio>/<installationId>/<nome>` (até 256 KiB); **a função confere a assinatura do terceiro** com
   `hold.verifyHmac(corpo, assinatura, hold.requireSecret("NOME"), { prefix: "sha256=" })` (recebe o **valor** do segredo) e recusa (401) se não bater.
-- **Agenda:** `every` só `1m`, `15m`, `30m`, `1h`, `6h`, `12h`, `1d`; em produção o mínimo é 15 min (`1m` só na stack local). O horário é
+- **Agenda:** `every` só `1m`, `15m`, `30m`, `1h`, `6h`, `12h`, `1d`; em produção o mínimo é 15 min (`1m` não é aceito). O horário é
   espalhado entre instalações; agenda perdida roda uma vez ao voltar; plugin desligado não roda.
 - **Respeite a frequência que o usuário pediu.** "Todo dia" é `every: "1d"`, mesmo que haja mais de 20 itens: **não** troque para `1h` para
   caber no limite por execução. Processe até ~20 por execução e guarde o progresso em `hold.storage` (cursor e período, ex.:
   `follow-up/progresso = { semana, cursor }`); quem não coube espera a próxima execução ou é retomado por "Executar agora". Se o volume
   diário não couber nem assim, explique ao usuário e proponha a frequência menor como **opção**, sem trocar sozinho.
 - **Limitações:** linhas de console de execuções simultâneas podem se misturar nos Registros; corpo do hook é texto UTF-8 (binário não
-  confere HMAC); trocar segredo na stack local reinicia o plugin ~1 s (uma execução pode falhar uma vez e é refeita); na nuvem os
-  Registros levam até ~60 s. Detalhes em `functions-reference.md`.
+  confere HMAC); trocar um segredo reinicia o plugin por ~1 s (uma execução pode falhar uma vez e é refeita); os
+  Registros levam até ~60 s para aparecer. Detalhes em `functions-reference.md`.
 
 ## Onde o plugin aparece no Holdprint
 
@@ -336,7 +340,7 @@ Do plugin para o Holdprint, `hold.nav.open('budget', id)` (na página; no modal 
 Para ver no Holdprint de verdade: `holdprint plugin deploy`, aprovação do consentimento e abrir um orçamento (ícone de raio > Plugins). O cache
 da lista de ações é de até 60 s: se o botão não apareceu, reabra o orçamento depois de um minuto.
 
-Exemplo completo ("Gerar proposta", só de ações): `examples.md`, seção 6, e `examples/gerar-proposta` no repositório holdprint-plugins.
+Exemplo completo ("Gerar proposta", só de ações): `examples.md`, seção 6,.
 
 ## Apps externos: entrar com a conta Holdprint (TV, celular, site)
 
@@ -345,14 +349,13 @@ usuário que entrou, o plugin declara `contributes.externalApps` e o app usa `Ho
 `external-apps-reference.md`. Resumo que vale sempre:
 - `kind: "device"` para TV (código + QR, aprovado no Holdprint; o QR vem pronto em `info.qrSvg` → `el.innerHTML = info.qrSvg`;
   `info.qrUrl` é só o texto do QR, nunca `img.src`, e nada de biblioteca de QR de CDN); `kind: "web"` para celular/site (redireciona e volta, exige `redirectUris`).
-- `origins` (`https://`; `http://localhost` só no local) e `scopes` **dentro** dos escopos do manifesto. Até 3 apps. App ou origem
+- `origins` (`https://`; `http://localhost` só em desenvolvimento) e `scopes` **dentro** dos escopos do manifesto. Até 3 apps. App ou origem
   nova **pede consentimento**: mostre o link `/plugins/consent/<id>` ("Acessa de fora do Holdprint: <app> em <origem>").
 - Entrada **só** por `HoldprintExternal.init({ pluginId, appId })` + `app.signIn({ onCode })` (device) ou `app.signIn()` / `app.handleRedirect()`
   (web). **Nunca** peça senha no app. Quem guarda a sessão é o SDK (`persist`); **nunca** copie token, refresh ou código para
   `localStorage`/cookie seu, URL, log ou arquivo do projeto.
 - O SDK vem de `<id.domínio técnico>/sdk/external-v1.js` e o app só fala com `api.<domínio técnico>`, a mesma `/v1`; CORS só para a
-  origem registrada. Local: `http://id.plugins.localhost:8787` / `http://api.plugins.localhost:8787`; nuvem de teste:
-  `https://id.hold.market` / `https://api.hold.market`.
+  origem registrada. O endereço exato (`id.` e `api.` do domínio técnico) aparece na tela de aprovação.
 - Do plugin dentro do Holdprint para o app: `hold.nav.openExternal(appId, { entity: { type: 'budget', id } })` (**só orçamento**) e, no
   app, `app.verifyContext(jws)` (confere pelo JWKS; nunca confie em id solto na URL).
 - Token da CLI ou do MCP não serve para rotas do ERP que repassam o token do usuário ao Auth ou ao Merlin (limite conhecido).
@@ -388,22 +391,19 @@ Instalar pela vitrine leva ao mesmo consentimento de sempre (serve também para 
 - **Plugin para outra gráfica NÃO pode declarar `secrets`** (`409 HOLD_PLUGIN_PLATFORM_74` ao instalar pelo link; `409 _75` no deploy que acrescenta segredo
   com instalação em outra conta). Se o usuário quer enviar o plugin, projete sem segredo (só tela, ações, agendas e eventos) e avise que integração com chave própria
   ainda não é possível entre contas. Versão nova vale para todas as instalações; escopo novo deixa a outra conta nos escopos antigos até o Administrador dela aprovar.
-- Link vencido, revogado ou errado dá `404 _72`; teto de contas dá `409 _73`; `listing` inválido dá `400 _70`. Se o recurso estiver desligado na stack
-  (`PLUGIN_INSTALL_LINKS_ENABLED`), as rotas de link recusam: avise o usuário em vez de contornar.
+- Link vencido, revogado ou errado dá `404 _72`; teto de contas dá `409 _73`; `listing` inválido dá `400 _70`. Se o recurso estiver desligado na conta,
+  as rotas de link recusam: avise o usuário em vez de contornar.
 
-## Nuvem de teste, prévia, release e rollback
+## Publicar, prévia, release e rollback
 
-O alvo `teste` precisa estar configurado uma vez na máquina (`scripts/nuvem-teste.sh setup`, feito por quem mantém a stack);
-se `deploy --target teste` disser que o alvo não existe, avise o usuário em vez de tentar configurar por conta própria.
+`holdprint plugin deploy [pasta]` publica na hospedagem da Hold **pela conta de quem fez login**: não há alvo para escolher, flag `--target` nem chave para configurar. O plugin passa a ser servido pela hospedagem da Hold e o deploy imprime o endereço.
 
-- **Publicar na nuvem de teste:** `holdprint plugin deploy --target teste [pasta]`. O plugin passa a ser servido pela
-  hospedagem de teste (`https://<pluginId>.hold.market`) em vez da máquina local. O alvo fica gravado no registro do plugin.
 - **A primeira versão é liberada direto.** Da segunda em diante o `deploy` publica como **prévia** e imprime um link
   `.../plugins/<installationId>?versao=vN`. Só **Administradores** abrem a prévia, e o quadro mostra a faixa
   "Prévia vN · só administradores veem · a equipe vê vM". Os outros perfis continuam vendo a versão liberada (vM).
   Mostre o link da prévia ao usuário e peça que um Administrador confira.
 - **Liberar:** `holdprint plugin release [vN]` (sem argumento, libera a prévia mais recente). A equipe passa a ver vN
-  na próxima abertura. A borda da nuvem pode levar **até ~60 s** para refletir um deploy, release, rollback, desligar ou
+  na próxima abertura. A hospedagem pode levar **até ~60 s** para refletir um deploy, release, rollback, desligar ou
   reinstalar: se o quadro ainda mostrar a versão antiga (ou der 404/`wrong_installation`), espere e reabra antes de concluir
   que falhou.
 - **Voltar:** `holdprint plugin rollback [vN]` (sem argumento, volta à versão liberada anterior).
@@ -412,9 +412,8 @@ se `deploy --target teste` disser que o alvo não existe, avise o usuário em ve
   (v1, v2, v3...). Não tente "corrigir" uma versão no lugar; publique outra e libere.
 - **Prévia de versão inexistente** dá `404 HOLD_PLUGIN_PLATFORM_46`; Vendedor ou outro perfil abrindo `?versao=` de versão
   não liberada dá `403 HOLD_PLUGIN_PLATFORM_47` (esperado, não é defeito).
-- **NUNCA** peça ao usuário token, chave ou credencial da Cloudflare, e **nunca** edite arquivos de infraestrutura
-  (Workers, KV, DNS, variáveis de ambiente, scripts de setup). A publicação na nuvem passa só pelo `holdprint plugin deploy`
-  e pela WebApi; o token da Cloudflare fica guardado no serviço de deploy da plataforma, nunca na máquina de quem publica.
+- **NUNCA** peça ao usuário token ou chave de hospedagem, e **nunca** edite arquivos de infraestrutura (DNS, variáveis de ambiente, scripts de
+  setup). A publicação passa só pelo `holdprint plugin deploy`, que usa o login do usuário; nenhuma chave de hospedagem fica na máquina de quem publica.
   Se o deploy falhar por infraestrutura, mostre o erro ao usuário e pare.
 
 ## Ver o plugin antes de publicar: simulador e modo desenvolvedor
@@ -445,7 +444,7 @@ Dois jeitos de ver a tela sem publicar versão. Comece sempre pelo simulador.
 - **Nunca use túnel** (ngrok, cloudflared, localtunnel) para expor o servidor local do plugin ou do simulador: o modo
   desenvolvedor só aceita origem `localhost`, `127.0.0.1` ou `[::1]` (`400 HOLD_PLUGIN_PLATFORM_50` caso contrário) e o simulador
   não precisa de rede. `holdprint plugin dev` (sem `--account`) continua publicando uma versão a cada salvamento (a CLI avisa e sugere `holdprint dev` ou `--account`).
-- A tela recarrega sozinha em cerca de 2 a 3 s depois de salvar. `--no-open` não abre o navegador; `--port` só vale junto com `--account`.
+- A tela recarrega sozinha em cerca de 2 a 3 s depois de salvar. `--no-open` (aceito em `holdprint dev` e em `holdprint plugin dev --account`) não abre o navegador e só imprime o link; `--port` troca a porta do simulador (padrão 4790) ou do modo `--account`.
 - Se a escrita for recusada, o erro do SDK já explica em português (ex.: "o modo desenvolvedor é somente leitura; publique o plugin para gravar (HOLD_PLUGIN_PLATFORM_51)"); mostre-o ao usuário em vez de tentar contornar.
 - `functions/` rodam no simulador (com "Executar agenda <id>" na moldura) e no modo desenvolvedor (só leitura: escrita dá `403 _51`). Segredos locais ficam em `.holdprint/dev-secrets.json`, que nunca se versiona.
 
@@ -497,8 +496,7 @@ Quando o usuário pede de uma vez "um painel no menu, um botão no orçamento qu
    `hold.sync.pull`, não de varredura completa a cada abertura (ver seção Sincronização).
 10. **Segredo nunca no chat.** O Claude não pede, não recebe e não escreve o valor de um segredo (nem em arquivo, comando, exemplo ou log). Declara o
    nome e manda gravar pela tela Segredos ou por `! holdprint plugin secrets set NOME`.
-8. **Consulta paginada e leve.** `page`/`pageSize` (máximo 100; **prefira 25 em `/budgets`**; cada chamada leva cerca de 1 s no
-   ambiente de teste). Filtre no servidor (`state`, `sellerId`), desenhe a tela por página
+8. **Consulta paginada e leve.** `page`/`pageSize` (máximo 100; **prefira 25 em `/budgets`**; cada chamada leva cerca de 1 s). Filtre no servidor (`state`, `sellerId`), desenhe a tela por página
    conforme chegam e não baixe a base inteira.
 11. **Plugin para outra gráfica: sem segredo e link só na conversa.** Não declare `secrets` em plugin que vai por link; escreva `listing` em pt-BR (texto puro, sem promessa);
    entregue o link do `publish --unlisted` ao usuário e não o salve em arquivo do projeto.
@@ -542,7 +540,7 @@ Erro de plataforma vem como `[{ type: 53, errorType: <n>, errorCode: "HOLD_PLUGI
 | Tela em branco / `Holdprint is not defined` | Faltou `<script src="/_hold/sdk/v1.js">` antes do `app.js`. |
 | `Refused to connect` / CSP | Chamada a domínio externo ou `fetch` fora do SDK. Remova. |
 | Deploy recusado | Manifesto inválido: rode `holdprint plugin validate`; veja `manifest-reference.md`. |
-| Lista de orçamentos demora | ~1 s por página no teste (banco remoto). Use `pageSize=25` e desenhe progressivo. |
+| Lista de orçamentos demora | Pode levar ~1 s por página. Use `pageSize=25` e desenhe progressivo. |
 | `400 HOLD_PLUGIN_PLATFORM_70` no deploy | `listing` inválido: `summary` acima de 140, `category` fora do catálogo, mais de 5 `highlights` (80 caracteres cada) ou `support` que não é e-mail nem `https://`. |
 | `409 HOLD_PLUGIN_PLATFORM_74` / `_75` | Plugin com `secrets` não instala em outra conta (74) e o deploy não pode acrescentar segredo com instalação alheia (75). Tire o segredo do plugin. |
 | `404 _72` / `409 _73` no link | Link inválido, revogado ou vencido (72) ou teto de contas atingido (73). Gere outro com `publish --unlisted` ou aumente `--max-accounts` (até 10). |
@@ -555,7 +553,7 @@ Erro de plataforma vem como `[{ type: 53, errorType: <n>, errorCode: "HOLD_PLUGI
 | `409 HOLD_PLUGIN_PLATFORM_101` | Sem versão liberada: rode `holdprint plugin release` e peça de novo. |
 | Pedido `Recusado: <motivo>` | A Hold recusou. Mostre o motivo, corrija, libere versão nova e rode `holdprint plugin submit` de novo. |
 | Mudou o código e a tela não mudou | Rode `deploy` e recarregue o Holdprint (F5). |
-| `Voce ainda nao fez login` (a mensagem traz o caminho: `holdprint login` se já tem conta, ou criar conta de teste grátis em `<Holdprint>/holdai/register`) / `Sua sessao da CLI expirou` / `401` na CLI | Rode `holdprint login` de novo (o acesso renova sozinho; se o refresh venceu ou foi revogado em Acessos conectados, é preciso novo login). |
+| `Você ainda não fez login` (a mensagem traz o caminho: `holdprint login` se já tem conta, ou criar conta de teste grátis em `<Holdprint>/holdai/register`) / `Sua sessão da CLI expirou` / `401` na CLI | Rode `holdprint login` de novo (o acesso renova sozinho; se o refresh venceu ou foi revogado em Acessos conectados, é preciso novo login). |
 | App externo: `400 _80`/`_81`, CORS, `401 _82`/`_83`, `403 _87` | Veja a tabela de erros em `external-apps-reference.md`. |
 
 ## Checklist pós-deploy

@@ -1,7 +1,7 @@
 # Exemplos
 
 Ambos usam só o SDK, sem domínio externo, UI em pt-BR, com os contratos reais da API. Exemplo completo e publicável (KPIs,
-grupos, contagem de follow-ups, anotação): `examples/vendas-por-vendedor` no repo holdprint-plugins.
+grupos, contagem de follow-ups, anotação).
 
 ## 1. Orçamentos abertos por vendedor, com follow-up
 
@@ -180,26 +180,26 @@ Pontos: botão "Atualizar" chama `atualizar()` (não recarrega a lista inteira);
 `400 _44` = etapa de outro funil, `400 _45` = orçamento não aberto, `404 _30` = orçamento que o usuário não vê.
 Para listas grandes sob demanda use `for await (const b of hold.api.list('/budgets', { state: 'open' }))`.
 
-## Exemplo: nova versão na nuvem de teste, prévia e release
+## Exemplo: nova versão, prévia e release
 
 Pedido: "muda a cor do cabeçalho do plugin de vendas e deixa eu ver antes de liberar pra equipe".
 
 1. Edite só `public/style.css` (nunca arquivo de infraestrutura).
-2. `holdprint plugin deploy --target teste` publica a v2 como **prévia** (a v1 segue liberada) e imprime
+2. `holdprint plugin deploy` publica a v2 como **prévia** (a v1 segue liberada) e imprime
    `Prévia v2: <endereço>/plugins/<installationId>?versao=v2`.
 3. Diga ao usuário, com as suas palavras: "Abra este link logado como Administrador. Você vê a faixa 'Prévia v2'; a equipe
    continua vendo a v1." Espere a confirmação.
 4. Aprovada: `holdprint plugin release v2`. Se não gostou: edite de novo e rode `deploy` (vira v3); a v2 não é alterada.
 5. Se a v2 liberada der problema: `holdprint plugin rollback v1`.
-6. Depois de `release` ou `rollback`, a nuvem pode levar até ~60 s para refletir; reabra o quadro antes de dizer que não funcionou.
+6. Depois de `release` ou `rollback`, a hospedagem pode levar até ~60 s para refletir; reabra o quadro antes de dizer que não funcionou.
 
-Nunca peça credencial da Cloudflare: se o deploy pedir algo de infraestrutura, mostre o erro e pare.
+Nunca peça chave de hospedagem: se o deploy pedir algo de infraestrutura, mostre o erro e pare.
 
 ## Exemplo: ver o plugin antes de publicar
 
 Pedido: "quero ver como está ficando o painel de vendas".
 
-1. **Sem login, para desenhar:** `holdprint dev` na pasta do plugin. Abra `http://localhost:4790` no Chrome (a CLI abre sozinha), edite
+1. **Sem login, para desenhar:** `holdprint dev` na pasta do plugin. Abra no Chrome o endereço que a CLI imprime (padrão `http://localhost:4790`), edite
    `public/` e a tela recarrega a cada salvamento. Os dados são da Gráfica Exemplo (fictícios). `holdprint dev --reset` zera o que o
    plugin gravou no simulador.
 2. **Com dados reais, só você, só leitura:** depois de `holdprint login` (como Administrador) e do primeiro `deploy` aprovado, rode
@@ -265,8 +265,7 @@ function confere(req, corpo, segredo) { // segredo "whsec_..." de `holdprint plu
 
 ## 5. Follow-up automático com função, agenda, segredo e hook
 
-Referência completa e testada: `examples/follow-up-automatico` no repositório holdprint-plugins (tela, `functions/index.ts`,
-manifesto e `CLAUDE.md`).
+Os trechos abaixo (tela, `functions/index.ts` e manifesto) mostram o essencial.
 
 Pedido: "cria um plugin que todo dia cria uma tarefa de follow-up nos orçamentos abertos parados há 7 dias e tem um botão para
 testar a integração com hp-teste-eco usando uma chave que eu vou guardar".
@@ -288,10 +287,10 @@ holdprint plugin create follow-up --template automacao
   "events": { "path": "/api/eventos" },
   "hooks": [{ "name": "cobranca", "path": "/api/hooks/cobranca" }] },
 "secrets": [
-  { "name": "CHAVE_SERVICO", "description": "Chave da API do serviço de teste (hp-teste-eco)" },
+  { "name": "CHAVE_SERVICO", "description": "Chave da API do serviço de teste " },
   { "name": "SEGREDO_COBRANCA", "description": "Segredo que o sistema de cobrança usa para assinar os avisos" }
 ],
-"network": { "domains": ["hp-teste-eco.rafael-7fa.workers.dev"] }
+"network": { "domains": ["api.exemplo.com.br"] }
 ```
 
 `storage` não entra em `scopes` (é implícito).
@@ -332,7 +331,7 @@ async function testarIntegracao(hold: HoldFunctionContext): Promise<Response> {
   let chave: string;
   try { chave = hold.requireSecret("CHAVE_SERVICO"); }
   catch (e) { if (e instanceof MissingSecretError) return Response.json({ ok: false, mensagem: "Segredo CHAVE_SERVICO não definido" }); throw e; }
-  const r = await fetch("https://hp-teste-eco.rafael-7fa.workers.dev/exige-chave", { headers: { "x-api-key": chave } });
+  const r = await fetch("https://api.exemplo.com.br/exige-chave", { headers: { "x-api-key": chave } });
   return Response.json({ ok: r.status === 200, mensagem: r.status === 200 ? "Chave aceita" : `Chave recusada (${r.status})` });
 }
 
@@ -353,20 +352,20 @@ lida vem pura, sem o registro `{ value }`, então `Array.isArray(salvas) ? salva
 Fluxo com o usuário (o Claude **não pede o valor do segredo no chat**):
 
 1. `holdprint plugin deploy` e mostrar o link `/plugins/consent/<id>`: o Administrador aprova (a tela mostra "Hospedado pela Hold
-   (Cloudflare)", "Roda sozinho: Follow-up, todo dia", "Fala com: hp-teste-eco.rafael-7fa.workers.dev" e "Recebe chamadas de: <URL do hook>").
+   (Cloudflare)", "Roda sozinho: Follow-up, todo dia", "Fala com: api.exemplo.com.br" e "Recebe chamadas de: <URL do hook>").
 2. Pedir ao usuário que grave os segredos: pela tela **Plugins > ⋯ > Segredos** ou, no terminal dele,
    `! holdprint plugin secrets set CHAVE_SERVICO`. Conferir sem ver o valor: `holdprint plugin secrets list` (mostra "definido em … por …").
 3. Abrir o plugin e clicar **Testar integração**: "Chave aceita". Chave errada mostra "Chave recusada (401)" sem novo deploy.
 4. Testar sem esperar o dia seguinte: `holdprint plugin run follow-up` (ou Plugins > ⋯ > Chamadas e cotas > Automações > **Executar agora**),
    depois `holdprint plugin logs --trigger manual` (ou a tela **Registros**). As tarefas aparecem nos orçamentos "via plugin <nome>",
    com o vendedor como responsável. Rodar de novo na mesma semana não duplica.
-5. Hook: passar a URL do hook ao serviço de cobrança; para testar, `node scripts/hook-sender.mjs <installationId> cobranca --budget <id>`
-   no repositório holdprint-plugins (assina com o segredo; sem assinatura válida a função responde 401).
+5. Hook: passar a URL do hook ao serviço de cobrança; para testar, um envio de teste do próprio serviço de cobrança
+   assinado com o segredo (sem assinatura válida a função responde 401).
 
 ## 6. Ação "Gerar proposta": modal no orçamento e "Proposta rápida" em Novo registro
 
 Pedido: "cria um botão Gerar proposta no orçamento que abre um modal com a proposta na minha marca e, ao confirmar, registra uma tarefa
-Proposta enviada". O código completo está em `examples/gerar-proposta` no repositório holdprint-plugins; abaixo, o essencial.
+Proposta enviada". Abaixo, o essencial.
 O `GET /v1/budgets/{id}` traz cada proposta com `paymentOption`, `totalPrice` e `isWinner`; `proposeItems` vem vazio (a lista de itens
 não é exposta no `/v1`), então o documento mostra as **opções com pagamento e total**; se um dia vierem itens, o exemplo já desenha a tabela.
 Fluxo: `holdprint plugin create <pasta> --template acao`, editar, `holdprint plugin validate`, testar em `holdprint dev`,
