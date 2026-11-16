@@ -174,7 +174,7 @@ carimbados antes dela. Pagine pelo `nextCursor` (guarde no `storage` entre execu
 
 ## Erros
 
-Formato: `[{ "type": 53, "errorType": <n>, "errorCode": "HOLD_PLUGIN_PLATFORM_<n>", "fields": [...] }]`. Mostre ao usuário
+Formato: `[{ "type": 59, "errorType": <n>, "errorCode": "HOLD_PLUGIN_PLATFORM_<n>", "fields": [...] }]`. Mostre ao usuário
 uma mensagem em pt-BR sua; não despeje o JSON.
 
 | HTTP | Código | Significado |

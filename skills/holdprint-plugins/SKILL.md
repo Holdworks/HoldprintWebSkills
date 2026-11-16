@@ -503,7 +503,7 @@ Quando o usuário pede de uma vez "um painel no menu, um botão no orçamento qu
 
 ## Erros comuns
 
-Erro de plataforma vem como `[{ type: 53, errorType: <n>, errorCode: "HOLD_PLUGIN_PLATFORM_<n>", fields: [...] }]`
+Erro de plataforma vem como `[{ type: 59, errorType: <n>, errorCode: "HOLD_PLUGIN_PLATFORM_<n>", fields: [...] }]`
 (ver `api-v1-reference.md` para a tabela completa). No SDK, `HoldApiError` traz `status` e `body`.
 
 | Sintoma | Causa e correção |

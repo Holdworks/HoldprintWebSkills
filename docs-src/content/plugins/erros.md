@@ -5,7 +5,7 @@
 A API responde com uma lista de erros:
 
 ```json
-[{ "type": 56, "errorType": 66, "errorCode": "HOLD_PLUGIN_PLATFORM_66", "message": "...", "fields": ["contributes.actions[0].target"], "parameters": [] }]
+[{ "type": 59, "errorType": 66, "errorCode": "HOLD_PLUGIN_PLATFORM_66", "message": "...", "fields": ["contributes.actions[0].target"], "parameters": [] }]
 ```
 
 - `errorCode` é `HOLD_PLUGIN_PLATFORM_<n>`; o número está na tabela abaixo.
