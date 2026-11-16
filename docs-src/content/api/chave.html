@@ -1,0 +1,71 @@
+<!-- legacy-id: api-overview -->
+<p class="eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>API REST</p>
+      <h2>API REST do Holdprint</h2>
+      <p class="section-sub">Integração direta via HTTP, autenticada por API Key. Para conectar uma LLM, prefira o MCP (acima). A API REST é para integrações de sistema.</p>
+      <div class="ref">
+        <div class="ref-head"><span class="ref-tag">base</span><code>https://api.holdworks.ai</code></div>
+        <div class="ref-body">
+          <p>Todas as requisições usam a URL base acima e exigem o header <code class="inline">x-api-key</code>. Respostas em JSON, padrão REST.</p>
+          <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">header</span></div><pre><code>x-api-key: sua_api_key_aqui</code></pre></div>
+          <h3>Onde pegar seu token</h3>
+          <div class="steps">
+            <div class="step"><div class="step-num"></div><div class="step-body"><h3>Acesse Ajustes</h3><p>No menu lateral do app Holdprint, clique em <strong>Ajustes</strong>.</p></div></div>
+            <div class="step"><div class="step-num"></div><div class="step-body"><h3>Abra API/MCP</h3><p>Dentro de Ajustes, clique em <strong>API/MCP</strong>.</p></div></div>
+            <div class="step"><div class="step-num"></div><div class="step-body"><h3>Copie o token</h3><p>Na aba <strong>Chave de API</strong>, clique em <strong>Copiar</strong> (ou <strong>Gerar novo token</strong> para criar um novo).</p></div></div>
+          </div>
+          <div class="shot">
+            <div class="shot-bar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="shot-url">app.holdprint.net/holdprint/settings/api-ai</span></div>
+            <div class="shot-body" style="padding:0">
+              <div class="app-mock">
+                <div class="am-side">
+                  <div class="am-logo">holdprint</div>
+                  <div class="am-item"><span class="am-dot"></span>Cadastros</div>
+                  <div class="am-item"><span class="am-dot"></span>Financeiro</div>
+                  <div class="am-item"><span class="am-dot"></span>Produ&ccedil;&atilde;o</div>
+                  <div class="am-item on"><span class="am-dot"></span>Ajustes</div>
+                </div>
+                <div class="am-main">
+                  <div class="am-crumb">Ajustes / <b>API/MCP</b></div>
+                  <div class="am-tabs"><span class="am-tab on">Chave de API</span><span class="am-tab">Instalar skills</span><span class="am-tab">Conectar MCP</span></div>
+                  <p class="am-label">Seu token pessoal de API</p>
+                  <div class="am-token-row"><div class="am-token">&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;</div><span class="am-copy">Copiar</span></div>
+                  <span class="am-gen">Gerar novo token</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="callout warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg><div><p class="ct-title">Mantenha sua API Key segura</p><p>Nunca exponha a chave em c&oacute;digo cliente ou reposit&oacute;rios p&uacute;blicos. Use vari&aacute;veis de ambiente. Para LLMs, prefira o MCP (login OAuth, sem colar token).</p></div></div>
+        </div>
+      </div>
+      <h3>Formato de resposta</h3>
+      <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">json</span></div><pre><code>{
+  "success": true,
+  "data": {
+    "items": [ ... ],
+    "pagination": { "page": 1, "limit": 50, "total": 100, "pages": 2 }
+  },
+  "message": "Success"
+}</code></pre></div>
+      <h3>Erros na escrita (contas a pagar e a receber)</h3>
+      <p>Os endpoints de cria&ccedil;&atilde;o, edi&ccedil;&atilde;o e baixa de contas devolvem erros neste formato. O <code>code</code> identifica a regra; <code>fields</code> aponta o campo.</p>
+      <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">json</span></div><pre><code>{
+  "success": false,
+  "error": {
+    "code": "HOLD_CHART_OF_ACCOUNTS_2",
+    "message": "Mensagem do erro no idioma da conta",
+    "fields": [],
+    "parameters": []
+  }
+}</code></pre></div>
+      <h3>C&oacute;digos de status</h3>
+      <table class="dtable"><thead><tr><th>C&oacute;digo</th><th>Significado</th></tr></thead><tbody>
+        <tr><td>200</td><td>OK &mdash; requisi&ccedil;&atilde;o bem-sucedida</td></tr>
+        <tr><td>201</td><td>Created &mdash; registro criado</td></tr>
+        <tr><td>400</td><td>Bad Request &mdash; par&acirc;metros inv&aacute;lidos ou regra de neg&oacute;cio n&atilde;o atendida</td></tr>
+        <tr><td>401</td><td>Unauthorized &mdash; API Key inv&aacute;lida ou ausente</td></tr>
+        <tr><td>403</td><td>Forbidden &mdash; recurso fora do plano da conta ou chave sem permiss&atilde;o para a opera&ccedil;&atilde;o</td></tr>
+        <tr><td>404</td><td>Not Found &mdash; recurso n&atilde;o encontrado</td></tr>
+        <tr><td>409</td><td>Conflict &mdash; a mesma <code>Idempotency-Key</code> est&aacute; sendo processada em outra requisi&ccedil;&atilde;o</td></tr>
+        <tr><td>500</td><td>Internal Server Error</td></tr>
+      </tbody></table>
+      <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Rate limiting</p><p>100 requisi&ccedil;&otilde;es por minuto por API Key. Header de resposta <code>X-RateLimit-Remaining</code>; reset a cada minuto. Implemente retry com backoff exponencial.</p></div></div>

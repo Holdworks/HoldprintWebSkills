@@ -1,0 +1,51 @@
+<!-- legacy-id: api-financial-lookups -->
+<h2>Cadastros financeiros</h2><p class="section-sub">Plano de contas, formas e condições de pagamento: os identificadores que as contas a pagar e a receber pedem na criação, edição e baixa.</p>
+
+<div class="ref">
+  <div class="ref-head"><span class="ref-tag get">GET</span><code>/api-key/chart-of-accounts/data</code></div>
+  <div class="ref-body">
+    <p>Lista o plano de contas da conta. Use o <code>publicId</code> em <code>chartOfAccounts</code> na criação e edição de contas a pagar e a receber. Só aceitam lançamento as contas com <code>acceptsEntries: true</code> (analíticas).</p>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash</span></div><pre><code>curl -X GET "https://api.holdworks.ai/api-key/chart-of-accounts/data" \
+  -H "x-api-key: sua_api_key_aqui"</code></pre></div>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>publicId</td><td>int</td><td>Identificador usado nas contas a pagar e a receber</td></tr>
+      <tr><td>parentPublicId</td><td>int</td><td>Conta pai (0 no primeiro nível)</td></tr>
+      <tr><td>name</td><td>string</td><td>Nome da conta</td></tr>
+      <tr><td>accountType</td><td>string</td><td><code>Credit</code> ou <code>Debit</code></td></tr>
+      <tr><td>type</td><td>string</td><td><code>Analytic</code> ou <code>Synthetic</code></td></tr>
+      <tr><td>acceptsEntries</td><td>boolean</td><td>Se a conta pode receber lançamentos</td></tr>
+    </tbody></table>
+  </div>
+</div>
+
+<div class="ref">
+  <div class="ref-head"><span class="ref-tag get">GET</span><code>/api-key/payment-methods/data</code></div>
+  <div class="ref-body">
+    <p>Lista as formas de pagamento ativas (dinheiro, PIX, boleto, cartão…). Use o <code>id</code> em <code>paymentMethodId</code> na criação à vista e na baixa.</p>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash</span></div><pre><code>curl -X GET "https://api.holdworks.ai/api-key/payment-methods/data" \
+  -H "x-api-key: sua_api_key_aqui"</code></pre></div>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>id</td><td>string</td><td>Identificador da forma de pagamento</td></tr>
+      <tr><td>name</td><td>string</td><td>Nome</td></tr>
+      <tr><td>isIncome</td><td>boolean</td><td>Usada em recebimentos</td></tr>
+      <tr><td>isExpense</td><td>boolean</td><td>Usada em pagamentos</td></tr>
+    </tbody></table>
+  </div>
+</div>
+
+<div class="ref">
+  <div class="ref-head"><span class="ref-tag get">GET</span><code>/api-key/payment-options/data</code></div>
+  <div class="ref-body">
+    <p>Lista as condições de pagamento (forma + prazo, ex.: "Boleto 30/60/90"). Use o <code>id</code> em <code>paymentOptionId</code> para criar contas parceladas. Contas a receber aceitam condições com <code>isIncome: true</code>; contas a pagar, com <code>isExpense: true</code>.</p>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash</span></div><pre><code>curl -X GET "https://api.holdworks.ai/api-key/payment-options/data" \
+  -H "x-api-key: sua_api_key_aqui"</code></pre></div>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>id</td><td>string</td><td>Identificador da condição</td></tr>
+      <tr><td>name</td><td>string</td><td>Nome</td></tr>
+      <tr><td>description</td><td>string</td><td>Descrição</td></tr>
+      <tr><td>paymentMethodId</td><td>string</td><td>Forma de pagamento da condição</td></tr>
+      <tr><td>isIncome</td><td>boolean</td><td>Disponível para vendas (contas a receber)</td></tr>
+      <tr><td>isExpense</td><td>boolean</td><td>Disponível para compras (contas a pagar)</td></tr>
+    </tbody></table>
+  </div>
+</div>

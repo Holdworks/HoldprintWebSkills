@@ -1,0 +1,17 @@
+<!-- legacy-id: mongo -->
+<h2>Banco read-only (avançado)</h2>
+      <p class="section-sub">Para quem precisa de queries diretas no MongoDB. A connection string é liberada manualmente pela equipe — não é gerada sozinha.</p>
+      <div class="steps">
+        <div class="step"><div class="step-num"></div><div class="step-body">
+          <h3>Solicite o acesso</h3>
+          <p>Fale com o suporte Holdprint para receber uma string de conexão somente-leitura ao seu banco de produção.</p>
+        </div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body">
+          <h3>Use a skill holdprint-mongo</h3>
+          <p>Ela ensina a LLM a navegar o schema (orçamento ↔ custeio, campos dinâmicos, blocos) e a montar queries corretas.</p>
+        </div></div>
+      </div>
+      <div class="callout warn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+        <div><p class="ct-title">Regras de ouro</p><p>É somente leitura — nunca escreva. Filtre sempre <code class="inline">deleted: false</code> (a exclusão é lógica). Nunca compartilhe a string: ela dá acesso aos seus dados.</p></div>
+      </div>

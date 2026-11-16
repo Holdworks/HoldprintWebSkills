@@ -1,0 +1,179 @@
+<!-- legacy-id: api-budgets -->
+<h2>Orçamentos</h2><p class="section-sub">Consulta paginada de orçamentos com propostas, itens, produtos e checklists — ideal para integração, análises e relatórios.</p>
+
+<div class="ref">
+  <div class="ref-head"><span class="ref-tag get">GET</span><code>/api-key/budgets/data</code></div>
+  <div class="ref-body">
+    <p>Consulta dados detalhados de orçamentos de forma paginada, incluindo informações sobre propostas, itens, produtos e checklists. Suporta paginação, filtros por data e tradução de campos, retornando dados em formato estruturado para integração com sistemas externos.</p>
+
+    <p>Este endpoint requer autenticação via API Key no header <code>x-api-key</code>:</p>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">http</span></div><pre><code>GET /api-key/budgets/data HTTP/1.1
+Host: api.holdworks.ai
+x-api-key: sua_api_key_aqui</code></pre></div>
+
+    <h3>Parâmetros de Consulta</h3>
+    <p>Todos os parâmetros são opcionais e enviados via query string na URL.</p>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>page</td><td>integer</td><td class="req-no">opcional</td><td>Número da página a ser retornada, mínimo: 1 (padrão: 1)</td></tr>
+      <tr><td>pageSize</td><td>integer</td><td class="req-no">opcional</td><td>Quantidade de registros por página, mínimo: 1, máximo: 100 (padrão: 20)</td></tr>
+      <tr><td>startDate</td><td>datetime</td><td class="req-no">opcional</td><td>Data inicial para filtrar orçamentos, formato ISO 8601 (padrão: null)</td></tr>
+      <tr><td>endDate</td><td>datetime</td><td class="req-no">opcional</td><td>Data final para filtrar orçamentos, formato ISO 8601 (padrão: null)</td></tr>
+      <tr><td>language</td><td>string</td><td class="req-no">opcional</td><td>Código do idioma para tradução de campos (padrão: "pt-BR")</td></tr>
+    </tbody></table>
+
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Filtro de Datas</p><p>Se nenhuma data for informada, retorna todos os orçamentos. O filtro é aplicado sobre o campo <code>CreationDate</code> dos orçamentos.</p></div></div>
+
+    <h3>Estrutura da Resposta — PagedResult&lt;BudgetDataModel&gt;</h3>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">json</span></div><pre><code>{
+  "data": [ /* Array de BudgetDataModel */ ],
+  "totalCount": 150,
+  "page": 1,
+  "pageSize": 20,
+  "totalPages": 8,
+  "hasNextPage": true,
+  "hasPreviousPage": false
+}</code></pre></div>
+
+    <h3>Estrutura de Dados — BudgetDataModel</h3>
+    <p>Cada item no array <code>data</code> representa um orçamento:</p>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>code</td><td>integer</td><td>Código único do orçamento</td></tr>
+      <tr><td>title</td><td>string</td><td>Título/descrição do orçamento</td></tr>
+      <tr><td>customerName</td><td>string</td><td>Nome do cliente associado ao orçamento</td></tr>
+      <tr><td>budgetState</td><td>integer</td><td>Estado atual do orçamento (1=Open, 2=Lost, 3=Won)</td></tr>
+      <tr><td>creationDate</td><td>datetime</td><td>Data e hora de criação do orçamento</td></tr>
+      <tr><td>deliveryNeed</td><td>datetime?</td><td>Data necessária para entrega (pode ser null)</td></tr>
+      <tr><td>wonDate</td><td>datetime?</td><td>Data em que o orçamento foi ganho (pode ser null)</td></tr>
+      <tr><td>lostDate</td><td>datetime?</td><td>Data em que o orçamento foi perdido (pode ser null)</td></tr>
+      <tr><td>proposes</td><td>array</td><td>Lista de propostas deste orçamento</td></tr>
+    </tbody></table>
+
+    <h3>Estrutura de Dados — ProposeDataModel</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>paymentOption</td><td>string</td><td>Forma de pagamento desta proposta</td></tr>
+      <tr><td>totalPrice</td><td>decimal</td><td>Preço total da proposta</td></tr>
+      <tr><td>totalProfitPercentual</td><td>decimal</td><td>Percentual de lucro total sobre a proposta</td></tr>
+      <tr><td>productionCost</td><td>decimal</td><td>Custo total de produção</td></tr>
+      <tr><td>sellingCost</td><td>decimal</td><td>Custo total de venda</td></tr>
+      <tr><td>proposeItems</td><td>array</td><td>Lista de itens desta proposta</td></tr>
+    </tbody></table>
+
+    <h3>Estrutura de Dados — ProposeItemDataModel</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>itemName</td><td>string</td><td>Nome do item</td></tr>
+      <tr><td>quantity</td><td>double</td><td>Quantidade do item</td></tr>
+      <tr><td>unitSymbol</td><td>string</td><td>Símbolo da unidade de medida</td></tr>
+      <tr><td>unitPrice</td><td>double</td><td>Preço unitário</td></tr>
+      <tr><td>totalPrice</td><td>decimal</td><td>Preço total do item</td></tr>
+      <tr><td>totalProfit</td><td>decimal</td><td>Lucro total do item</td></tr>
+      <tr><td>profitPercentual</td><td>decimal</td><td>Percentual de lucro sobre o item</td></tr>
+      <tr><td>productionCost</td><td>decimal</td><td>Custo de produção do item</td></tr>
+      <tr><td>sellingCost</td><td>decimal</td><td>Custo de venda do item</td></tr>
+      <tr><td>products</td><td>array</td><td>Lista de produtos que compõem este item</td></tr>
+    </tbody></table>
+
+    <h3>Estrutura de Dados — BudgetProductDataModel</h3>
+    <p>Cada produto é um objeto dinâmico (dicionário) com propriedades fixas e campos customizáveis:</p>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Estrutura Dinâmica</p><p>Além das propriedades fixas documentadas, o produto pode conter campos customizáveis adicionais (ex: "Material", "Acabamento", "Cores") que variam conforme a configuração da sua conta.</p></div></div>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>Name</td><td>string</td><td>Nome do produto</td></tr>
+      <tr><td>Description</td><td>string</td><td>Descrição do produto</td></tr>
+      <tr><td>Quantity</td><td>decimal</td><td>Quantidade de produção</td></tr>
+      <tr><td>SaleQuantity</td><td>decimal</td><td>Quantidade de venda</td></tr>
+      <tr><td>UnitPrice</td><td>decimal</td><td>Preço unitário</td></tr>
+      <tr><td>TotalValue</td><td>decimal</td><td>Valor total</td></tr>
+      <tr><td>ProductionCost</td><td>decimal</td><td>Custo de produção</td></tr>
+      <tr><td>SellingCost</td><td>decimal</td><td>Custo de venda</td></tr>
+      <tr><td>Checklists</td><td>array</td><td>Lista de checklists respondidos</td></tr>
+    </tbody></table>
+
+    <h3>Exemplos de Uso</h3>
+    <p>Exemplo 1: Requisição básica.</p>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash</span></div><pre><code>curl -X GET "https://holdprintwebapi-prod.azurewebsites.net/api-key/budgets/data?page=1&amp;pageSize=20" \
+  -H "x-api-key: sua_api_key_aqui"</code></pre></div>
+
+    <p>Exemplo 2: Com filtro de data.</p>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash</span></div><pre><code>curl -X GET "https://holdprintwebapi-prod.azurewebsites.net/api-key/budgets/data?page=1&amp;pageSize=10&amp;startDate=2025-10-01&amp;endDate=2025-10-31&amp;language=pt-BR" \
+  -H "x-api-key: sua_api_key_aqui"</code></pre></div>
+
+    <h3>Exemplo de Resposta</h3>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">json</span></div><pre><code>{
+  "data": [
+    {
+      "code": 12345,
+      "title": "Impressão de Folhetos Promocionais",
+      "customerName": "Empresa XYZ Ltda",
+      "budgetState": 1,
+      "creationDate": "2025-10-15T14:30:00Z",
+      "deliveryNeed": "2025-10-25T10:00:00Z",
+      "wonDate": null,
+      "lostDate": null,
+      "proposes": [
+        {
+          "paymentOption": "À Vista",
+          "totalPrice": 1500.00,
+          "totalProfitPercentual": 35.50,
+          "productionCost": 967.50,
+          "sellingCost": 532.50,
+          "proposeItems": [
+            {
+              "itemName": "Folheto A4 - 4x4 cores",
+              "quantity": 5000.0,
+              "unitSymbol": "un",
+              "unitPrice": 0.30,
+              "totalPrice": 1500.00,
+              "totalProfit": 532.50,
+              "profitPercentual": 35.50,
+              "productionCost": 967.50,
+              "sellingCost": 532.50,
+              "products": [
+                {
+                  "Name": "Impressão Digital",
+                  "Description": "Impressão em papel couché 170g",
+                  "Quantity": 5000,
+                  "SaleQuantity": 5000,
+                  "UnitPrice": 0.15,
+                  "TotalValue": 750.00,
+                  "ProductionCost": 500.00,
+                  "SellingCost": 250.00,
+                  "Checklists": [
+                    {
+                      "question": "Qual tipo de papel?",
+                      "answer": "Papel Couché 170g"
+                    }
+                  ],
+                  "Material": [
+                    {
+                      "fieldName": "Material",
+                      "value": "Papel Couché 170g"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "totalCount": 150,
+  "page": 1,
+  "pageSize": 20,
+  "totalPages": 8,
+  "hasNextPage": true,
+  "hasPreviousPage": false
+}</code></pre></div>
+
+    <h3>Códigos de Status</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>200 OK</td><td>—</td><td>Requisição bem-sucedida, retorna os dados</td></tr>
+      <tr><td>401 Unauthorized</td><td>—</td><td>API Key inválida ou ausente</td></tr>
+      <tr><td>400 Bad Request</td><td>—</td><td>Parâmetros inválidos (ex: formato de data incorreto)</td></tr>
+      <tr><td>500 Internal Server Error</td><td>—</td><td>Erro interno no servidor</td></tr>
+    </tbody></table>
+
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Boas Práticas</p><ul><li>Sempre verifique <code>hasNextPage</code> antes de solicitar a próxima página</li><li>Use <code>totalPages</code> para implementar navegação direta por número de página</li><li>Limite o <code>pageSize</code> conforme necessário para otimizar performance</li><li>Cache os resultados quando apropriado para reduzir chamadas à API</li><li>Use filtros de data para reduzir o conjunto de dados retornado</li></ul></div></div>
+
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Dica de Performance</p><p>Para grandes volumes de dados, recomenda-se usar <code>pageSize</code> entre 20 e 50 e sempre aplicar filtros de data quando possível.</p></div></div>
+  </div>
+</div>

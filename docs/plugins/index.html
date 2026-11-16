@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Construa dentro do Holdprint com a sua IA · Plugins · Holdprint Docs</title>
+<meta name="description" content="O que é um plugin, onde ele aparece no Holdprint, quem pode criar e como a segurança funciona.">
+<link rel="canonical" href="https://docs.holdworks.ai/plugins/">
+<link rel="alternate" type="text/markdown" href="/plugins.md">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b0f17" media="(prefers-color-scheme: dark)">
+<script>document.documentElement.classList.add('js');try{var t=localStorage.getItem('hp-docs-theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+<a class="skip" href="#conteudo">Pular para o conteúdo</a>
+<header class="topbar">
+  <button class="icon-btn menu-btn" type="button" aria-label="Abrir menu" aria-controls="sidebar" aria-expanded="false" data-menu><svg class="i i-menu" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  <a class="brand" href="/" aria-label="Holdprint Docs, início"><img class="brand-logo brand-logo-on-light" src="/assets/logo-holdprint.svg" alt="Holdprint" width="111" height="22"><img class="brand-logo brand-logo-on-dark" src="/assets/logo-holdprint-claro-sobre-escuro.svg" alt="" aria-hidden="true" width="111" height="22"><span>Docs</span></a>
+  <button class="search-trigger" type="button" data-search-open aria-label="Buscar na documentação"><svg class="i i-search" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg><span>Buscar na documentação</span><kbd>⌘K</kbd></button>
+  <nav class="top-tabs" aria-label="Áreas"><a href="/">Começar</a><a href="/conectar-ia/">Conectar IA</a><a href="/api/">API</a><a href="/plugins/" aria-current="true">Plugins</a></nav>
+  <div class="top-actions">
+    <a class="icon-btn" href="/llms.txt" title="llms.txt: índice para IAs" aria-label="llms.txt, índice para IAs"><svg class="i i-bot" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4.5" y="8" width="15" height="11" rx="3"/><path d="M12 4.5V8M9 13v1.5M15 13v1.5M2.5 13v2.5M21.5 13v2.5"/></svg></a>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Alternar tema claro e escuro"><svg class="i i-sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></svg><svg class="i i-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+  </div>
+</header>
+<div class="shell">
+  <aside class="sidebar" id="sidebar" aria-label="Navegação da documentação">
+    <nav class="sidebar-nav"><div class="nav-group"><a class="nav-group-title" href="/">Começar<svg class="i i-chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9.5 6.5 5.5 5.5-5.5 5.5"/></svg></a><ul><li><a href="/">Visão geral</a></li><li><a href="/comecar/inicio-rapido/">Início rápido</a></li><li><a href="/comecar/perguntas-frequentes/">Perguntas frequentes</a></li></ul></div><div class="nav-group"><a class="nav-group-title" href="/conectar-ia/">Conectar IA<svg class="i i-chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9.5 6.5 5.5 5.5-5.5 5.5"/></svg></a><ul><li><a href="/conectar-ia/">Visão geral</a></li><li><a href="/conectar-ia/claude-code/">Claude Code</a></li><li><a href="/conectar-ia/claude-ai-e-chatgpt/">claude.ai e ChatGPT</a></li><li><a href="/conectar-ia/skills/">Instalar as skills</a></li><li><a href="/conectar-ia/como-usar/">Como usar</a></li><li><a href="/conectar-ia/tools-do-mcp/">Tools do MCP</a></li><li><a href="/conectar-ia/dominio/">Skills e domínio</a></li><li><a href="/conectar-ia/banco-read-only/">Banco read-only</a></li></ul></div><div class="nav-group"><a class="nav-group-title" href="/api/">API<svg class="i i-chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9.5 6.5 5.5 5.5-5.5 5.5"/></svg></a><ul><li><a href="/api/">Visão geral</a></li><li><a href="/api/v1/">API /v1</a></li><li><a href="/api/v1/consultas/">Consultas por recurso</a></li><li><a href="/api/acoes/">Ações pela CLI e MCP</a></li><li class="nav-sub" role="presentation">API Key (legada)</li><li><a href="/api/chave/">Visão geral</a></li><li><a href="/api/clientes/">Clientes</a></li><li><a href="/api/fornecedores/">Fornecedores</a></li><li><a href="/api/orcamentos/">Orçamentos</a></li><li><a href="/api/jobs/">Jobs</a></li><li><a href="/api/contas-a-pagar/">Contas a pagar</a></li><li><a href="/api/contas-a-receber/">Contas a receber</a></li><li><a href="/api/cadastros-financeiros/">Cadastros financeiros</a></li></ul></div><div class="nav-group is-open"><a class="nav-group-title" href="/plugins/" aria-current="true">Plugins<svg class="i i-chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9.5 6.5 5.5 5.5-5.5 5.5"/></svg></a><ul><li><a href="/plugins/" aria-current="page">Visão geral</a></li><li><a href="/plugins/comece-com-sua-ia/">Comece com a sua IA</a></li><li><a href="/plugins/cli/">CLI holdprint</a></li><li><a href="/plugins/manifesto/">Manifesto</a></li><li><a href="/plugins/sdk/">SDK</a></li><li><a href="/api/v1/">API /v1</a></li><li><a href="/plugins/escopos/">Escopos</a></li><li><a href="/plugins/publicacao/">Publicação</a></li><li><a href="/plugins/erros/">Erros</a></li></ul></div></nav>
+    <div class="sidebar-foot"><a href="/llms.txt">llms.txt</a><a href="/llms-full.txt">llms-full.txt</a><a href="https://github.com/holdprint/skills" rel="noreferrer" target="_blank">GitHub</a></div>
+  </aside>
+  <div class="scrim" data-scrim hidden></div>
+  <main class="main" id="conteudo"><article class="article"><header class="page-head"><div class="page-meta"><nav class="crumbs" aria-label="Você está aqui"><a href="/plugins/">Plugins</a></nav><div class="page-actions"><button class="btn btn-ghost" type="button" data-copy-page="/plugins.md"><svg class="i i-copy" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg><span>Copiar para a IA</span></button><a class="btn btn-ghost" href="/plugins.md"><svg class="i i-file" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14 3.5H7a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-10z"/><path d="M14 3.5v5h5M8.5 13h7M8.5 16.5h5"/></svg><span>Markdown</span></a></div></div><h1>Construa dentro do Holdprint com a sua IA</h1><p class="lede">Telas no menu, botões nas telas, abas, cards na Visão Geral e automações que rodam dentro do Holdprint. A sua IA cria e testa; você aprova o que o plugin pode ler e fazer.</p></header><div class="article-body"><aside class="callout callout-note"><svg class="i i-info" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5.5M12 7.6v.1"></path></svg><div><p>Convenção desta documentação: <code><span class="ph" title="Endereço do Holdprint no navegador. Definido na publicação.">{APP_URL}</span></code> é o endereço do Holdprint que você usa no navegador e <code><span class="ph" title="Endereço da API de plugins. Definido na publicação.">{BASE_URL}</span></code> é o endereço da API. Os dois serão fixados na publicação.</p>
+</div></aside><h2 id="o-que-e-um-plugin">O que é um plugin<a class="anchor" href="#o-que-e-um-plugin" aria-label="Link para esta seção">#</a></h2>
+<p>Um plugin é uma extensão que a sua gráfica (ou alguém por ela) cria para o Holdprint. Ele aparece <strong>dentro</strong> do Holdprint, com os dados da sua conta, como se fosse parte do sistema: uma tela nova no menu, um botão numa ordem de produção, uma aba no cadastro do cliente, um indicador na Visão Geral ou uma rotina que roda sozinha de madrugada.</p>
+<p>Por dentro, um plugin é:</p>
+<ul>
+<li>uma <strong>tela</strong> feita de HTML, CSS e JavaScript estáticos (sem build obrigatório), que roda isolada dentro do Holdprint e conversa com a conta pelo SDK <code>Holdprint.connect()</code>;</li>
+<li>um <strong>manifesto</strong> <code>holdprint.plugin.json</code>, que diz o nome, onde o plugin aparece e quais dados ele pede para ler ou gravar;</li>
+<li>opcionalmente, <strong>funções</strong>: código que roda na hospedagem da Hold, sem ninguém com a tela aberta (agenda, aviso de evento, chamada de um serviço externo).</li>
+</ul>
+<p>Você não precisa saber programar: a forma recomendada de criar é pedir a uma IA (Claude, ChatGPT, Codex, Cursor) que já conhece o Holdprint pelas skills oficiais. Veja <a href="/plugins/comece-com-sua-ia/">Comece com a sua IA</a>.</p>
+<h2 id="onde-o-plugin-aparece">Onde o plugin aparece<a class="anchor" href="#onde-o-plugin-aparece" aria-label="Link para esta seção">#</a></h2>
+<p>Escolha um lugar: a tela destaca onde o plugin entra no Holdprint, e o trecho do manifesto mostra o que o coloca lá. Um plugin pode juntar vários lugares.</p>
+<div class="pmap" data-pmap="">
+  <div class="pmap-picker" role="tablist" aria-label="Lugares onde o plugin aparece"><button type="button" role="tab" id="pmap-t-pagina" aria-controls="pmap-p-pagina" aria-selected="true" tabindex="0" data-state="pagina" data-view="page">Página no menu</button><button type="button" role="tab" id="pmap-t-acao" aria-controls="pmap-p-acao" aria-selected="false" tabindex="-1" data-state="acao" data-view="job">Botão no registro</button><button type="button" role="tab" id="pmap-t-lote" aria-controls="pmap-p-lote" aria-selected="false" tabindex="-1" data-state="lote" data-view="jobs">Ação em lote</button><button type="button" role="tab" id="pmap-t-novo" aria-controls="pmap-p-novo" aria-selected="false" tabindex="-1" data-state="novo" data-view="overview" data-menu-open="">Novo registro</button><button type="button" role="tab" id="pmap-t-aba" aria-controls="pmap-p-aba" aria-selected="false" tabindex="-1" data-state="aba" data-view="customer">Aba</button><button type="button" role="tab" id="pmap-t-card" aria-controls="pmap-p-card" aria-selected="false" tabindex="-1" data-state="card" data-view="overview">Card na Visão Geral</button><button type="button" role="tab" id="pmap-t-automacao" aria-controls="pmap-p-automacao" aria-selected="false" tabindex="-1" data-state="automacao" data-view="logs">Automação</button></div>
+  <div class="pmap-stage">
+    <div class="pmap-screen">
+<div class="hp" aria-hidden="true" data-view="page">
+  <div class="hp-top">
+    <span class="hp-logo">holdprint</span>
+    <span class="hp-search">Buscar</span>
+    <span class="hp-new" data-t="novo-btn">+ Novo registro
+      <span class="hp-menu">
+        <span>Orçamento</span><span>Cliente</span><span>Tarefa</span>
+        <span class="hp-menu-sep">Plugins</span>
+        <span class="hp-is-plugin" data-t="novo"><svg class="i i-puzzle hp-plugin-mark" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M10 4.5a2 2 0 1 1 4 0V6h3.5a1.5 1.5 0 0 1 1.5 1.5V11h-1.5a2 2 0 1 0 0 4H19v3.5a1.5 1.5 0 0 1-1.5 1.5H14v-1.5a2 2 0 1 0-4 0V20H6.5A1.5 1.5 0 0 1 5 18.5V15h1.5a2 2 0 1 0 0-4H5V7.5A1.5 1.5 0 0 1 6.5 6H10z"></path></svg>Proposta rápida</span>
+      </span>
+    </span>
+    <span class="hp-avatar">RA</span>
+  </div>
+  <div class="hp-side">
+    <span class="hp-nav">Visão geral</span>
+    <span class="hp-nav">CRM</span>
+    <span class="hp-nav hp-nav-open">Produção</span>
+    <span class="hp-sub">Jobs</span>
+    <span class="hp-sub hp-is-plugin" data-t="pagina"><svg class="i i-puzzle hp-plugin-mark" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M10 4.5a2 2 0 1 1 4 0V6h3.5a1.5 1.5 0 0 1 1.5 1.5V11h-1.5a2 2 0 1 0 0 4H19v3.5a1.5 1.5 0 0 1-1.5 1.5H14v-1.5a2 2 0 1 0-4 0V20H6.5A1.5 1.5 0 0 1 5 18.5V15h1.5a2 2 0 1 0 0-4H5V7.5A1.5 1.5 0 0 1 6.5 6H10z"></path></svg>Jobs a entregar</span>
+    <span class="hp-nav">Financeiro</span>
+    <span class="hp-nav">Estoque</span>
+    <span class="hp-nav">Cadastros</span>
+    <span class="hp-nav">Relatórios</span>
+    <span class="hp-nav">Plugins</span>
+  </div>
+  <div class="hp-main">
+    <div class="hp-view" data-v="page">
+      <div class="hp-h">Jobs a entregar <span class="hp-pill">plugin Produção 360</span></div>
+      <div class="hp-table">
+        <span class="hp-th">Job</span><span class="hp-th">Cliente</span><span class="hp-th">Entrega</span>
+        <span>#2051</span><span>Gráfica Alfa</span><span>Hoje</span><span>#2049</span><span>Loja Beta</span><span>Amanhã</span><span>#2046</span><span>Studio Gama</span><span>18/11</span><span>#2043</span><span>Padaria Delta</span><span>20/11</span>
+      </div>
+    </div>
+    <div class="hp-view" data-v="job">
+      <div class="hp-crumb">Produção / Jobs / #2051</div>
+      <div class="hp-h">Banner lona 3×1 m
+        <span class="hp-actions"><span class="hp-btn">Editar</span><span class="hp-btn">Imprimir OP</span><span class="hp-btn hp-btn-plugin hp-is-plugin" data-t="acao"><svg class="i i-puzzle hp-plugin-mark" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M10 4.5a2 2 0 1 1 4 0V6h3.5a1.5 1.5 0 0 1 1.5 1.5V11h-1.5a2 2 0 1 0 0 4H19v3.5a1.5 1.5 0 0 1-1.5 1.5H14v-1.5a2 2 0 1 0-4 0V20H6.5A1.5 1.5 0 0 1 5 18.5V15h1.5a2 2 0 1 0 0-4H5V7.5A1.5 1.5 0 0 1 6.5 6H10z"></path></svg>Avisar a produção</span></span>
+      </div>
+      <div class="hp-fields">
+        <span><b>Cliente</b>Gráfica Alfa</span><span><b>Entrega</b>Hoje, 17h</span><span><b>Etapa</b>Impressão</span><span><b>Quantidade</b>2</span>
+      </div>
+      <div class="hp-bar"><span style="width:62%"></span></div>
+      <div class="hp-section">Itens</div>
+      <div class="hp-table hp-table-items">
+        <span class="hp-th">Item</span><span class="hp-th">Material</span><span class="hp-th">Qtd.</span>
+        <span>Banner 3×1 m</span><span>Lona 440 g</span><span>2</span>
+        <span>Ilhós a cada 50 cm</span><span>Acabamento</span><span>2</span>
+        <span>Bastão e corda</span><span>Acabamento</span><span>2</span>
+      </div>
+    </div>
+    <div class="hp-view" data-v="jobs">
+      <div class="hp-h">Jobs</div>
+      <div class="hp-bulk"><span>2 selecionados</span><span class="hp-btn">Exportar</span><span class="hp-btn hp-btn-plugin hp-is-plugin" data-t="lote"><svg class="i i-puzzle hp-plugin-mark" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M10 4.5a2 2 0 1 1 4 0V6h3.5a1.5 1.5 0 0 1 1.5 1.5V11h-1.5a2 2 0 1 0 0 4H19v3.5a1.5 1.5 0 0 1-1.5 1.5H14v-1.5a2 2 0 1 0-4 0V20H6.5A1.5 1.5 0 0 1 5 18.5V15h1.5a2 2 0 1 0 0-4H5V7.5A1.5 1.5 0 0 1 6.5 6H10z"></path></svg>Avisar selecionados</span></div>
+      <div class="hp-table hp-table-check">
+        <span class="hp-th"></span><span class="hp-th">Job</span><span class="hp-th">Descrição</span><span class="hp-th">Entrega</span>
+        <span class="hp-check on"></span><span>#2051</span><span>Banner lona 3×1 m</span><span>Hoje</span><span class="hp-check on"></span><span>#2049</span><span>Adesivo vitrine</span><span>Amanhã</span><span class="hp-check"></span><span>#2046</span><span>Cartão de visita</span><span>18/11</span><span class="hp-check"></span><span>#2043</span><span>Fachada ACM</span><span>20/11</span>
+      </div>
+    </div>
+    <div class="hp-view" data-v="customer">
+      <div class="hp-crumb">Cadastros / Clientes</div>
+      <div class="hp-h">Gráfica Alfa</div>
+      <div class="hp-tabs"><span class="on">Dados</span><span>Contatos</span><span>Financeiro</span><span class="hp-is-plugin" data-t="aba"><svg class="i i-puzzle hp-plugin-mark" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M10 4.5a2 2 0 1 1 4 0V6h3.5a1.5 1.5 0 0 1 1.5 1.5V11h-1.5a2 2 0 1 0 0 4H19v3.5a1.5 1.5 0 0 1-1.5 1.5H14v-1.5a2 2 0 1 0-4 0V20H6.5A1.5 1.5 0 0 1 5 18.5V15h1.5a2 2 0 1 0 0-4H5V7.5A1.5 1.5 0 0 1 6.5 6H10z"></path></svg>Histórico</span></div>
+      <div class="hp-fields"><span><b>CNPJ</b>00.000.000/0001-00</span><span><b>Cidade</b>Curitiba</span><span><b>Vendedor</b>Ana</span><span><b>Limite</b>R$ 20.000</span></div>
+    </div>
+    <div class="hp-view" data-v="overview">
+      <div class="hp-h">Visão geral</div>
+      <div class="hp-kpis"><span><b>R$ 84,2 mil</b>Faturado no mês</span><span><b>37</b>Orçamentos abertos</span><span><b>12</b>Jobs em produção</span></div>
+      <div class="hp-section">Plugins</div>
+      <div class="hp-cards"><span class="hp-card hp-is-plugin" data-t="card"><svg class="i i-puzzle hp-plugin-mark" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M10 4.5a2 2 0 1 1 4 0V6h3.5a1.5 1.5 0 0 1 1.5 1.5V11h-1.5a2 2 0 1 0 0 4H19v3.5a1.5 1.5 0 0 1-1.5 1.5H14v-1.5a2 2 0 1 0-4 0V20H6.5A1.5 1.5 0 0 1 5 18.5V15h1.5a2 2 0 1 0 0-4H5V7.5A1.5 1.5 0 0 1 6.5 6H10z"></path></svg><b>Entregas de hoje</b><em>7</em>3 atrasadas</span><span class="hp-card hp-card-empty"></span></div>
+    </div>
+    <div class="hp-view" data-v="logs">
+      <div class="hp-crumb">Plugins / Produção 360</div>
+      <div class="hp-h">Registros</div>
+      <div class="hp-logs" data-t="automacao">
+        <span><i>07:00</i>agenda follow-up<em>3 tarefas criadas</em></span>
+        <span><i>10:42</i>evento budget.won<em>ok</em></span>
+        <span><i>14:15</i>evento budget.won<em>ok</em></span>
+      </div>
+    </div>
+  </div>
+  <span class="hp-ring"></span>
+</div></div>
+    <div class="pmap-panels"><div class="pmap-panel is-active" role="tabpanel" id="pmap-p-pagina" aria-labelledby="pmap-t-pagina">
+  <p class="pmap-where"><strong>Página no menu.</strong> Uma tela inteira no menu lateral, dentro do grupo que você escolher (aqui, Produção).</p>
+  <figure class="code"><figcaption><span class="code-label">holdprint.plugin.json</span><button class="copy" type="button" data-copy aria-label="Copiar código"><svg class="i i-copy" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg><span>Copiar</span></button></figcaption><pre class="shiki github-dark-default" style="background-color:#0d1117;color:#e6edf3" tabindex="0"><code><span class="line"><span style="color:#E6EDF3">{</span></span>
+<span class="line"><span style="color:#7EE787">  "contributes"</span><span style="color:#E6EDF3">: {</span></span>
+<span class="line"><span style="color:#7EE787">    "pages"</span><span style="color:#E6EDF3">: [</span></span>
+<span class="line"><span style="color:#E6EDF3">      { </span><span style="color:#7EE787">"id"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"entregas"</span><span style="color:#E6EDF3">, </span><span style="color:#7EE787">"menuTitle"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"Jobs a entregar"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "icon"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"truck"</span><span style="color:#E6EDF3">, </span><span style="color:#7EE787">"group"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"production"</span><span style="color:#E6EDF3"> }</span></span>
+<span class="line"><span style="color:#E6EDF3">    ]</span></span>
+<span class="line"><span style="color:#E6EDF3">  }</span></span>
+<span class="line"><span style="color:#E6EDF3">}</span></span></code></pre></figure>
+  <p class="pmap-receives">O plugin recebe <code>hold.context.page === "entregas"</code>.</p>
+</div><div class="pmap-panel" role="tabpanel" id="pmap-p-acao" aria-labelledby="pmap-t-acao">
+  <p class="pmap-where"><strong>Botão no registro.</strong> Um botão dentro do registro aberto, aqui a ordem de produção. Abre um modal ou uma página.</p>
+  <figure class="code"><figcaption><span class="code-label">holdprint.plugin.json</span><button class="copy" type="button" data-copy aria-label="Copiar código"><svg class="i i-copy" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg><span>Copiar</span></button></figcaption><pre class="shiki github-dark-default" style="background-color:#0d1117;color:#e6edf3" tabindex="0"><code><span class="line"><span style="color:#E6EDF3">{</span></span>
+<span class="line"><span style="color:#7EE787">  "contributes"</span><span style="color:#E6EDF3">: {</span></span>
+<span class="line"><span style="color:#7EE787">    "actions"</span><span style="color:#E6EDF3">: [</span></span>
+<span class="line"><span style="color:#E6EDF3">      { </span><span style="color:#7EE787">"id"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"avisar-producao"</span><span style="color:#E6EDF3">, </span><span style="color:#7EE787">"title"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"Avisar a produção"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "icon"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"bell"</span><span style="color:#E6EDF3">, </span><span style="color:#7EE787">"target"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"job"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "open"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"modal"</span><span style="color:#E6EDF3">, </span><span style="color:#7EE787">"modal"</span><span style="color:#E6EDF3">: { </span><span style="color:#7EE787">"size"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"md"</span><span style="color:#E6EDF3"> } }</span></span>
+<span class="line"><span style="color:#E6EDF3">    ]</span></span>
+<span class="line"><span style="color:#E6EDF3">  }</span></span>
+<span class="line"><span style="color:#E6EDF3">}</span></span></code></pre></figure>
+  <p class="pmap-receives">O plugin recebe o registro em <code>hold.context.launch.entity</code>.</p>
+</div><div class="pmap-panel" role="tabpanel" id="pmap-p-lote" aria-labelledby="pmap-t-lote">
+  <p class="pmap-where"><strong>Ação em lote.</strong> Um botão sobre os itens marcados numa lista, aqui a lista de jobs.</p>
+  <figure class="code"><figcaption><span class="code-label">holdprint.plugin.json</span><button class="copy" type="button" data-copy aria-label="Copiar código"><svg class="i i-copy" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg><span>Copiar</span></button></figcaption><pre class="shiki github-dark-default" style="background-color:#0d1117;color:#e6edf3" tabindex="0"><code><span class="line"><span style="color:#E6EDF3">{</span></span>
+<span class="line"><span style="color:#7EE787">  "contributes"</span><span style="color:#E6EDF3">: {</span></span>
+<span class="line"><span style="color:#7EE787">    "actions"</span><span style="color:#E6EDF3">: [</span></span>
+<span class="line"><span style="color:#E6EDF3">      { </span><span style="color:#7EE787">"id"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"avisar-selecionados"</span><span style="color:#E6EDF3">, </span><span style="color:#7EE787">"title"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"Avisar selecionados"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "target"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"job-list"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "open"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"modal"</span><span style="color:#E6EDF3">, </span><span style="color:#7EE787">"modal"</span><span style="color:#E6EDF3">: { </span><span style="color:#7EE787">"size"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"lg"</span><span style="color:#E6EDF3"> } }</span></span>
+<span class="line"><span style="color:#E6EDF3">    ]</span></span>
+<span class="line"><span style="color:#E6EDF3">  }</span></span>
+<span class="line"><span style="color:#E6EDF3">}</span></span></code></pre></figure>
+  <p class="pmap-receives">O plugin recebe até 100 registros em <code>hold.context.launch.entities</code>.</p>
+</div><div class="pmap-panel" role="tabpanel" id="pmap-p-novo" aria-labelledby="pmap-t-novo">
+  <p class="pmap-where"><strong>Novo registro.</strong> Um item no menu Novo registro, no topo de qualquer tela.</p>
+  <figure class="code"><figcaption><span class="code-label">holdprint.plugin.json</span><button class="copy" type="button" data-copy aria-label="Copiar código"><svg class="i i-copy" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg><span>Copiar</span></button></figcaption><pre class="shiki github-dark-default" style="background-color:#0d1117;color:#e6edf3" tabindex="0"><code><span class="line"><span style="color:#E6EDF3">{</span></span>
+<span class="line"><span style="color:#7EE787">  "contributes"</span><span style="color:#E6EDF3">: {</span></span>
+<span class="line"><span style="color:#7EE787">    "actions"</span><span style="color:#E6EDF3">: [</span></span>
+<span class="line"><span style="color:#E6EDF3">      { </span><span style="color:#7EE787">"id"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"proposta-rapida"</span><span style="color:#E6EDF3">, </span><span style="color:#7EE787">"title"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"Proposta rápida"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "icon"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"bolt"</span><span style="color:#E6EDF3">, </span><span style="color:#7EE787">"target"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"new-record"</span><span style="color:#E6EDF3">, </span><span style="color:#7EE787">"open"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"page"</span><span style="color:#E6EDF3"> }</span></span>
+<span class="line"><span style="color:#E6EDF3">    ]</span></span>
+<span class="line"><span style="color:#E6EDF3">  }</span></span>
+<span class="line"><span style="color:#E6EDF3">}</span></span></code></pre></figure>
+  <p class="pmap-receives">Sem registro: o plugin abre vazio, pronto para criar.</p>
+</div><div class="pmap-panel" role="tabpanel" id="pmap-p-aba" aria-labelledby="pmap-t-aba">
+  <p class="pmap-where"><strong>Aba.</strong> Uma aba no cadastro do cliente ou no orçamento. Só carrega quando alguém clica nela.</p>
+  <figure class="code"><figcaption><span class="code-label">holdprint.plugin.json</span><button class="copy" type="button" data-copy aria-label="Copiar código"><svg class="i i-copy" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg><span>Copiar</span></button></figcaption><pre class="shiki github-dark-default" style="background-color:#0d1117;color:#e6edf3" tabindex="0"><code><span class="line"><span style="color:#E6EDF3">{</span></span>
+<span class="line"><span style="color:#7EE787">  "contributes"</span><span style="color:#E6EDF3">: {</span></span>
+<span class="line"><span style="color:#7EE787">    "tabs"</span><span style="color:#E6EDF3">: [</span></span>
+<span class="line"><span style="color:#E6EDF3">      { </span><span style="color:#7EE787">"id"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"historico"</span><span style="color:#E6EDF3">, </span><span style="color:#7EE787">"title"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"Histórico"</span><span style="color:#E6EDF3">, </span><span style="color:#7EE787">"target"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"customer"</span><span style="color:#E6EDF3"> }</span></span>
+<span class="line"><span style="color:#E6EDF3">    ]</span></span>
+<span class="line"><span style="color:#E6EDF3">  }</span></span>
+<span class="line"><span style="color:#E6EDF3">}</span></span></code></pre></figure>
+  <p class="pmap-receives">O plugin recebe <code>hold.context.tab</code> e o registro aberto em <code>launch.entity</code>.</p>
+</div><div class="pmap-panel" role="tabpanel" id="pmap-p-card" aria-labelledby="pmap-t-card">
+  <p class="pmap-where"><strong>Card na Visão Geral.</strong> Um card na seção Plugins, no fim da Visão Geral. Pequeno, médio ou grande.</p>
+  <figure class="code"><figcaption><span class="code-label">holdprint.plugin.json</span><button class="copy" type="button" data-copy aria-label="Copiar código"><svg class="i i-copy" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg><span>Copiar</span></button></figcaption><pre class="shiki github-dark-default" style="background-color:#0d1117;color:#e6edf3" tabindex="0"><code><span class="line"><span style="color:#E6EDF3">{</span></span>
+<span class="line"><span style="color:#7EE787">  "contributes"</span><span style="color:#E6EDF3">: {</span></span>
+<span class="line"><span style="color:#7EE787">    "cards"</span><span style="color:#E6EDF3">: [</span></span>
+<span class="line"><span style="color:#E6EDF3">      { </span><span style="color:#7EE787">"id"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"entregas-hoje"</span><span style="color:#E6EDF3">, </span><span style="color:#7EE787">"title"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"Entregas de hoje"</span><span style="color:#E6EDF3">, </span><span style="color:#7EE787">"size"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"small"</span><span style="color:#E6EDF3"> }</span></span>
+<span class="line"><span style="color:#E6EDF3">    ]</span></span>
+<span class="line"><span style="color:#E6EDF3">  }</span></span>
+<span class="line"><span style="color:#E6EDF3">}</span></span></code></pre></figure>
+  <p class="pmap-receives">O plugin recebe <code>hold.context.card</code> e ajusta a altura com <code>hold.ui.resize()</code>.</p>
+</div><div class="pmap-panel" role="tabpanel" id="pmap-p-automacao" aria-labelledby="pmap-t-automacao">
+  <p class="pmap-where"><strong>Automação.</strong> Nada na tela: funções rodam na hospedagem da Hold por agenda ou evento. O que aconteceu aparece nos registros do plugin.</p>
+  <figure class="code"><figcaption><span class="code-label">holdprint.plugin.json</span><button class="copy" type="button" data-copy aria-label="Copiar código"><svg class="i i-copy" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg><span>Copiar</span></button></figcaption><pre class="shiki github-dark-default" style="background-color:#0d1117;color:#e6edf3" tabindex="0"><code><span class="line"><span style="color:#E6EDF3">{</span></span>
+<span class="line"><span style="color:#7EE787">  "events"</span><span style="color:#E6EDF3">: { </span><span style="color:#7EE787">"subscribe"</span><span style="color:#E6EDF3">: [</span><span style="color:#A5D6FF">"budget.won"</span><span style="color:#E6EDF3">] },</span></span>
+<span class="line"><span style="color:#7EE787">  "functions"</span><span style="color:#E6EDF3">: {</span></span>
+<span class="line"><span style="color:#7EE787">    "entry"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"functions/index.ts"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">    "schedules"</span><span style="color:#E6EDF3">: [</span></span>
+<span class="line"><span style="color:#E6EDF3">      { </span><span style="color:#7EE787">"id"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"follow-up"</span><span style="color:#E6EDF3">, </span><span style="color:#7EE787">"every"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"1d"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "path"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"/api/agenda/follow-up"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "description"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"Follow-up de orçamentos parados"</span><span style="color:#E6EDF3"> }</span></span>
+<span class="line"><span style="color:#E6EDF3">    ],</span></span>
+<span class="line"><span style="color:#7EE787">    "events"</span><span style="color:#E6EDF3">: { </span><span style="color:#7EE787">"path"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"/api/eventos"</span><span style="color:#E6EDF3"> }</span></span>
+<span class="line"><span style="color:#E6EDF3">  }</span></span>
+<span class="line"><span style="color:#E6EDF3">}</span></span></code></pre></figure>
+  <p class="pmap-receives">Acompanhe com <code>holdprint plugin logs</code> ou na tela do plugin.</p>
+</div></div>
+  </div>
+</div>
+<h2 id="o-que-da-para-construir">O que dá para construir<a class="anchor" href="#o-que-da-para-construir" aria-label="Link para esta seção">#</a></h2>
+<div class="table-wrap"><table><thead><tr><th>Lugar no Holdprint</th><th>Como se declara</th><th>Exemplo</th></tr></thead><tbody><tr><td><strong>Página no menu</strong>, dentro do grupo que fizer sentido: Produção, Financeiro, Estoque, CRM, Cadastros, Custeio, Relatórios ou Plugins</td><td><code>contributes.pages</code> (até 5)</td><td>"Relatório de produção da semana" no menu Produção</td></tr><tr><td><strong>Botão de ação no detalhe</strong> de um registro (orçamento, cliente, ordem de produção, conta a pagar e a receber, insumo, pedido de compra, fornecedor, nota fiscal, contrato e outros)</td><td><code>contributes.actions</code> com o alvo da tela (até 10 ações)</td><td>"Avisar a produção" dentro da ordem de produção</td></tr><tr><td><strong>Botão de ação em lote</strong>, sobre os itens marcados numa lista</td><td><code>contributes.actions</code> com alvo <code>&lt;tela&gt;-list</code></td><td>"Enviar selecionados para a transportadora" na lista de jobs</td></tr><tr><td><strong>Novo registro</strong>, no menu do topo, abrindo um modal ou uma página</td><td><code>contributes.actions</code> com alvo <code>new-record</code></td><td>"Proposta rápida"</td></tr><tr><td><strong>Aba</strong> dentro do orçamento ou do cliente</td><td><code>contributes.tabs</code> (até 3)</td><td>Aba "Histórico de compras" no cliente</td></tr><tr><td><strong>Card na Visão Geral</strong> (pequeno, médio ou grande)</td><td><code>contributes.cards</code> (até 3)</td><td>Card "Meta do mês"</td></tr><tr><td><strong>Automação</strong> sem tela aberta: agenda, reação a eventos, chamada de serviço externo (hook), "Executar agora"</td><td><code>functions</code>, <code>events</code>, <code>secrets</code>, <code>network</code></td><td>Follow-up automático de orçamentos parados há 7 dias</td></tr><tr><td><strong>App fora do Holdprint</strong> (TV da produção, página no celular) que entra com a conta Holdprint</td><td><code>contributes.externalApps</code> (até 3)</td><td>Painel de TV com os jobs do dia</td></tr></tbody></table></div>
+<p>Um plugin pode juntar várias dessas peças: uma página no menu, um botão no orçamento que abre um modal e uma agenda diária formam <strong>um plugin só</strong>, com um único consentimento.</p>
+<h2 id="ideias-reais-para-graficas">Ideias reais para gráficas<a class="anchor" href="#ideias-reais-para-graficas" aria-label="Link para esta seção">#</a></h2>
+<ul>
+<li><strong>Painel de vendas por vendedor</strong>: orçamentos abertos, ganhos no mês e taxa de conversão de cada vendedor, com um botão que cria a tarefa de follow-up.</li>
+<li><strong>Follow-up automático</strong>: todo dia, procura orçamentos abertos sem movimento há 7 dias e cria uma tarefa para o vendedor responsável.</li>
+<li><strong>Gerar proposta</strong>: botão no orçamento que abre um modal, monta o texto da proposta e registra a tarefa "Proposta enviada".</li>
+<li><strong>Jobs a entregar</strong>: página no grupo Produção com os jobs não finalizados ordenados pela data de entrega, e um botão em lote para avisar a equipe sobre os selecionados.</li>
+<li><strong>Contas a vencer na semana</strong>: card na Visão Geral com o total a pagar nos próximos 7 dias.</li>
+<li><strong>Histórico do cliente</strong>: aba no cadastro do cliente com os orçamentos ganhos e perdidos e as tarefas abertas.</li>
+<li><strong>Integração com a transportadora ou o serviço de cobrança</strong>: função que recebe o aviso do serviço externo (hook), confere a assinatura e registra no Holdprint.</li>
+<li><strong>Painel da produção na TV</strong>: app externo que entra por um código na TV e mostra os jobs do dia, sem senha na TV.</li>
+</ul>
+<h2 id="quem-pode-criar">Quem pode criar<a class="anchor" href="#quem-pode-criar" aria-label="Link para esta seção">#</a></h2>
+<div class="table-wrap"><table><thead><tr><th>Perfil</th><th>O que pode fazer</th></tr></thead><tbody><tr><td><strong>Administrador da conta</strong></td><td>Tudo: criar, publicar na conta, aprovar (consentimento), escolher os perfis que usam, gravar segredos, gerar link para outra gráfica e pedir publicação no Marketplace.</td></tr><tr><td><strong>Desenvolvedor da gráfica</strong> (sem perfil de Administrador)</td><td>Desenhar e testar o plugin no <strong>simulador</strong> (<code>holdprint dev</code>), com dados fictícios, sem login. Para publicar na conta é preciso o login de um Administrador.</td></tr><tr><td><strong>Quem ainda não tem conta</strong> ("vibe coder")</td><td>Começa no simulador, sem conta. Para colocar o plugin num Holdprint de verdade ou publicar, cria uma <strong>conta de teste grátis</strong> em <code><span class="ph" title="Endereço do Holdprint no navegador. Definido na publicação.">{APP_URL}</span>/holdai/register</code>, ativa pelo e-mail e entra com <code>holdprint login</code>. Na conta de teste, a pessoa é Administradora.</td></tr></tbody></table></div>
+<p>Quem <strong>usa</strong> o plugin depois de instalado: o Administrador sempre; os demais perfis só se um Administrador os liberar na aprovação e se o perfil tiver a permissão <strong>Plugins: Usar</strong> em Ajustes &gt; Perfis. Quem tem <strong>Plugins: Gerenciar</strong> pode ligar e desligar plugins.</p>
+<h2 id="seguranca-em-linguagem-simples">Segurança, em linguagem simples<a class="anchor" href="#seguranca-em-linguagem-simples" aria-label="Link para esta seção">#</a></h2>
+<ul>
+<li><strong>Isolado.</strong> A tela do plugin roda numa área separada do Holdprint (outro endereço, sem acesso aos cookies nem à tela do sistema). Ela não chama sites de fora: bibliotecas e fontes vão dentro do próprio plugin. Serviço externo só por função, e só para os sites que o plugin declarou.</li>
+<li><strong>Só o que pediu.</strong> O plugin declara no manifesto cada permissão (escopo) que precisa, com o motivo em português. Ele não acessa nada fora dessa lista, e a lista é curta e fixa: não existe "acesso total".</li>
+<li><strong>Você aprova.</strong> Nada aparece para ninguém antes de um Administrador abrir a tela de consentimento, conferir o que o plugin acessa, onde aparece, o que roda sozinho e com quais sites fala, digitar a senha e clicar em <strong>Aprovar e instalar</strong>. Se uma versão nova pedir permissão nova, o Holdprint pede aprovação de novo; até lá o plugin continua com as permissões antigas.</li>
+<li><strong>Vê o que o usuário vê.</strong> Quando alguém abre o plugin, ele enxerga só o que essa pessoa já enxerga no Holdprint. Um vendedor que só vê os próprios orçamentos vê só os próprios orçamentos no plugin.</li>
+<li><strong>Dados por conta.</strong> Cada conta tem os próprios dados, registros e configurações do plugin. Um plugin instalado em outra gráfica nunca vê os dados da sua.</li>
+<li><strong>Sem senha, sem token.</strong> O plugin nunca pede senha. A credencial é do SDK, curta e renovada sozinha. Segredos (chaves de serviços externos) são gravados por um Administrador numa tela própria e nunca aparecem no código, no chat da IA nem nos registros.</li>
+<li><strong>Limites.</strong> Cada instalação tem cota de chamadas (10 mil por dia e 300 por minuto) para não pesar no sistema. O Administrador acompanha o consumo em <strong>Plugins &gt; Chamadas e cotas</strong>.</li>
+<li><strong>Desligar e revogar.</strong> O Administrador desliga, desinstala ou revoga o acesso a qualquer momento na tela Plugins. Acessos da CLI, do MCP e de apps externos aparecem em <strong>Plugins &gt; Acessos conectados</strong> e podem ser desconectados.</li>
+</ul>
+<h2 id="proximos-passos">Próximos passos<a class="anchor" href="#proximos-passos" aria-label="Link para esta seção">#</a></h2>
+<ol>
+<li><a href="/plugins/comece-com-sua-ia/">Comece com a sua IA</a>: o kit para pedir o plugin ao Claude, ao ChatGPT, ao Codex ou ao Cursor.</li>
+<li><a href="/plugins/cli/">CLI</a>, <a href="/plugins/manifesto/">Manifesto</a>, <a href="/plugins/sdk/">SDK</a>, <a href="/api/v1/">API /v1</a>, <a href="/plugins/escopos/">Escopos</a>, <a href="/plugins/publicacao/">Publicação</a> e <a href="/plugins/erros/">Erros</a>: a referência técnica.</li>
+</ol>
+</div><nav class="pager" aria-label="Paginação"><a class="pager-prev" href="/api/cadastros-financeiros/"><span>Anterior</span><strong>API · Cadastros financeiros</strong></a><a class="pager-next" href="/plugins/comece-com-sua-ia/"><span>Próximo</span><strong>Plugins · Comece com a sua IA</strong></a></nav></article><aside class="rail"><nav class="toc" aria-label="Nesta página"><p class="rail-title">Nesta página</p><ul><li class="toc-l2"><a href="#o-que-e-um-plugin">O que é um plugin</a></li><li class="toc-l2"><a href="#onde-o-plugin-aparece">Onde o plugin aparece</a></li><li class="toc-l2"><a href="#o-que-da-para-construir">O que dá para construir</a></li><li class="toc-l2"><a href="#ideias-reais-para-graficas">Ideias reais para gráficas</a></li><li class="toc-l2"><a href="#quem-pode-criar">Quem pode criar</a></li><li class="toc-l2"><a href="#seguranca-em-linguagem-simples">Segurança, em linguagem simples</a></li><li class="toc-l2"><a href="#proximos-passos">Próximos passos</a></li></ul></nav><div class="rail-prompt"><figure class="prompt"><figcaption><span class="prompt-label"><svg class="i i-sparkle" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 13.9 9a1.5 1.5 0 0 0 1 1l5.6 2-5.6 2a1.5 1.5 0 0 0-1 1L12 20.5 10.1 15a1.5 1.5 0 0 0-1-1L3.5 12l5.6-2a1.5 1.5 0 0 0 1-1z"/></svg>Cole na sua IA</span><button class="copy" type="button" data-copy aria-label="Copiar prompt"><svg class="i i-copy" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg><span>Copiar</span></button></figcaption><pre><code>Crie um plugin do Holdprint que mostra os jobs atrasados num card da Visão Geral. Comece pelo simulador e me mostre a tela.</code></pre></figure></div></aside></main>
+</div>
+<dialog class="search" aria-label="Buscar na documentação">
+  <form method="dialog" class="search-box" role="search">
+    <svg class="i i-search" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg><input type="search" placeholder="Buscar: plugin, manifesto, contas a pagar, erro 94…" aria-label="Termo de busca" autocomplete="off" spellcheck="false" data-search-input>
+    <button class="search-esc" type="submit" aria-label="Fechar busca">Esc</button>
+  </form>
+  <ul class="search-results" role="listbox" aria-label="Resultados" data-search-results></ul>
+  <p class="search-hint"><span><kbd>↑</kbd><kbd>↓</kbd> navegar</span><span><kbd>Enter</kbd> abrir</span><span><kbd>Esc</kbd> fechar</span></p>
+</dialog>
+<div class="toast" role="status" aria-live="polite" data-toast></div>
+<script src="/assets/site.js" defer></script>
+</body>
+</html>

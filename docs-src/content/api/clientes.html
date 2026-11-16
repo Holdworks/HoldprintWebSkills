@@ -1,0 +1,435 @@
+<!-- legacy-id: api-customers -->
+<h2>Clientes</h2><p class="section-sub">Consulta, criação e atualização do cadastro de clientes na plataforma Holdprint, com suporte a endereços múltiplos, contatos, limite de crédito e campos fiscais específicos por país.</p>
+
+<div class="ref">
+  <div class="ref-head"><span class="ref-tag get">GET</span><code>/api-key/customers/data</code></div>
+  <div class="ref-body">
+    <p>Consulta dados de clientes cadastrados na plataforma de forma paginada, com suporte a busca por nome, e-mail ou documento. Os dados retornados incluem informações completas de contato, endereço e status do cliente, facilitando integrações com CRM e sistemas de gestão. Se nenhum parâmetro for informado, o endpoint retorna todos os clientes ativos cadastrados.</p>
+    <p>Autenticação via API Key no header <code>x-api-key</code>.</p>
+    <h3>Parâmetros de Query</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>page</td><td>int</td><td class="req-no">opcional</td><td>Número da página para paginação (padrão: 1)</td></tr>
+      <tr><td>limit</td><td>int</td><td class="req-no">opcional</td><td>Quantidade de registros por página (padrão: 50 • máximo: 100)</td></tr>
+      <tr><td>search</td><td>string</td><td class="req-no">opcional</td><td>Busca por nome, e-mail ou documento do cliente (exemplo: Empresa Exemplo)</td></tr>
+      <tr><td>active</td><td>boolean</td><td class="req-no">opcional</td><td>Filtrar apenas clientes ativos (true/false) (padrão: true)</td></tr>
+      <tr><td>translate</td><td>boolean</td><td class="req-no">opcional</td><td>Traduzir nomes de campos (true/false) (padrão: false)</td></tr>
+    </tbody></table>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash</span></div><pre><code>curl -X GET "https://api.holdworks.ai/api-key/customers/data?page=1&amp;limit=50&amp;search=Empresa" \
+  -H "x-api-key: sua_api_key_aqui"</code></pre></div>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">json</span></div><pre><code>{
+  "success": true,
+  "data": {
+    "items": [
+      {
+        "id": 789,
+        "name": "Empresa Exemplo LTDA",
+        "email": "contato@exemplo.com",
+        "phone": "+55 11 98765-4321",
+        "document": "12.345.678/0001-99",
+        "address": {
+          "street": "Rua Exemplo, 123",
+          "complement": "Sala 501",
+          "neighborhood": "Centro",
+          "city": "São Paulo",
+          "state": "SP",
+          "zip_code": "01234-567",
+          "country": "Brasil"
+        },
+        "contact_person": "João Silva",
+        "active": true,
+        "notes": "Cliente preferencial com desconto especial",
+        "created_at": "2024-01-10T10:00:00Z",
+        "updated_at": "2025-01-15T14:30:00Z"
+      }
+    ],
+    "pagination": {
+      "page": 1,
+      "limit": 50,
+      "total": 145,
+      "pages": 3
+    }
+  },
+  "message": "Success"
+}</code></pre></div>
+    <h3>Estrutura de Dados</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>id</td><td>number</td><td>Identificador único do cliente</td></tr>
+      <tr><td>name</td><td>string</td><td>Nome ou razão social do cliente</td></tr>
+      <tr><td>email</td><td>string</td><td>E-mail de contato</td></tr>
+      <tr><td>phone</td><td>string</td><td>Telefone de contato</td></tr>
+      <tr><td>document</td><td>string</td><td>CPF ou CNPJ do cliente</td></tr>
+      <tr><td>address</td><td>object</td><td>Endereço completo do cliente</td></tr>
+      <tr><td>contact_person</td><td>string</td><td>Nome da pessoa de contato</td></tr>
+      <tr><td>active</td><td>boolean</td><td>Indica se o cliente está ativo</td></tr>
+      <tr><td>notes</td><td>string | null</td><td>Observações sobre o cliente</td></tr>
+      <tr><td>created_at</td><td>string</td><td>Data de cadastro (ISO 8601)</td></tr>
+      <tr><td>updated_at</td><td>string</td><td>Data da última atualização (ISO 8601)</td></tr>
+    </tbody></table>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Dica</p><p>Use o parâmetro search para criar funcionalidades de autocomplete ou busca rápida de clientes no seu sistema.</p></div></div>
+    <h3>Objeto Address</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>street</td><td>string</td><td>Logradouro e número</td></tr>
+      <tr><td>complement</td><td>string</td><td>Complemento (opcional)</td></tr>
+      <tr><td>neighborhood</td><td>string</td><td>Bairro</td></tr>
+      <tr><td>city</td><td>string</td><td>Cidade</td></tr>
+      <tr><td>state</td><td>string</td><td>Estado (sigla)</td></tr>
+      <tr><td>zip_code</td><td>string</td><td>CEP</td></tr>
+      <tr><td>country</td><td>string</td><td>País</td></tr>
+    </tbody></table>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Boas Práticas</p><ul><li>Use paginação para grandes volumes de dados</li><li>Implemente cache local para reduzir requisições</li><li>Utilize o filtro active=true para exibir apenas clientes ativos</li><li>Normalize documentos antes de buscar (remover pontos e traços)</li></ul></div></div>
+  </div>
+</div>
+
+<div class="ref">
+  <div class="ref-head"><span class="ref-tag post">POST</span><code>/api-key/customers</code></div>
+  <div class="ref-body">
+    <p>Cria um novo cliente na plataforma via API Key. Você pode cadastrar informações completas incluindo endereços múltiplos, contatos, limite de crédito e campos específicos por país. O sistema gera automaticamente o ID do cliente e registra as datas de criação. Apenas o campo Name é obrigatório; todos os demais são opcionais.</p>
+    <p>Autenticação via API Key no header <code>x-api-key</code> e <code>Content-Type: application/json</code>.</p>
+    <h3>Request Body</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>Name</td><td>string</td><td class="req-yes">Sim</td><td>Nome ou razão social do cliente</td></tr>
+      <tr><td>FullName</td><td>string</td><td class="req-no">Não</td><td>Nome completo/razão social completa (padrão: Name)</td></tr>
+      <tr><td>MainEmail</td><td>string</td><td class="req-no">Não</td><td>E-mail principal de contato</td></tr>
+      <tr><td>MainPhoneNumber</td><td>string</td><td class="req-no">Não</td><td>Telefone principal de contato</td></tr>
+      <tr><td>Site</td><td>string</td><td class="req-no">Não</td><td>Website do cliente</td></tr>
+      <tr><td>Addresses</td><td>array</td><td class="req-no">Não</td><td>Lista de endereços do cliente</td></tr>
+      <tr><td>Contacts</td><td>array</td><td class="req-no">Não</td><td>Lista de contatos do cliente</td></tr>
+      <tr><td>CustomerDetails</td><td>object</td><td class="req-no">Não</td><td>Detalhes de crédito do cliente</td></tr>
+      <tr><td>SpecificFields</td><td>object</td><td class="req-no">Não</td><td>Campos específicos por país</td></tr>
+    </tbody></table>
+    <h3>Estrutura de Addresses</h3>
+    <p>O campo Addresses aceita um array de objetos de endereço. Existem dois tipos de endereço. Endereço Genérico:</p>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>Description</td><td>string</td><td>Descrição do endereço (ex: "Sede", "Filial")</td></tr>
+      <tr><td>Country</td><td>string</td><td>País</td></tr>
+      <tr><td>AddressLine1</td><td>string</td><td>Logradouro e número</td></tr>
+      <tr><td>AddressLine2</td><td>string</td><td>Complemento</td></tr>
+      <tr><td>Locality</td><td>string</td><td>Cidade</td></tr>
+      <tr><td>AdministrativeAreaL1</td><td>string</td><td>Estado/Província</td></tr>
+      <tr><td>AdministrativeAreaL2</td><td>string</td><td>Bairro/Distrito</td></tr>
+      <tr><td>PostalCode</td><td>string</td><td>Código postal/CEP</td></tr>
+      <tr><td>Number</td><td>string</td><td>Número do endereço</td></tr>
+      <tr><td>Type</td><td>string</td><td>Tipo: "Generic" ou "BR"</td></tr>
+    </tbody></table>
+    <p>Endereço Brasil (BR): para endereços no Brasil, use <code>Type: "BR"</code> e inclua campos adicionais:</p>
+    <table class="dtable"><thead><tr><th>Campo Adicional</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>AddressLine3</td><td>string</td><td>Linha adicional de endereço</td></tr>
+      <tr><td>IbgeLocalityCode</td><td>int</td><td>Código IBGE da cidade</td></tr>
+      <tr><td>IbgeStateCode</td><td>int</td><td>Código IBGE do estado</td></tr>
+      <tr><td>IbgeCountryCode</td><td>int</td><td>Código IBGE do país (1058 para Brasil)</td></tr>
+    </tbody></table>
+    <h3>Estrutura de Contacts</h3>
+    <p>O campo Contacts aceita um array de objetos de contato:</p>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>Name</td><td>string</td><td>Nome do contato</td></tr>
+      <tr><td>Role</td><td>string</td><td>Cargo/função do contato</td></tr>
+      <tr><td>Phone</td><td>string</td><td>Telefone do contato</td></tr>
+      <tr><td>Email</td><td>string</td><td>E-mail do contato</td></tr>
+      <tr><td>BirthDate</td><td>string</td><td>Data de nascimento (ISO 8601)</td></tr>
+      <tr><td>ContactType</td><td>string</td><td>Tipo: "Customer", "Supplier", "Commercial", "Financial", "Other"</td></tr>
+    </tbody></table>
+    <h3>Estrutura de CustomerDetails</h3>
+    <p>O campo CustomerDetails contém informações sobre limite de crédito:</p>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>SalesCreditLimit</td><td>decimal</td><td>Limite de crédito para vendas (padrão: 0)</td></tr>
+      <tr><td>SalesCreditLimitExpirationDate</td><td>string</td><td>Data de expiração do limite (ISO 8601)</td></tr>
+    </tbody></table>
+    <h3>Campos Específicos por País</h3>
+    <p>O campo SpecificFields contém informações específicas de cada país. Campos disponíveis:</p>
+    <table class="dtable"><thead><tr><th>País</th><th>Campos Disponíveis</th></tr></thead><tbody>
+      <tr><td>Brasil (BR)</td><td>CNPJ (string) - CNPJ da empresa; CPF (string) - CPF do cliente; InscricaoEstadual (string) - Inscrição estadual; InscricaoMunicipal (string) - Inscrição municipal; RegimeTributario (string) - Regime tributário</td></tr>
+      <tr><td>Argentina (AR)</td><td>CUIT (string) - CUIT da empresa; CUIL (string) - CUIL da pessoa; IngresosBrutos (string) - Ingresos brutos</td></tr>
+      <tr><td>Portugal (PT)</td><td>NIF (string) - Número de Identificação Fiscal; NIPC (string) - Número de Identificação de Pessoa Coletiva</td></tr>
+      <tr><td>Chile (CL)</td><td>RUT (string) - Rol Único Tributario</td></tr>
+      <tr><td>Colômbia (CO)</td><td>NIT (string) - Número de Identificación Tributaria</td></tr>
+      <tr><td>Estados Unidos (US)</td><td>EIN (string) - Employer Identification Number; SSN (string) - Social Security Number</td></tr>
+      <tr><td>Paraguai (PY)</td><td>RUC (string) - Registro Único de Contribuyentes</td></tr>
+      <tr><td>Reino Unido (GB)</td><td>VATNumber (string) - VAT Registration Number; CompanyNumber (string) - Company Registration Number</td></tr>
+      <tr><td>Uruguai (UY)</td><td>RUT (string) - Registro Único Tributario</td></tr>
+    </tbody></table>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Dica</p><p>Você precisa especificar o tipo de campo no objeto. Por exemplo, para Brasil use <code>"SpecificFields": {"BR": {"CNPJ": "12.345.678/0001-99"}}</code></p></div></div>
+    <p>Exemplo de Requisição - Básico (apenas campos obrigatórios):</p>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash</span></div><pre><code>curl -X POST "https://api.holdworks.ai/api-key/customers" \
+  -H "x-api-key: sua_api_key_aqui" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "Name": "Empresa Exemplo LTDA"
+  }'</code></pre></div>
+    <p>Exemplo de Requisição - Completo (todos os campos opcionais):</p>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash</span></div><pre><code>curl -X POST "https://api.holdworks.ai/api-key/customers" \
+  -H "x-api-key: sua_api_key_aqui" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "Name": "Empresa Exemplo LTDA",
+    "FullName": "Empresa Exemplo Comércio e Serviços LTDA",
+    "MainEmail": "contato@exemplo.com",
+    "MainPhoneNumber": "+55 11 98765-4321",
+    "Site": "https://www.exemplo.com",
+    "Addresses": [
+      {
+        "Type": "BR",
+        "Description": "Sede",
+        "Country": "Brasil",
+        "AddressLine1": "Rua Exemplo",
+        "AddressLine2": "Sala 501",
+        "AddressLine3": "",
+        "Locality": "São Paulo",
+        "AdministrativeAreaL1": "SP",
+        "AdministrativeAreaL2": "Centro",
+        "PostalCode": "01234-567",
+        "Number": "123",
+        "IbgeLocalityCode": 3550308,
+        "IbgeStateCode": 35,
+        "IbgeCountryCode": 1058
+      }
+    ],
+    "Contacts": [
+      {
+        "Name": "João Silva",
+        "Role": "Gerente Comercial",
+        "Phone": "+55 11 91234-5678",
+        "Email": "joao.silva@exemplo.com",
+        "BirthDate": "1985-03-15T00:00:00Z",
+        "ContactType": "Commercial"
+      }
+    ],
+    "CustomerDetails": {
+      "SalesCreditLimit": 50000.00,
+      "SalesCreditLimitExpirationDate": "2025-12-31T23:59:59Z"
+    },
+    "SpecificFields": {
+      "BR": {
+        "CNPJ": "12.345.678/0001-99",
+        "InscricaoEstadual": "123.456.789.012",
+        "InscricaoMunicipal": "98765432",
+        "RegimeTributario": "Simples Nacional"
+      }
+    }
+  }'</code></pre></div>
+    <p>Exemplo de Resposta:</p>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">json</span></div><pre><code>{
+  "Id": "507f1f77bcf86cd799439011",
+  "Name": "Empresa Exemplo LTDA",
+  "FullName": "Empresa Exemplo Comércio e Serviços LTDA",
+  "MainEmail": "contato@exemplo.com",
+  "MainPhoneNumber": "+55 11 98765-4321",
+  "Site": "https://www.exemplo.com",
+  "EntityType": "Customer",
+  "Active": true,
+  "CreationTime": "2025-01-15T10:30:00Z",
+  "LastUpdateTime": "2025-01-15T10:30:00Z",
+  "Addresses": [
+    {
+      "Type": "BR",
+      "Description": "Sede",
+      "Country": "Brasil",
+      "AddressLine1": "Rua Exemplo",
+      "AddressLine2": "Sala 501",
+      "AddressLine3": "",
+      "Locality": "São Paulo",
+      "AdministrativeAreaL1": "SP",
+      "AdministrativeAreaL2": "Centro",
+      "PostalCode": "01234-567",
+      "Number": "123",
+      "IbgeLocalityCode": 3550308,
+      "IbgeStateCode": 35,
+      "IbgeCountryCode": 1058
+    }
+  ],
+  "Contacts": [
+    {
+      "Id": 1,
+      "Name": "João Silva",
+      "Role": "Gerente Comercial",
+      "Phone": "+55 11 91234-5678",
+      "Email": "joao.silva@exemplo.com",
+      "BirthDate": "1985-03-15T00:00:00Z",
+      "ContactType": "Commercial"
+    }
+  ],
+  "CustomerDetails": {
+    "SalesCreditLimit": 50000.00,
+    "AvaibleSalesCreditLimit": 50000.00,
+    "SalesCreditLimitExpirationDate": "2025-12-31T23:59:59Z"
+  },
+  "SpecificFields": {
+    "BR": {
+      "CNPJ": "12.345.678/0001-99",
+      "InscricaoEstadual": "123.456.789.012",
+      "InscricaoMunicipal": "98765432",
+      "RegimeTributario": "Simples Nacional"
+    }
+  }
+}</code></pre></div>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Dica</p><p>A resposta inclui campos gerados pelo sistema como Id, EntityType, Active, CreationTime e LastUpdateTime. O campo AvaibleSalesCreditLimit é inicializado com o mesmo valor de SalesCreditLimit.</p></div></div>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Boas Práticas</p><ul><li>Sempre valide e-mails e telefones antes de enviar</li><li>Use o campo FullName para armazenar razão social completa</li><li>Para endereços BR, sempre forneça os códigos IBGE quando possível</li><li>Inclua múltiplos contatos com tipos específicos (Commercial, Financial, etc.)</li><li>Defina limites de crédito com datas de expiração apropriadas</li><li>Use os campos específicos do país para compliance fiscal</li></ul></div></div>
+    <h3>Códigos de Status</h3>
+    <table class="dtable"><thead><tr><th>Código</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>200</td><td>Cliente criado com sucesso</td></tr>
+      <tr><td>400</td><td>Dados inválidos (campo obrigatório ausente ou formato incorreto)</td></tr>
+      <tr><td>401</td><td>API Key inválida ou ausente</td></tr>
+      <tr><td>500</td><td>Erro interno do servidor</td></tr>
+    </tbody></table>
+  </div>
+</div>
+
+<div class="ref">
+  <div class="ref-head"><span class="ref-tag put">PUT</span><code>/api-key/customers/{id}</code></div>
+  <div class="ref-body">
+    <p>Atualiza um cliente existente na plataforma via API Key. Você pode modificar todas as informações do cliente, incluindo endereços, contatos, limite de crédito e status de ativação. O sistema atualiza automaticamente o campo LastUpdateTime. Diferença do POST: este endpoint inclui o campo Active (boolean, obrigatório) que permite ativar ou desativar o cliente — esse campo não está disponível no endpoint de criação.</p>
+    <p>Autenticação via API Key no header <code>x-api-key</code> e <code>Content-Type: application/json</code>.</p>
+    <h3>Parâmetros de URL</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>id</td><td>string</td><td class="req-yes">Sim</td><td>ID do cliente a ser atualizado (MongoDB ObjectId). Exemplo: 507f1f77bcf86cd799439011</td></tr>
+    </tbody></table>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Dica</p><p>O sistema valida se o cliente pertence à conta associada à API Key. Se o ID não existir ou não pertencer à sua conta, será retornado erro 404.</p></div></div>
+    <h3>Request Body</h3>
+    <p>O corpo da requisição é similar ao POST, mas inclui o campo Active:</p>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>Name</td><td>string</td><td class="req-yes">Sim</td><td>Nome ou razão social do cliente</td></tr>
+      <tr><td>Active</td><td>boolean</td><td class="req-yes">Sim</td><td>NOVO: Status do cliente (true = ativo, false = inativo)</td></tr>
+      <tr><td>FullName</td><td>string</td><td class="req-no">Não</td><td>Nome completo/razão social completa (padrão: Name)</td></tr>
+      <tr><td>MainEmail</td><td>string</td><td class="req-no">Não</td><td>E-mail principal de contato</td></tr>
+      <tr><td>MainPhoneNumber</td><td>string</td><td class="req-no">Não</td><td>Telefone principal de contato</td></tr>
+      <tr><td>Site</td><td>string</td><td class="req-no">Não</td><td>Website do cliente</td></tr>
+      <tr><td>Addresses</td><td>array</td><td class="req-no">Não</td><td>Lista de endereços do cliente</td></tr>
+      <tr><td>Contacts</td><td>array</td><td class="req-no">Não</td><td>Lista de contatos do cliente</td></tr>
+      <tr><td>CustomerDetails</td><td>object</td><td class="req-no">Não</td><td>Detalhes de crédito do cliente</td></tr>
+      <tr><td>SpecificFields</td><td>object</td><td class="req-no">Não</td><td>Campos específicos por país</td></tr>
+    </tbody></table>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Dica</p><p>Os campos Addresses, Contacts, CustomerDetails e SpecificFields seguem a mesma estrutura documentada na seção de Criação acima. Consulte aquela seção para detalhes completos.</p></div></div>
+    <p>Exemplo de Requisição - Básico (atualizando nome e status):</p>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash</span></div><pre><code>curl -X PUT "https://api.holdworks.ai/api-key/customers/507f1f77bcf86cd799439011" \
+  -H "x-api-key: sua_api_key_aqui" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "Name": "Empresa Exemplo LTDA - Atualizada",
+    "Active": true
+  }'</code></pre></div>
+    <p>Exemplo de Requisição - Desativar Cliente:</p>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash</span></div><pre><code>curl -X PUT "https://api.holdworks.ai/api-key/customers/507f1f77bcf86cd799439011" \
+  -H "x-api-key: sua_api_key_aqui" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "Name": "Empresa Exemplo LTDA",
+    "Active": false
+  }'</code></pre></div>
+    <p>Exemplo de Requisição - Completo (atualizando todos os dados):</p>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash</span></div><pre><code>curl -X PUT "https://api.holdworks.ai/api-key/customers/507f1f77bcf86cd799439011" \
+  -H "x-api-key: sua_api_key_aqui" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "Name": "Empresa Exemplo LTDA - Atualizada",
+    "FullName": "Empresa Exemplo Comércio e Serviços LTDA - Atualizada",
+    "Active": true,
+    "MainEmail": "novo-contato@exemplo.com",
+    "MainPhoneNumber": "+55 11 99999-9999",
+    "Site": "https://www.exemplo-novo.com",
+    "Addresses": [
+      {
+        "Type": "BR",
+        "Description": "Sede - Novo Endereço",
+        "Country": "Brasil",
+        "AddressLine1": "Av. Paulista",
+        "AddressLine2": "10º andar",
+        "AddressLine3": "",
+        "Locality": "São Paulo",
+        "AdministrativeAreaL1": "SP",
+        "AdministrativeAreaL2": "Bela Vista",
+        "PostalCode": "01310-100",
+        "Number": "1000",
+        "IbgeLocalityCode": 3550308,
+        "IbgeStateCode": 35,
+        "IbgeCountryCode": 1058
+      }
+    ],
+    "Contacts": [
+      {
+        "Name": "Maria Santos",
+        "Role": "Diretora Comercial",
+        "Phone": "+55 11 98888-8888",
+        "Email": "maria.santos@exemplo.com",
+        "BirthDate": "1980-05-20T00:00:00Z",
+        "ContactType": "Commercial"
+      }
+    ],
+    "CustomerDetails": {
+      "SalesCreditLimit": 100000.00,
+      "SalesCreditLimitExpirationDate": "2026-12-31T23:59:59Z"
+    },
+    "SpecificFields": {
+      "BR": {
+        "CNPJ": "12.345.678/0001-99",
+        "InscricaoEstadual": "999.888.777.666",
+        "InscricaoMunicipal": "11223344",
+        "RegimeTributario": "Lucro Real"
+      }
+    }
+  }'</code></pre></div>
+    <p>Exemplo de Resposta:</p>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">json</span></div><pre><code>{
+  "Id": "507f1f77bcf86cd799439011",
+  "Name": "Empresa Exemplo LTDA - Atualizada",
+  "FullName": "Empresa Exemplo Comércio e Serviços LTDA - Atualizada",
+  "MainEmail": "novo-contato@exemplo.com",
+  "MainPhoneNumber": "+55 11 99999-9999",
+  "Site": "https://www.exemplo-novo.com",
+  "EntityType": "Customer",
+  "Active": true,
+  "CreationTime": "2025-01-15T10:30:00Z",
+  "LastUpdateTime": "2025-01-28T14:45:00Z",
+  "Addresses": [
+    {
+      "Type": "BR",
+      "Description": "Sede - Novo Endereço",
+      "Country": "Brasil",
+      "AddressLine1": "Av. Paulista",
+      "AddressLine2": "10º andar",
+      "AddressLine3": "",
+      "Locality": "São Paulo",
+      "AdministrativeAreaL1": "SP",
+      "AdministrativeAreaL2": "Bela Vista",
+      "PostalCode": "01310-100",
+      "Number": "1000",
+      "IbgeLocalityCode": 3550308,
+      "IbgeStateCode": 35,
+      "IbgeCountryCode": 1058
+    }
+  ],
+  "Contacts": [
+    {
+      "Id": 1,
+      "Name": "Maria Santos",
+      "Role": "Diretora Comercial",
+      "Phone": "+55 11 98888-8888",
+      "Email": "maria.santos@exemplo.com",
+      "BirthDate": "1980-05-20T00:00:00Z",
+      "ContactType": "Commercial"
+    }
+  ],
+  "CustomerDetails": {
+    "SalesCreditLimit": 100000.00,
+    "AvaibleSalesCreditLimit": 100000.00,
+    "SalesCreditLimitExpirationDate": "2026-12-31T23:59:59Z"
+  },
+  "SpecificFields": {
+    "BR": {
+      "CNPJ": "12.345.678/0001-99",
+      "InscricaoEstadual": "999.888.777.666",
+      "InscricaoMunicipal": "11223344",
+      "RegimeTributario": "Lucro Real"
+    }
+  }
+}</code></pre></div>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Dica</p><p>Note que o campo LastUpdateTime é atualizado automaticamente pelo sistema para refletir o horário da última modificação.</p></div></div>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Boas Práticas</p><ul><li>Sempre valide o ID do cliente antes de enviar a requisição</li><li>Use Active: false em vez de deletar clientes permanentemente</li><li>Atualize o limite de crédito com data de expiração apropriada</li><li>Ao atualizar endereços e contatos, envie a lista completa desejada</li><li>Mantenha histórico das alterações no seu sistema</li><li>Implemente retry logic para falhas temporárias de rede</li></ul></div></div>
+    <h3>Códigos de Status</h3>
+    <table class="dtable"><thead><tr><th>Código</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>200</td><td>Cliente atualizado com sucesso</td></tr>
+      <tr><td>400</td><td>Dados inválidos (campo obrigatório ausente ou formato incorreto)</td></tr>
+      <tr><td>401</td><td>API Key inválida ou ausente</td></tr>
+      <tr><td>404</td><td>Cliente não encontrado ou não pertence à sua conta</td></tr>
+      <tr><td>500</td><td>Erro interno do servidor</td></tr>
+    </tbody></table>
+  </div>
+</div>

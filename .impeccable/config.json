@@ -1,0 +1,41 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "createdAt": "2026-11-13T20:31:58.216Z",
+        "reason": "Rafael escolheu na página de decisão (13/11/2026) o card 'Padrão de mercado', cujo esboço usa Inter; Inter é a fonte atual da marca registrada em PRODUCT.md"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/assigned.html"
+        ],
+        "createdAt": "2026-11-13T20:42:22.984Z",
+        "reason": "Esboço descartado da página de decisão de 13/11/2026 (Rafael escolheu o canon); fontes próprias da direção não escolhida, arquivo não vai para o site"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/model-pick.html"
+        ],
+        "createdAt": "2026-11-13T20:42:23.003Z",
+        "reason": "Esboço descartado da página de decisão de 13/11/2026 (Rafael escolheu o canon); fontes próprias da direção não escolhida, arquivo não vai para o site"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/challenger-miura.html"
+        ],
+        "createdAt": "2026-11-13T20:42:23.021Z",
+        "reason": "Esboço descartado da página de decisão de 13/11/2026 (Rafael escolheu o canon); fontes próprias da direção não escolhida, arquivo não vai para o site"
+      }
+    ]
+  }
+}

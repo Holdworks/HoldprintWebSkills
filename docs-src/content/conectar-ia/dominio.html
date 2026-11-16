@@ -1,0 +1,23 @@
+<!-- legacy-id: domain -->
+<h2>Skills & domínio do Holdprint</h2>
+      <p class="section-sub">As skills (<code class="inline">holdprint-mcp</code> e <code class="inline">holdprint-mongo</code>) ensinam a LLM as regras do domínio que ela erraria sozinha. O essencial:</p>
+
+      <div class="know">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>O custo do orçamento NÃO está no Budget</h3>
+        <p>O preço/custo vive em <code class="inline">CostMemento</code> (versionado — use a maior <code class="inline">version</code>). Join: <code class="inline">Budget.code == CostMemento.public_identification</code> (inteiro, não ObjectId); ou <code class="inline">Budget.winner_propose_id → Propose.calc_id → CostMemento._id</code>. Quantidade em <code class="inline">CostMementoItem.quantity</code>.</p>
+      </div>
+
+      <div class="know">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>Campos dinâmicos & medidas</h3>
+        <p>Campos dinâmicos ficam em <code class="inline">fields_values</code> com chaves <code class="inline">"hold"+ObjectId</code> → resolva pela collection <code class="inline">Fields</code> (remove "hold", casa o <code class="inline">_id</code>, lê o <code class="inline">name_key</code>: WIDTH/LARGURA, HEIGHT/ALTURA…). O valor é polimórfico, discriminado por <code class="inline">class_name</code> (a classe .NET, não <code class="inline">_t</code>). <code class="inline">Feedstock.fields_values</code> é array; em Product/Process/Equipment é objeto.</p>
+      </div>
+
+      <div class="know">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>Enums e exclusão</h3>
+        <p>No Mongo cru, enums são <strong>inteiros</strong> (<code class="inline">Budget.state</code>: 1=Open, 2=Lost, 3=Won) — o MCP aceita string e converte. Exclusão é <strong>lógica</strong>: filtre sempre <code class="inline">deleted:false</code>. Product/Entity têm <code class="inline">active</code>; Budget/Process/Equipment não.</p>
+      </div>
+
+      <div class="callout info">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        <div><p class="ct-title">Pelo MCP, você não lida com isso</p><p>A skill <code class="inline">holdprint-mcp</code> + as tools já cuidam de enums, soft-delete e nomes. O detalhe acima importa para quem usa o <strong>banco read-only</strong> (skill <code class="inline">holdprint-mongo</code>).</p></div>
+      </div>

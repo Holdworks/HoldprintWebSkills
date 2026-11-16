@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contas a Receber · API · Holdprint Docs</title>
+<meta name="description" content="Consultar, criar, editar e dar baixa em contas a receber.">
+<link rel="canonical" href="https://docs.holdworks.ai/api/contas-a-receber/">
+<link rel="alternate" type="text/markdown" href="/api/contas-a-receber.md">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b0f17" media="(prefers-color-scheme: dark)">
+<script>document.documentElement.classList.add('js');try{var t=localStorage.getItem('hp-docs-theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+<a class="skip" href="#conteudo">Pular para o conteúdo</a>
+<header class="topbar">
+  <button class="icon-btn menu-btn" type="button" aria-label="Abrir menu" aria-controls="sidebar" aria-expanded="false" data-menu><svg class="i i-menu" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  <a class="brand" href="/" aria-label="Holdprint Docs, início"><img class="brand-logo brand-logo-on-light" src="/assets/logo-holdprint.svg" alt="Holdprint" width="111" height="22"><img class="brand-logo brand-logo-on-dark" src="/assets/logo-holdprint-claro-sobre-escuro.svg" alt="" aria-hidden="true" width="111" height="22"><span>Docs</span></a>
+  <button class="search-trigger" type="button" data-search-open aria-label="Buscar na documentação"><svg class="i i-search" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg><span>Buscar na documentação</span><kbd>⌘K</kbd></button>
+  <nav class="top-tabs" aria-label="Áreas"><a href="/">Começar</a><a href="/conectar-ia/">Conectar IA</a><a href="/api/" aria-current="true">API</a><a href="/plugins/">Plugins</a></nav>
+  <div class="top-actions">
+    <a class="icon-btn" href="/llms.txt" title="llms.txt: índice para IAs" aria-label="llms.txt, índice para IAs"><svg class="i i-bot" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4.5" y="8" width="15" height="11" rx="3"/><path d="M12 4.5V8M9 13v1.5M15 13v1.5M2.5 13v2.5M21.5 13v2.5"/></svg></a>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Alternar tema claro e escuro"><svg class="i i-sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></svg><svg class="i i-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+  </div>
+</header>
+<div class="shell">
+  <aside class="sidebar" id="sidebar" aria-label="Navegação da documentação">
+    <nav class="sidebar-nav"><div class="nav-group"><a class="nav-group-title" href="/">Começar<svg class="i i-chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9.5 6.5 5.5 5.5-5.5 5.5"/></svg></a><ul><li><a href="/">Visão geral</a></li><li><a href="/comecar/inicio-rapido/">Início rápido</a></li><li><a href="/comecar/perguntas-frequentes/">Perguntas frequentes</a></li></ul></div><div class="nav-group"><a class="nav-group-title" href="/conectar-ia/">Conectar IA<svg class="i i-chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9.5 6.5 5.5 5.5-5.5 5.5"/></svg></a><ul><li><a href="/conectar-ia/">Visão geral</a></li><li><a href="/conectar-ia/claude-code/">Claude Code</a></li><li><a href="/conectar-ia/claude-ai-e-chatgpt/">claude.ai e ChatGPT</a></li><li><a href="/conectar-ia/skills/">Instalar as skills</a></li><li><a href="/conectar-ia/como-usar/">Como usar</a></li><li><a href="/conectar-ia/tools-do-mcp/">Tools do MCP</a></li><li><a href="/conectar-ia/dominio/">Skills e domínio</a></li><li><a href="/conectar-ia/banco-read-only/">Banco read-only</a></li></ul></div><div class="nav-group is-open"><a class="nav-group-title" href="/api/" aria-current="true">API<svg class="i i-chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9.5 6.5 5.5 5.5-5.5 5.5"/></svg></a><ul><li><a href="/api/">Visão geral</a></li><li><a href="/api/v1/">API /v1</a></li><li><a href="/api/v1/consultas/">Consultas por recurso</a></li><li><a href="/api/acoes/">Ações pela CLI e MCP</a></li><li class="nav-sub" role="presentation">API Key (legada)</li><li><a href="/api/chave/">Visão geral</a></li><li><a href="/api/clientes/">Clientes</a></li><li><a href="/api/fornecedores/">Fornecedores</a></li><li><a href="/api/orcamentos/">Orçamentos</a></li><li><a href="/api/jobs/">Jobs</a></li><li><a href="/api/contas-a-pagar/">Contas a pagar</a></li><li><a href="/api/contas-a-receber/" aria-current="page">Contas a receber</a></li><li><a href="/api/cadastros-financeiros/">Cadastros financeiros</a></li></ul></div><div class="nav-group"><a class="nav-group-title" href="/plugins/">Plugins<svg class="i i-chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9.5 6.5 5.5 5.5-5.5 5.5"/></svg></a><ul><li><a href="/plugins/">Visão geral</a></li><li><a href="/plugins/comece-com-sua-ia/">Comece com a sua IA</a></li><li><a href="/plugins/cli/">CLI holdprint</a></li><li><a href="/plugins/manifesto/">Manifesto</a></li><li><a href="/plugins/sdk/">SDK</a></li><li><a href="/api/v1/">API /v1</a></li><li><a href="/plugins/escopos/">Escopos</a></li><li><a href="/plugins/publicacao/">Publicação</a></li><li><a href="/plugins/erros/">Erros</a></li></ul></div></nav>
+    <div class="sidebar-foot"><a href="/llms.txt">llms.txt</a><a href="/llms-full.txt">llms-full.txt</a><a href="https://github.com/holdprint/skills" rel="noreferrer" target="_blank">GitHub</a></div>
+  </aside>
+  <div class="scrim" data-scrim hidden></div>
+  <main class="main main-reference" id="conteudo"><article class="article"><header class="page-head"><div class="page-meta"><nav class="crumbs" aria-label="Você está aqui"><a href="/api/">API</a><svg class="i i-chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9.5 6.5 5.5 5.5-5.5 5.5"/></svg><span>Contas a receber</span></nav><div class="page-actions"><button class="btn btn-ghost" type="button" data-copy-page="/api/contas-a-receber.md"><svg class="i i-copy" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg><span>Copiar para a IA</span></button><a class="btn btn-ghost" href="/api/contas-a-receber.md"><svg class="i i-file" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14 3.5H7a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-10z"/><path d="M14 3.5v5h5M8.5 13h7M8.5 16.5h5"/></svg><span>Markdown</span></a></div></div><h1>Contas a Receber</h1><p class="lede">Consulta, criação, edição e baixa de receitas, com classificação no plano de contas, para integração e controle de fluxo de caixa.</p></header><nav class="endpoint-index" aria-label="Endpoints desta página"><p class="rail-title">Endpoints</p><ul><li><a href="#get-api-key-incomes-data"><span class="method method-get method-sm">GET</span><code>/api-key/incomes/data</code></a></li><li><a href="#post-api-key-incomes"><span class="method method-post method-sm">POST</span><code>/api-key/incomes</code></a></li><li><a href="#patch-api-key-incomes-id"><span class="method method-patch method-sm">PATCH</span><code>/api-key/incomes/{id}</code></a></li><li><a href="#post-api-key-incomes-id-settle"><span class="method method-post method-sm">POST</span><code>/api-key/incomes/{id}/settle</code></a></li></ul></nav><div class="article-body">
+<section class="endpoint" id="get-api-key-incomes-data"><h2 class="endpoint-head" id="get-api-key-incomes-data"><span class="method method-get">GET</span><code class="endpoint-path">/api-key/incomes/data</code><a class="anchor" href="#get-api-key-incomes-data" aria-label="Link para esta seção">#</a></h2><div class="endpoint-grid"><div class="endpoint-doc">
+    <p>Consulta receitas de forma paginada, com suporte a filtros por data, status e cliente. Os dados incluem informações contábeis, centros de receita e detalhes de recebimento, facilitando o controle de fluxo de caixa e análises financeiras. A autenticação é feita via API Key no header <code>x-api-key</code>.</p>
+    <aside class="callout callout-note"><svg class="i i-info" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5.5M12 7.6v.1"></path></svg><div><p class="callout-title">Filtro Padrão</p><p>Se nenhuma data for informada, este endpoint retorna apenas receitas do mês corrente. Para consultar receitas de outros períodos, sempre especifique as datas.</p></div></aside>
+    <h3 id="parametros-de-query">Parâmetros de Query<a class="anchor" href="#parametros-de-query" aria-label="Link para esta seção">#</a></h3>
+    <div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>page</td><td>int</td><td><span class="req">opcional</span></td><td>Número da página para paginação (padrão: 1)</td></tr>
+      <tr><td>limit</td><td>int</td><td><span class="req">opcional</span></td><td>Quantidade de registros por página (padrão: 50 • máximo: 100)</td></tr>
+      <tr><td>start_date</td><td>string</td><td><span class="req">opcional</span></td><td>Data inicial para filtro (formato: YYYY-MM-DD). Exemplo: 2025-01-01</td></tr>
+      <tr><td>end_date</td><td>string</td><td><span class="req">opcional</span></td><td>Data final para filtro (formato: YYYY-MM-DD). Exemplo: 2025-12-31</td></tr>
+      <tr><td>translate</td><td>boolean</td><td><span class="req">opcional</span></td><td>Traduzir nomes de campos (true/false). Padrão: false</td></tr>
+      <tr><td>status</td><td>string</td><td><span class="req">opcional</span></td><td>Filtrar por status (pending, received, overdue, cancelled). Exemplo: received</td></tr>
+      <tr><td>customer_id</td><td>int</td><td><span class="req">opcional</span></td><td>Filtrar receitas de um cliente específico. Exemplo: 789</td></tr>
+    </tbody></table></div>
+    
+    
+    <h3 id="status-das-receitas">Status das Receitas<a class="anchor" href="#status-das-receitas" aria-label="Link para esta seção">#</a></h3>
+    <div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>pending</td><td>string</td><td>Pendente - Receita a receber</td></tr>
+      <tr><td>received</td><td>string</td><td>Recebida - Receita quitada</td></tr>
+      <tr><td>overdue</td><td>string</td><td>Vencida - Receita não recebida após a data esperada</td></tr>
+      <tr><td>cancelled</td><td>string</td><td>Cancelada - Receita cancelada</td></tr>
+    </tbody></table></div>
+    <h3 id="centros-de-receita">Centros de Receita<a class="anchor" href="#centros-de-receita" aria-label="Link para esta seção">#</a></h3>
+    <div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>sales</td><td>string</td><td>Receitas de vendas de produtos e serviços</td></tr>
+      <tr><td>services</td><td>string</td><td>Receitas de serviços complementares</td></tr>
+      <tr><td>recurring</td><td>string</td><td>Receitas recorrentes (contratos, assinaturas)</td></tr>
+      <tr><td>other</td><td>string</td><td>Outras receitas</td></tr>
+    </tbody></table></div>
+    <aside class="callout callout-note"><svg class="i i-info" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5.5M12 7.6v.1"></path></svg><div><p class="callout-title">Dica</p><p>Monitore receitas com status overdue para identificar clientes com pagamentos atrasados e tomar ações de cobrança apropriadas.</p></div></aside>
+    <h3 id="estrutura-de-dados">Estrutura de Dados<a class="anchor" href="#estrutura-de-dados" aria-label="Link para esta seção">#</a></h3>
+    <div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>id</td><td>number</td><td>Identificador único da receita</td></tr>
+      <tr><td>description</td><td>string</td><td>Descrição da receita</td></tr>
+      <tr><td>amount</td><td>number</td><td>Valor da receita</td></tr>
+      <tr><td>expected_date</td><td>string</td><td>Data esperada de recebimento (YYYY-MM-DD)</td></tr>
+      <tr><td>received_date</td><td>string | null</td><td>Data do recebimento (YYYY-MM-DD)</td></tr>
+      <tr><td>status</td><td>string</td><td>Status da receita (pending, received, overdue, cancelled)</td></tr>
+      <tr><td>customer</td><td>object</td><td>Informações do cliente</td></tr>
+      <tr><td>revenue_center</td><td>string</td><td>Centro de receita contábil</td></tr>
+      <tr><td>payment_method</td><td>string | null</td><td>Método de pagamento utilizado</td></tr>
+      <tr><td>invoice_number</td><td>string</td><td>Número da nota fiscal</td></tr>
+      <tr><td>job_id</td><td>number | null</td><td>ID do job relacionado</td></tr>
+    </tbody></table></div>
+    <aside class="callout callout-note"><svg class="i i-info" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5.5M12 7.6v.1"></path></svg><div><p class="callout-title">Boas Práticas</p><ul><li>Sempre especifique datas para evitar dados incompletos</li><li>Use paginação para grandes volumes de dados</li><li>Compare expected_date vs received_date para análise de inadimplência</li><li>Filtre por centro de receita para análises de rentabilidade</li></ul></div></aside>
+  </div><div class="endpoint-code"><div class="endpoint-code-inner"><div class="code-tabs" data-tabs=""><div class="tab-list" role="tablist" aria-label="Exemplos deste endpoint"><button type="button" role="tab" id="get-api-key-incomes-data-code-t0" aria-controls="get-api-key-incomes-data-code-p0" aria-selected="true" tabindex="0">Requisição</button><button type="button" role="tab" id="get-api-key-incomes-data-code-t1" aria-controls="get-api-key-incomes-data-code-p1" aria-selected="false" tabindex="-1">Resposta</button></div><div role="tabpanel" id="get-api-key-incomes-data-code-p0" aria-labelledby="get-api-key-incomes-data-code-t0"><figure class="code"><figcaption><span class="code-label">Requisição</span><button class="copy" type="button" data-copy aria-label="Copiar código"><svg class="i i-copy" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg><span>Copiar</span></button></figcaption><pre class="shiki github-dark-default" style="background-color:#0d1117;color:#e6edf3" tabindex="0"><code><span class="line"><span style="color:#FFA657">curl</span><span style="color:#79C0FF"> -X</span><span style="color:#A5D6FF"> GET</span><span style="color:#A5D6FF"> "https://api.holdworks.ai/api-key/incomes/data?page=1&#x26;limit=50&#x26;start_date=2025-01-01&#x26;end_date=2025-12-31&#x26;status=received"</span><span style="color:#FF7B72"> \</span></span>
+<span class="line"><span style="color:#79C0FF">  -H</span><span style="color:#A5D6FF"> "x-api-key: sua_api_key_aqui"</span></span></code></pre></figure></div><div role="tabpanel" id="get-api-key-incomes-data-code-p1" aria-labelledby="get-api-key-incomes-data-code-t1" hidden=""><figure class="code"><figcaption><span class="code-label">Resposta</span><button class="copy" type="button" data-copy aria-label="Copiar código"><svg class="i i-copy" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg><span>Copiar</span></button></figcaption><pre class="shiki github-dark-default" style="background-color:#0d1117;color:#e6edf3" tabindex="0"><code><span class="line"><span style="color:#E6EDF3">{</span></span>
+<span class="line"><span style="color:#7EE787">  "success"</span><span style="color:#E6EDF3">: </span><span style="color:#79C0FF">true</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">  "data"</span><span style="color:#E6EDF3">: {</span></span>
+<span class="line"><span style="color:#7EE787">    "items"</span><span style="color:#E6EDF3">: [</span></span>
+<span class="line"><span style="color:#E6EDF3">      {</span></span>
+<span class="line"><span style="color:#7EE787">        "id"</span><span style="color:#E6EDF3">: </span><span style="color:#79C0FF">2001</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "description"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"Pagamento Job #5678 - Cartões de Visita"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "amount"</span><span style="color:#E6EDF3">: </span><span style="color:#79C0FF">12500.00</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "expected_date"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"2025-02-15"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "received_date"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"2025-02-14"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "status"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"received"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "customer"</span><span style="color:#E6EDF3">: {</span></span>
+<span class="line"><span style="color:#7EE787">          "id"</span><span style="color:#E6EDF3">: </span><span style="color:#79C0FF">789</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">          "name"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"Empresa Exemplo LTDA"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">          "document"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"12.345.678/0001-99"</span></span>
+<span class="line"><span style="color:#E6EDF3">        },</span></span>
+<span class="line"><span style="color:#7EE787">        "revenue_center"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"sales"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "payment_method"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"bank_transfer"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "invoice_number"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"NFS-45678"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "job_id"</span><span style="color:#E6EDF3">: </span><span style="color:#79C0FF">5678</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "notes"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"Pagamento antecipado"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "created_at"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"2025-01-15T10:00:00Z"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "updated_at"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"2025-02-14T16:20:00Z"</span></span>
+<span class="line"><span style="color:#E6EDF3">      },</span></span>
+<span class="line"><span style="color:#E6EDF3">      {</span></span>
+<span class="line"><span style="color:#7EE787">        "id"</span><span style="color:#E6EDF3">: </span><span style="color:#79C0FF">2002</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "description"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"Pagamento Job #5680 - Impressão de Catálogos"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "amount"</span><span style="color:#E6EDF3">: </span><span style="color:#79C0FF">8750.00</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "expected_date"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"2025-02-20"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "received_date"</span><span style="color:#E6EDF3">: </span><span style="color:#79C0FF">null</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "status"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"pending"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "customer"</span><span style="color:#E6EDF3">: {</span></span>
+<span class="line"><span style="color:#7EE787">          "id"</span><span style="color:#E6EDF3">: </span><span style="color:#79C0FF">790</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">          "name"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"Editora ABC"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">          "document"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"98.765.432/0001-10"</span></span>
+<span class="line"><span style="color:#E6EDF3">        },</span></span>
+<span class="line"><span style="color:#7EE787">        "revenue_center"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"sales"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "payment_method"</span><span style="color:#E6EDF3">: </span><span style="color:#79C0FF">null</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "invoice_number"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"NFS-45679"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "job_id"</span><span style="color:#E6EDF3">: </span><span style="color:#79C0FF">5680</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "notes"</span><span style="color:#E6EDF3">: </span><span style="color:#79C0FF">null</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "created_at"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"2025-01-18T14:00:00Z"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "updated_at"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"2025-01-18T14:00:00Z"</span></span>
+<span class="line"><span style="color:#E6EDF3">      }</span></span>
+<span class="line"><span style="color:#E6EDF3">    ],</span></span>
+<span class="line"><span style="color:#7EE787">    "pagination"</span><span style="color:#E6EDF3">: {</span></span>
+<span class="line"><span style="color:#7EE787">      "page"</span><span style="color:#E6EDF3">: </span><span style="color:#79C0FF">1</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">      "limit"</span><span style="color:#E6EDF3">: </span><span style="color:#79C0FF">50</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">      "total"</span><span style="color:#E6EDF3">: </span><span style="color:#79C0FF">95</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">      "pages"</span><span style="color:#E6EDF3">: </span><span style="color:#79C0FF">2</span></span>
+<span class="line"><span style="color:#E6EDF3">    }</span></span>
+<span class="line"><span style="color:#E6EDF3">  },</span></span>
+<span class="line"><span style="color:#7EE787">  "message"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"Success"</span></span>
+<span class="line"><span style="color:#E6EDF3">}</span></span></code></pre></figure></div></div></div></div></div></section>
+
+<section class="endpoint" id="post-api-key-incomes"><h2 class="endpoint-head" id="post-api-key-incomes"><span class="method method-post">POST</span><code class="endpoint-path">/api-key/incomes</code><a class="anchor" href="#post-api-key-incomes" aria-label="Link para esta seção">#</a></h2><div class="endpoint-grid"><div class="endpoint-doc">
+    <p>Cria uma conta a receber, à vista ou parcelada. A conta nasce em aberto; para registrar o pagamento, use <code>/api-key/incomes/{id}/settle</code>. A criação aparece no histórico da conta como feita pela integração (API).</p>
+    <p>Autenticação via API Key no header <code>x-api-key</code> e <code>Content-Type: application/json</code>.</p>
+    <h3 id="headers">Headers<a class="anchor" href="#headers" aria-label="Link para esta seção">#</a></h3>
+    <div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>Idempotency-Key</td><td>string</td><td><span class="req">Recomendado</span></td><td>Identificador único da operação no seu sistema (até 200 caracteres). Reenviar a mesma chave com o mesmo corpo devolve a conta já criada, sem duplicar. A mesma chave com corpo diferente é recusada</td></tr>
+    </tbody></table></div>
+    <h3 id="request-body">Request Body<a class="anchor" href="#request-body" aria-label="Link para esta seção">#</a></h3>
+    <div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>description</td><td>string</td><td><span class="req req-yes">obrigatório</span></td><td>Descrição da conta a receber</td></tr>
+      <tr><td>amount</td><td>number</td><td><span class="req req-yes">obrigatório</span></td><td>Valor total. Maior que zero</td></tr>
+      <tr><td>dueDate</td><td>string</td><td><span class="req req-yes">obrigatório</span></td><td>Vencimento (ISO 8601, ex.: 2026-11-10). No parcelamento, é a data base das parcelas</td></tr>
+      <tr><td>chartOfAccounts</td><td>array</td><td><span class="req req-yes">obrigatório</span></td><td>Classificação no plano de contas: lista de <code>{ publicId, amount }</code>. Com um único item, <code>amount</code> pode ser omitido (usa o valor total). Com mais de um, cada item precisa de <code>amount</code> e a soma deve ser igual a <code>amount</code></td></tr>
+      <tr><td>paymentMethodId</td><td>string</td><td><span class="req req-yes">obrigatório</span></td><td>Forma de pagamento (<code>/api-key/payment-methods/data</code>). Obrigatório quando não houver <code>paymentOptionId</code></td></tr>
+      <tr><td>paymentOptionId</td><td>string</td><td><span class="req req-yes">obrigatório</span></td><td>Condição de pagamento (<code>/api-key/payment-options/data</code>, com uso em venda). Informe para parcelar; as parcelas seguem a condição</td></tr>
+      <tr><td>installments</td><td>array</td><td><span class="req">opcional</span></td><td>Parcelas personalizadas: lista de <code>{ dueDate, amount }</code>. Exige <code>paymentOptionId</code>; a soma deve ser igual a <code>amount</code></td></tr>
+      <tr><td>customerId</td><td>string</td><td><span class="req">opcional</span></td><td>Id do cliente (<code>/api-key/customers/data</code>)</td></tr>
+      <tr><td>companyId</td><td>string</td><td><span class="req">opcional</span></td><td>Id da empresa emissora, em contas com mais de um CNPJ. Se omitido, usa a empresa padrão da conta</td></tr>
+      <tr><td>documentNumber</td><td>string</td><td><span class="req">opcional</span></td><td>Número do documento (nota, boleto, contrato)</td></tr>
+      <tr><td>notes</td><td>string</td><td><span class="req">opcional</span></td><td>Observações</td></tr>
+    </tbody></table></div>
+    <aside class="callout callout-note"><svg class="i i-info" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5.5M12 7.6v.1"></path></svg><div><p class="callout-title">À vista ou parcelado</p><p>Sem <code>paymentOptionId</code>, é criada uma única conta com a forma de pagamento informada. Com <code>paymentOptionId</code>, é criada uma conta por parcela, conforme a condição de pagamento ou a lista <code>installments</code>. A resposta traz todas as parcelas em <code>items</code>.</p></div></aside>
+    <p>Exemplo de requisição — à vista:</p>
+    
+    <p>Exemplo de requisição — parcelado em 3x com valores próprios:</p>
+    
+    <p>Resposta (<strong>201</strong> na criação; <strong>200</strong> quando a <code>Idempotency-Key</code> já tinha sido usada):</p>
+    
+  </div><div class="endpoint-code"><div class="endpoint-code-inner"><div class="code-tabs" data-tabs=""><div class="tab-list" role="tablist" aria-label="Exemplos deste endpoint"><button type="button" role="tab" id="post-api-key-incomes-code-t0" aria-controls="post-api-key-incomes-code-p0" aria-selected="true" tabindex="0">Requisição</button><button type="button" role="tab" id="post-api-key-incomes-code-t1" aria-controls="post-api-key-incomes-code-p1" aria-selected="false" tabindex="-1">Corpo da requisição</button><button type="button" role="tab" id="post-api-key-incomes-code-t2" aria-controls="post-api-key-incomes-code-p2" aria-selected="false" tabindex="-1">Corpo da requisição</button></div><div role="tabpanel" id="post-api-key-incomes-code-p0" aria-labelledby="post-api-key-incomes-code-t0"><figure class="code"><figcaption><span class="code-label">Requisição</span><button class="copy" type="button" data-copy aria-label="Copiar código"><svg class="i i-copy" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg><span>Copiar</span></button></figcaption><pre class="shiki github-dark-default" style="background-color:#0d1117;color:#e6edf3" tabindex="0"><code><span class="line"><span style="color:#FFA657">curl</span><span style="color:#79C0FF"> -X</span><span style="color:#A5D6FF"> POST</span><span style="color:#A5D6FF"> "https://api.holdworks.ai/api-key/incomes"</span><span style="color:#FF7B72"> \</span></span>
+<span class="line"><span style="color:#79C0FF">  -H</span><span style="color:#A5D6FF"> "x-api-key: sua_api_key_aqui"</span><span style="color:#FF7B72"> \</span></span>
+<span class="line"><span style="color:#79C0FF">  -H</span><span style="color:#A5D6FF"> "Content-Type: application/json"</span><span style="color:#FF7B72"> \</span></span>
+<span class="line"><span style="color:#79C0FF">  -H</span><span style="color:#A5D6FF"> "Idempotency-Key: pedido-1234"</span><span style="color:#FF7B72"> \</span></span>
+<span class="line"><span style="color:#79C0FF">  -d</span><span style="color:#A5D6FF"> '{</span></span>
+<span class="line"><span style="color:#A5D6FF">    "description": "Venda pedido 1234",</span></span>
+<span class="line"><span style="color:#A5D6FF">    "amount": 1500.00,</span></span>
+<span class="line"><span style="color:#A5D6FF">    "dueDate": "2026-11-10",</span></span>
+<span class="line"><span style="color:#A5D6FF">    "customerId": "6650f1c2a1b2c3d4e5f60789",</span></span>
+<span class="line"><span style="color:#A5D6FF">    "paymentMethodId": "6650f1c2a1b2c3d4e5f60111",</span></span>
+<span class="line"><span style="color:#A5D6FF">    "documentNumber": "NF 1234",</span></span>
+<span class="line"><span style="color:#A5D6FF">    "chartOfAccounts": [ { "publicId": 12 } ]</span></span>
+<span class="line"><span style="color:#A5D6FF">  }'</span></span></code></pre></figure></div><div role="tabpanel" id="post-api-key-incomes-code-p1" aria-labelledby="post-api-key-incomes-code-t1" hidden=""><figure class="code"><figcaption><span class="code-label">Corpo da requisição</span><button class="copy" type="button" data-copy aria-label="Copiar código"><svg class="i i-copy" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg><span>Copiar</span></button></figcaption><pre class="shiki github-dark-default" style="background-color:#0d1117;color:#e6edf3" tabindex="0"><code><span class="line"><span style="color:#FFA657">curl</span><span style="color:#79C0FF"> -X</span><span style="color:#A5D6FF"> POST</span><span style="color:#A5D6FF"> "https://api.holdworks.ai/api-key/incomes"</span><span style="color:#FF7B72"> \</span></span>
+<span class="line"><span style="color:#79C0FF">  -H</span><span style="color:#A5D6FF"> "x-api-key: sua_api_key_aqui"</span><span style="color:#FF7B72"> \</span></span>
+<span class="line"><span style="color:#79C0FF">  -H</span><span style="color:#A5D6FF"> "Content-Type: application/json"</span><span style="color:#FF7B72"> \</span></span>
+<span class="line"><span style="color:#79C0FF">  -H</span><span style="color:#A5D6FF"> "Idempotency-Key: pedido-1235"</span><span style="color:#FF7B72"> \</span></span>
+<span class="line"><span style="color:#79C0FF">  -d</span><span style="color:#A5D6FF"> '{</span></span>
+<span class="line"><span style="color:#A5D6FF">    "description": "Venda pedido 1234",</span></span>
+<span class="line"><span style="color:#A5D6FF">    "amount": 3000.00,</span></span>
+<span class="line"><span style="color:#A5D6FF">    "dueDate": "2026-11-10",</span></span>
+<span class="line"><span style="color:#A5D6FF">    "paymentOptionId": "6650f1c2a1b2c3d4e5f60222",</span></span>
+<span class="line"><span style="color:#A5D6FF">    "installments": [</span></span>
+<span class="line"><span style="color:#A5D6FF">      { "dueDate": "2026-11-10", "amount": 1000.00 },</span></span>
+<span class="line"><span style="color:#A5D6FF">      { "dueDate": "2026-12-10", "amount": 1000.00 },</span></span>
+<span class="line"><span style="color:#A5D6FF">      { "dueDate": "2027-01-10", "amount": 1000.00 }</span></span>
+<span class="line"><span style="color:#A5D6FF">    ],</span></span>
+<span class="line"><span style="color:#A5D6FF">    "chartOfAccounts": [</span></span>
+<span class="line"><span style="color:#A5D6FF">      { "publicId": 12, "amount": 2000.00 },</span></span>
+<span class="line"><span style="color:#A5D6FF">      { "publicId": 15, "amount": 1000.00 }</span></span>
+<span class="line"><span style="color:#A5D6FF">    ]</span></span>
+<span class="line"><span style="color:#A5D6FF">  }'</span></span></code></pre></figure></div><div role="tabpanel" id="post-api-key-incomes-code-p2" aria-labelledby="post-api-key-incomes-code-t2" hidden=""><figure class="code"><figcaption><span class="code-label">Corpo da requisição</span><button class="copy" type="button" data-copy aria-label="Copiar código"><svg class="i i-copy" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg><span>Copiar</span></button></figcaption><pre class="shiki github-dark-default" style="background-color:#0d1117;color:#e6edf3" tabindex="0"><code><span class="line"><span style="color:#E6EDF3">{</span></span>
+<span class="line"><span style="color:#7EE787">  "success"</span><span style="color:#E6EDF3">: </span><span style="color:#79C0FF">true</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">  "data"</span><span style="color:#E6EDF3">: {</span></span>
+<span class="line"><span style="color:#7EE787">    "reusedExisting"</span><span style="color:#E6EDF3">: </span><span style="color:#79C0FF">false</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">    "items"</span><span style="color:#E6EDF3">: [</span></span>
+<span class="line"><span style="color:#E6EDF3">      {</span></span>
+<span class="line"><span style="color:#7EE787">        "id"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"6651a0b1c2d3e4f5a6b7c8d9"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "description"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"Venda pedido 1234"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "documentNumber"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"NF 1234"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "notes"</span><span style="color:#E6EDF3">: </span><span style="color:#79C0FF">null</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "companyId"</span><span style="color:#E6EDF3">: </span><span style="color:#79C0FF">null</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "customerId"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"6650f1c2a1b2c3d4e5f60789"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "amount"</span><span style="color:#E6EDF3">: </span><span style="color:#79C0FF">1500.00</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "openAmount"</span><span style="color:#E6EDF3">: </span><span style="color:#79C0FF">1500.00</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "amountReceived"</span><span style="color:#E6EDF3">: </span><span style="color:#79C0FF">0</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "dueDate"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"2026-11-10T00:00:00Z"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "settlementDate"</span><span style="color:#E6EDF3">: </span><span style="color:#79C0FF">null</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "status"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"Pending"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "paymentMethodId"</span><span style="color:#E6EDF3">: </span><span style="color:#A5D6FF">"6650f1c2a1b2c3d4e5f60111"</span><span style="color:#E6EDF3">,</span></span>
+<span class="line"><span style="color:#7EE787">        "chartOfAccounts"</span><span style="color:#E6EDF3">: [ { </span><span style="color:#7EE787">"publicId"</span><span style="color:#E6EDF3">: </span><span style="color:#79C0FF">12</span><span style="color:#E6EDF3">, </span><span style="color:#7EE787">"amount"</span><span style="color:#E6EDF3">: </span><span style="color:#79C0FF">1500.00</span><span style="color:#E6EDF3"> } ]</span></span>
+<span class="line"><span style="color:#E6EDF3">      }</span></span>
+<span class="line"><span style="color:#E6EDF3">    ]</span></span>
+<span class="line"><span style="color:#E6EDF3">  }</span></span>
+<span class="line"><span style="color:#E6EDF3">}</span></span></code></pre></figure></div></div></div></div></div></section>
+
+<section class="endpoint" id="patch-api-key-incomes-id"><h2 class="endpoint-head" id="patch-api-key-incomes-id"><span class="method method-patch">PATCH</span><code class="endpoint-path">/api-key/incomes/{id}</code><a class="anchor" href="#patch-api-key-incomes-id" aria-label="Link para esta seção">#</a></h2><div class="endpoint-grid"><div class="endpoint-doc">
+    <p>Altera uma conta a receber em aberto. Envie só os campos que mudam; os demais ficam como estão. A alteração aparece no histórico da conta.</p>
+    <p>Só é aceita para conta sem pagamento registrado. Conta paga ou com pagamento parcial devolve <strong>400</strong>; id inexistente ou de outra conta devolve <strong>404</strong>.</p>
+    <h3 id="request-body-2">Request Body<a class="anchor" href="#request-body-2" aria-label="Link para esta seção">#</a></h3>
+    <div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>description</td><td>string</td><td><span class="req">opcional</span></td><td>Nova descrição</td></tr>
+      <tr><td>amount</td><td>number</td><td><span class="req">opcional</span></td><td>Novo valor. Se a conta tiver mais de uma classificação no plano de contas, envie também <code>chartOfAccounts</code></td></tr>
+      <tr><td>dueDate</td><td>string</td><td><span class="req">opcional</span></td><td>Novo vencimento (ISO 8601)</td></tr>
+      <tr><td>documentNumber</td><td>string</td><td><span class="req">opcional</span></td><td>Número do documento</td></tr>
+      <tr><td>notes</td><td>string</td><td><span class="req">opcional</span></td><td>Observações</td></tr>
+      <tr><td>chartOfAccounts</td><td>array</td><td><span class="req">opcional</span></td><td>Nova classificação: lista de <code>{ publicId, amount }</code>, com as mesmas regras da criação</td></tr>
+    </tbody></table></div>
+    
+    <p>Resposta <strong>200</strong>: <code>{ "success": true, "data": { ...conta a receber atualizada... } }</code>, no mesmo formato de cada item da criação.</p>
+  </div><div class="endpoint-code"><div class="endpoint-code-inner"><figure class="code"><figcaption><span class="code-label">Requisição</span><button class="copy" type="button" data-copy aria-label="Copiar código"><svg class="i i-copy" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg><span>Copiar</span></button></figcaption><pre class="shiki github-dark-default" style="background-color:#0d1117;color:#e6edf3" tabindex="0"><code><span class="line"><span style="color:#FFA657">curl</span><span style="color:#79C0FF"> -X</span><span style="color:#A5D6FF"> PATCH</span><span style="color:#A5D6FF"> "https://api.holdworks.ai/api-key/incomes/6651a0b1c2d3e4f5a6b7c8d9"</span><span style="color:#FF7B72"> \</span></span>
+<span class="line"><span style="color:#79C0FF">  -H</span><span style="color:#A5D6FF"> "x-api-key: sua_api_key_aqui"</span><span style="color:#FF7B72"> \</span></span>
+<span class="line"><span style="color:#79C0FF">  -H</span><span style="color:#A5D6FF"> "Content-Type: application/json"</span><span style="color:#FF7B72"> \</span></span>
+<span class="line"><span style="color:#79C0FF">  -d</span><span style="color:#A5D6FF"> '{</span></span>
+<span class="line"><span style="color:#A5D6FF">    "dueDate": "2026-11-20",</span></span>
+<span class="line"><span style="color:#A5D6FF">    "amount": 1600.00</span></span>
+<span class="line"><span style="color:#A5D6FF">  }'</span></span></code></pre></figure></div></div></div></section>
+
+<section class="endpoint" id="post-api-key-incomes-id-settle"><h2 class="endpoint-head" id="post-api-key-incomes-id-settle"><span class="method method-post">POST</span><code class="endpoint-path">/api-key/incomes/{id}/settle</code><a class="anchor" href="#post-api-key-incomes-id-settle" aria-label="Link para esta seção">#</a></h2><div class="endpoint-grid"><div class="endpoint-doc">
+    <p>Registra o pagamento (recebimento) de uma conta a receber, com o mesmo efeito da baixa feita pela tela: a conta muda de status e a movimentação entra no extrato da conta financeira.</p>
+    <h3 id="headers-2">Headers<a class="anchor" href="#headers-2" aria-label="Link para esta seção">#</a></h3>
+    <div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>Idempotency-Key</td><td>string</td><td><span class="req">Recomendado</span></td><td>Identificador único do pagamento no seu sistema. Se a resposta se perder e você reenviar a mesma baixa com a mesma chave, o pagamento não é lançado de novo</td></tr>
+    </tbody></table></div>
+    <h3 id="request-body-3">Request Body<a class="anchor" href="#request-body-3" aria-label="Link para esta seção">#</a></h3>
+    <div class="table-wrap"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>financialAccountId</td><td>string</td><td><span class="req req-yes">obrigatório</span></td><td>Conta financeira (banco ou caixa) da movimentação. Consulte em <code>/api-key/financial-accounts/data</code></td></tr>
+      <tr><td>paymentMethodId</td><td>string</td><td><span class="req req-yes">obrigatório</span></td><td>Forma de pagamento (<code>/api-key/payment-methods/data</code>)</td></tr>
+      <tr><td>date</td><td>string</td><td><span class="req req-yes">obrigatório</span></td><td>Data do pagamento (ISO 8601)</td></tr>
+      <tr><td>amount</td><td>number</td><td><span class="req req-yes">obrigatório</span></td><td>Valor efetivamente recebido, já com juros e multa somados e desconto abatido</td></tr>
+      <tr><td>interestAmount</td><td>number</td><td><span class="req">opcional</span></td><td>Juros</td></tr>
+      <tr><td>fineAmount</td><td>number</td><td><span class="req">opcional</span></td><td>Multa</td></tr>
+      <tr><td>discountAmount</td><td>number</td><td><span class="req">opcional</span></td><td>Desconto</td></tr>
+      <tr><td>partial</td><td>boolean</td><td><span class="req">opcional</span></td><td>Use <code>true</code> para pagamento parcial; o saldo continua em aberto</td></tr>
+    </tbody></table></div>
+    <aside class="callout callout-note"><svg class="i i-info" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5.5M12 7.6v.1"></path></svg><div><p class="callout-title">Conta do valor</p><p>Para quitar, <code>amount + discountAmount − interestAmount − fineAmount</code> deve ser igual ao saldo em aberto (<code>openAmount</code>). Exemplo: saldo 1.000,00, juros 20,00 e desconto 10,00 → <code>amount</code> = 1.010,00. Valores menores que o saldo só são aceitos com <code>partial: true</code>; valores maiores que o saldo são recusados.</p></div></aside>
+    
+    <p>Resposta <strong>200</strong> com a conta a receber atualizada (<code>status</code> <code>Paid</code>, <code>openAmount</code> 0 e <code>settlementDate</code> preenchida). Conta já paga devolve <strong>400</strong>.</p>
+  </div><div class="endpoint-code"><div class="endpoint-code-inner"><figure class="code"><figcaption><span class="code-label">Requisição</span><button class="copy" type="button" data-copy aria-label="Copiar código"><svg class="i i-copy" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg><span>Copiar</span></button></figcaption><pre class="shiki github-dark-default" style="background-color:#0d1117;color:#e6edf3" tabindex="0"><code><span class="line"><span style="color:#FFA657">curl</span><span style="color:#79C0FF"> -X</span><span style="color:#A5D6FF"> POST</span><span style="color:#A5D6FF"> "https://api.holdworks.ai/api-key/incomes/6651a0b1c2d3e4f5a6b7c8d9/settle"</span><span style="color:#FF7B72"> \</span></span>
+<span class="line"><span style="color:#79C0FF">  -H</span><span style="color:#A5D6FF"> "x-api-key: sua_api_key_aqui"</span><span style="color:#FF7B72"> \</span></span>
+<span class="line"><span style="color:#79C0FF">  -H</span><span style="color:#A5D6FF"> "Content-Type: application/json"</span><span style="color:#FF7B72"> \</span></span>
+<span class="line"><span style="color:#79C0FF">  -H</span><span style="color:#A5D6FF"> "Idempotency-Key: pagamento-9876"</span><span style="color:#FF7B72"> \</span></span>
+<span class="line"><span style="color:#79C0FF">  -d</span><span style="color:#A5D6FF"> '{</span></span>
+<span class="line"><span style="color:#A5D6FF">    "financialAccountId": "6650f1c2a1b2c3d4e5f60333",</span></span>
+<span class="line"><span style="color:#A5D6FF">    "paymentMethodId": "6650f1c2a1b2c3d4e5f60111",</span></span>
+<span class="line"><span style="color:#A5D6FF">    "date": "2026-11-12",</span></span>
+<span class="line"><span style="color:#A5D6FF">    "amount": 1010.00,</span></span>
+<span class="line"><span style="color:#A5D6FF">    "interestAmount": 20.00,</span></span>
+<span class="line"><span style="color:#A5D6FF">    "discountAmount": 10.00</span></span>
+<span class="line"><span style="color:#A5D6FF">  }'</span></span></code></pre></figure></div></div></div></section>
+</div><nav class="pager" aria-label="Paginação"><a class="pager-prev" href="/api/contas-a-pagar/"><span>Anterior</span><strong>API · Contas a pagar</strong></a><a class="pager-next" href="/api/cadastros-financeiros/"><span>Próximo</span><strong>API · Cadastros financeiros</strong></a></nav></article></main>
+</div>
+<dialog class="search" aria-label="Buscar na documentação">
+  <form method="dialog" class="search-box" role="search">
+    <svg class="i i-search" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg><input type="search" placeholder="Buscar: plugin, manifesto, contas a pagar, erro 94…" aria-label="Termo de busca" autocomplete="off" spellcheck="false" data-search-input>
+    <button class="search-esc" type="submit" aria-label="Fechar busca">Esc</button>
+  </form>
+  <ul class="search-results" role="listbox" aria-label="Resultados" data-search-results></ul>
+  <p class="search-hint"><span><kbd>↑</kbd><kbd>↓</kbd> navegar</span><span><kbd>Enter</kbd> abrir</span><span><kbd>Esc</kbd> fechar</span></p>
+</dialog>
+<div class="toast" role="status" aria-live="polite" data-toast></div>
+<script src="/assets/site.js" defer></script>
+</body>
+</html>

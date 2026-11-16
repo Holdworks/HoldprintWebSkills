@@ -1,0 +1,30 @@
+<!-- legacy-id: install-cc -->
+<h2>Instalar no Claude Code</h2>
+      <p class="section-sub">Terminal, um comando. Ideal para quem já usa Claude Code no editor.</p>
+      <div class="steps">
+        <div class="step"><div class="step-num"></div><div class="step-body">
+          <h3>Adicione o servidor MCP</h3>
+          <div class="code" data-copy>
+            <div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">terminal</span></div>
+            <pre><code>claude mcp add <span class="f">--transport</span> http holdprint https://mcp.holdprint.net/mcp</code></pre>
+          </div>
+        </div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body">
+          <h3>Faça login</h3>
+          <p>Na primeira chamada, o Claude abre o navegador na tela de login da Holdprint. Entre com o seu e-mail e senha do ERP — nenhum token é colado.</p>
+          <div class="shot">
+            <div class="shot-bar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="shot-url">mcp.holdprint.net/authorize</span></div>
+            <div class="shot-body" style="background:#0f172a">
+              <img src="assets/oauth-login.png" alt="Tela de login OAuth da Holdprint" onerror="this.parentElement.innerHTML='&lt;div style=&quot;text-align:center;color:#94a3b8;padding:40px&quot;&gt;Tela de login Holdprint (OAuth)&lt;/div&gt;'">
+            </div>
+          </div>
+        </div></div>
+        <div class="step"><div class="step-num"></div><div class="step-body">
+          <h3>Verifique</h3>
+          <div class="code" data-copy>
+            <div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">terminal</span></div>
+            <pre><code>claude mcp list
+<span class="c"># holdprint ✓ conectado</span></code></pre>
+          </div>
+        </div></div>
+      </div>

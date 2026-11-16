@@ -1,0 +1,25 @@
+<!-- conectar-ia: visão geral (reescrita em 13/11/2026 a partir da seção "overview" do site antigo) -->
+<h2>Conecte a sua IA ao Holdprint</h2>
+<p class="section-sub">Conecte Claude, ChatGPT, Cursor, Gemini ou Copilot ao Holdprint e peça relatórios, análises e automações em português, sem depender de um programador.</p>
+
+<h3>Dois jeitos de conectar</h3>
+<table class="dtable"><thead><tr><th></th><th>MCP hospedado (recomendado)</th><th>Banco read-only</th></tr></thead><tbody>
+<tr><td><strong>Como entra</strong></td><td>Login pelo navegador (OAuth), com o seu e-mail e senha do Holdprint</td><td>String de conexão MongoDB somente leitura, liberada pela equipe Holdprint</td></tr>
+<tr><td><strong>O que a IA faz</strong></td><td>Usa 28 tools prontas para ler e operar o ERP; o que grava passa antes por uma prévia</td><td>Consultas diretas no banco, só leitura</td></tr>
+<tr><td><strong>Para quem</strong></td><td>Qualquer pessoa da gráfica</td><td>Casos avançados que precisam de queries próprias</td></tr>
+<tr><td><strong>Onde funciona</strong></td><td>Claude Code, claude.ai, ChatGPT, Cursor, Codex e outras IAs com MCP</td><td>Qualquer IA ou ferramenta que fale com MongoDB</td></tr>
+</tbody></table>
+
+<h3>Como fica no dia a dia</h3>
+<p>Depois de conectar, você conversa em português. Por exemplo:</p>
+<div class="code" data-copy><div class="code-head"><span class="code-label">prompt</span></div><pre><code>Quanto faturei este mês e qual o meu saldo em caixa?</code></pre></div>
+<p>A IA chama a tool <code class="inline">holdprint_report</code> e responde com os números da sua conta. Veja mais exemplos em <a href="#usar">Como usar</a>.</p>
+
+<h3>Por onde começar</h3>
+<div class="steps">
+  <div class="step"><div class="step-body"><h4>Instale as skills</h4><p>Elas ensinam a IA as regras do Holdprint. Veja <a href="#skills">Instalar as skills</a>.</p></div></div>
+  <div class="step"><div class="step-body"><h4>Conecte o MCP</h4><p>No terminal, pelo <a href="#install-cc">Claude Code</a>; no navegador, pelo <a href="#install-web">claude.ai ou ChatGPT</a>.</p></div></div>
+  <div class="step"><div class="step-body"><h4>Pergunte</h4><p>Em português, como falaria com alguém da equipe.</p></div></div>
+</div>
+
+<div class="callout info"><div><p class="ct-title">Quer telas e automações dentro do Holdprint?</p><p>A mesma IA pode criar plugins: páginas no menu, botões nas telas, abas, cards e rotinas automáticas. Veja <a href="/plugins/">Plugins</a>.</p></div></div>

@@ -1,0 +1,1175 @@
+{
+  "generatedAt": "2026-11-13",
+  "sourceCommit": "b56dd7b91",
+  "query": {
+    "limits": {
+      "maxLimit": 100,
+      "defaultLimit": 50
+    },
+    "operators": [
+      "eq",
+      "in",
+      "gte",
+      "lte"
+    ],
+    "resources": [
+      {
+        "resource": "budgets",
+        "title": "Orçamentos",
+        "scope": "budgets:read",
+        "fields": [
+          "id",
+          "code",
+          "budgetTitle",
+          "customer",
+          "funnel",
+          "state",
+          "businessValue",
+          "isBusiness",
+          "targetDateApprove",
+          "deliveryNeed",
+          "expirationDate",
+          "creationTime",
+          "wonDate",
+          "lostDate",
+          "lostAnnotation",
+          "note",
+          "responsibleUserId",
+          "winnerProposeId",
+          "lastUpdateTime",
+          "deleted"
+        ],
+        "filters": [
+          {
+            "field": "state",
+            "ops": [
+              "eq",
+              "in",
+              "gte",
+              "lte"
+            ],
+            "requires": []
+          },
+          {
+            "field": "wonDate",
+            "ops": [
+              "gte",
+              "lte"
+            ],
+            "requires": []
+          },
+          {
+            "field": "lostDate",
+            "ops": [
+              "gte",
+              "lte"
+            ],
+            "requires": []
+          },
+          {
+            "field": "creationTime",
+            "ops": [
+              "gte",
+              "lte"
+            ],
+            "requires": []
+          },
+          {
+            "field": "responsibleUserId",
+            "ops": [
+              "eq",
+              "in"
+            ],
+            "requires": []
+          },
+          {
+            "field": "customer",
+            "ops": [
+              "eq",
+              "in"
+            ],
+            "requires": []
+          }
+        ],
+        "sorts": [
+          "wonDate",
+          "lostDate",
+          "creationTime",
+          "updatedAt"
+        ],
+        "defaultSort": "-creationTime",
+        "updatedSince": true,
+        "requiresAnyFilter": [],
+        "requiresAllFilters": [],
+        "sortRequires": {},
+        "maxLimit": 100
+      },
+      {
+        "resource": "customers",
+        "title": "Clientes",
+        "scope": "customers:read",
+        "fields": [
+          "id",
+          "fullName",
+          "name",
+          "mainPhoneNumber",
+          "mainEmail",
+          "site",
+          "active",
+          "deleted",
+          "creationTime",
+          "lastUpdateTime"
+        ],
+        "filters": [
+          {
+            "field": "deleted",
+            "ops": [
+              "eq"
+            ],
+            "requires": []
+          }
+        ],
+        "sorts": [
+          "name",
+          "updatedAt"
+        ],
+        "defaultSort": "name",
+        "updatedSince": true,
+        "requiresAnyFilter": [],
+        "requiresAllFilters": [],
+        "sortRequires": {},
+        "maxLimit": 100
+      },
+      {
+        "resource": "tasks",
+        "title": "Tarefas",
+        "scope": "tasks:read",
+        "fields": [
+          "id",
+          "budgetId",
+          "budgetCode",
+          "title",
+          "description",
+          "taskType",
+          "relatedEntity",
+          "schedulingTime",
+          "endTime",
+          "duration",
+          "entityId",
+          "responsibleUserId",
+          "deleted",
+          "createdViaPluginId",
+          "createdViaPluginName"
+        ],
+        "filters": [
+          {
+            "field": "budgetId",
+            "ops": [
+              "eq",
+              "in"
+            ],
+            "requires": []
+          },
+          {
+            "field": "relatedEntity",
+            "ops": [
+              "eq",
+              "in"
+            ],
+            "requires": []
+          },
+          {
+            "field": "deleted",
+            "ops": [
+              "eq"
+            ],
+            "requires": []
+          }
+        ],
+        "sorts": [
+          "endTime",
+          "updatedAt"
+        ],
+        "defaultSort": "-endTime",
+        "updatedSince": true,
+        "requiresAnyFilter": [],
+        "requiresAllFilters": [],
+        "sortRequires": {
+          "endTime": [
+            "relatedEntity"
+          ]
+        },
+        "maxLimit": 100
+      },
+      {
+        "resource": "jobs",
+        "title": "Jobs",
+        "scope": "jobs:read",
+        "fields": [
+          "id",
+          "code",
+          "title",
+          "customerId",
+          "budgetId",
+          "deliveryExpected",
+          "deliveryNeeded",
+          "totalPrice",
+          "isFinalized",
+          "mustGenerateBilling",
+          "creationTime",
+          "commercialResponsibleId",
+          "responsibleId",
+          "versionNumber",
+          "contactId",
+          "companyId",
+          "deleted",
+          "type",
+          "jobChargeStatus",
+          "jobInvoiceStatus"
+        ],
+        "filters": [
+          {
+            "field": "code",
+            "ops": [
+              "eq",
+              "in",
+              "gte",
+              "lte"
+            ],
+            "requires": []
+          },
+          {
+            "field": "budgetId",
+            "ops": [
+              "eq",
+              "in"
+            ],
+            "requires": []
+          },
+          {
+            "field": "deleted",
+            "ops": [
+              "eq"
+            ],
+            "requires": []
+          },
+          {
+            "field": "isFinalized",
+            "ops": [
+              "eq"
+            ],
+            "requires": []
+          },
+          {
+            "field": "creationTime",
+            "ops": [
+              "gte",
+              "lte"
+            ],
+            "requires": []
+          },
+          {
+            "field": "deliveryNeeded",
+            "ops": [
+              "gte",
+              "lte"
+            ],
+            "requires": []
+          }
+        ],
+        "sorts": [
+          "creationTime",
+          "deliveryNeeded",
+          "code"
+        ],
+        "defaultSort": "-creationTime",
+        "updatedSince": false,
+        "requiresAnyFilter": [],
+        "requiresAllFilters": [],
+        "sortRequires": {},
+        "maxLimit": 100
+      },
+      {
+        "resource": "expenses",
+        "title": "Despesas",
+        "scope": "expenses:read",
+        "fields": [
+          "id",
+          "description",
+          "originalAmount",
+          "amountPayable",
+          "dueDate",
+          "originalDueDate",
+          "accrualDate",
+          "settlementDate",
+          "date",
+          "active",
+          "deleted",
+          "entityId",
+          "companyId",
+          "accountStatusId",
+          "paymentMethodId",
+          "accountStatusType",
+          "expenseOriginType",
+          "documentName",
+          "creationDate"
+        ],
+        "filters": [
+          {
+            "field": "accountStatusId",
+            "ops": [
+              "eq"
+            ],
+            "requires": []
+          },
+          {
+            "field": "active",
+            "ops": [
+              "eq"
+            ],
+            "requires": []
+          },
+          {
+            "field": "dueDate",
+            "ops": [
+              "gte",
+              "lte"
+            ],
+            "requires": [
+              "accountStatusId",
+              "active"
+            ]
+          }
+        ],
+        "sorts": [
+          "dueDate"
+        ],
+        "defaultSort": "dueDate",
+        "updatedSince": false,
+        "requiresAnyFilter": [],
+        "requiresAllFilters": [
+          "accountStatusId",
+          "active"
+        ],
+        "sortRequires": {
+          "dueDate": [
+            "accountStatusId",
+            "active"
+          ]
+        },
+        "maxLimit": 100
+      },
+      {
+        "resource": "incomes",
+        "title": "Receitas",
+        "scope": "incomes:read",
+        "fields": [
+          "id",
+          "description",
+          "originalAmount",
+          "amountReceivable",
+          "amountReceived",
+          "dueDate",
+          "originalDueDate",
+          "accrualDate",
+          "settlementDate",
+          "active",
+          "deleted",
+          "payerId",
+          "companyId",
+          "accountStatusId",
+          "paymentMethodId",
+          "financialAccountId",
+          "accountStatusType",
+          "incomeOriginType",
+          "documentName",
+          "creationDate"
+        ],
+        "filters": [
+          {
+            "field": "accountStatusId",
+            "ops": [
+              "eq"
+            ],
+            "requires": []
+          },
+          {
+            "field": "active",
+            "ops": [
+              "eq"
+            ],
+            "requires": []
+          },
+          {
+            "field": "dueDate",
+            "ops": [
+              "gte",
+              "lte"
+            ],
+            "requires": [
+              "accountStatusId",
+              "active"
+            ]
+          }
+        ],
+        "sorts": [
+          "dueDate"
+        ],
+        "defaultSort": "dueDate",
+        "updatedSince": false,
+        "requiresAnyFilter": [],
+        "requiresAllFilters": [
+          "accountStatusId",
+          "active"
+        ],
+        "sortRequires": {
+          "dueDate": [
+            "accountStatusId",
+            "active"
+          ]
+        },
+        "maxLimit": 100
+      },
+      {
+        "resource": "feedstocks",
+        "title": "Insumos",
+        "scope": "feedstocks:read",
+        "fields": [
+          "id",
+          "technicalName",
+          "description",
+          "unitUse",
+          "publicId",
+          "version",
+          "favorite",
+          "inactive",
+          "deleted",
+          "lock",
+          "useComercialNames",
+          "physicalQuantityType"
+        ],
+        "filters": [
+          {
+            "field": "publicId",
+            "ops": [
+              "eq",
+              "in"
+            ],
+            "requires": []
+          },
+          {
+            "field": "deleted",
+            "ops": [
+              "eq"
+            ],
+            "requires": []
+          },
+          {
+            "field": "inactive",
+            "ops": [
+              "eq"
+            ],
+            "requires": []
+          }
+        ],
+        "sorts": [
+          "technicalName"
+        ],
+        "defaultSort": "technicalName",
+        "updatedSince": false,
+        "requiresAnyFilter": [],
+        "requiresAllFilters": [],
+        "sortRequires": {},
+        "maxLimit": 100
+      }
+    ],
+    "byIdOnly": [
+      {
+        "resource": "funnels",
+        "title": "Funis",
+        "scope": "funnels:read"
+      },
+      {
+        "resource": "users",
+        "title": "Usuários",
+        "scope": "users:read"
+      },
+      {
+        "resource": "stock-movements",
+        "title": "Movimentações de estoque",
+        "scope": "stock-movements:read"
+      },
+      {
+        "resource": "purchase-orders",
+        "title": "Pedidos de compra",
+        "scope": "purchase-orders:read"
+      },
+      {
+        "resource": "stock-centrals",
+        "title": "Centrais de estoque",
+        "scope": "stock-centrals:read"
+      },
+      {
+        "resource": "suppliers",
+        "title": "Fornecedores",
+        "scope": "suppliers:read"
+      },
+      {
+        "resource": "employees",
+        "title": "Funcionários",
+        "scope": "employees:read"
+      },
+      {
+        "resource": "agencies",
+        "title": "Agências",
+        "scope": "agencies:read"
+      },
+      {
+        "resource": "cost-centers",
+        "title": "Centros de custo",
+        "scope": "cost-centers:read"
+      },
+      {
+        "resource": "equipments",
+        "title": "Equipamentos",
+        "scope": "equipments:read"
+      },
+      {
+        "resource": "processes",
+        "title": "Processos",
+        "scope": "processes:read"
+      },
+      {
+        "resource": "outsourceds",
+        "title": "Terceirizados",
+        "scope": "outsourceds:read"
+      },
+      {
+        "resource": "products",
+        "title": "Produtos",
+        "scope": "products:read"
+      },
+      {
+        "resource": "fixed-expenses",
+        "title": "Despesas fixas",
+        "scope": "fixed-expenses:read"
+      },
+      {
+        "resource": "financial-transactions",
+        "title": "Movimentações financeiras",
+        "scope": "financial-transactions:read"
+      },
+      {
+        "resource": "credit-cards",
+        "title": "Cartões da empresa",
+        "scope": "credit-cards:read"
+      },
+      {
+        "resource": "commissions",
+        "title": "Comissões",
+        "scope": "commissions:read"
+      },
+      {
+        "resource": "bank-reconciliations",
+        "title": "Conciliações bancárias",
+        "scope": "bank-reconciliations:read"
+      },
+      {
+        "resource": "invoices",
+        "title": "Notas fiscais",
+        "scope": "invoices:read"
+      },
+      {
+        "resource": "contracts",
+        "title": "Contratos",
+        "scope": "contracts:read"
+      }
+    ]
+  },
+  "actions": {
+    "total": 1474,
+    "examples": [
+      {
+        "key": "CustomersController.Create:POST:api/customers",
+        "label": "Cadastrar cliente",
+        "method": "POST",
+        "route": "/api/customers",
+        "risk": "medium",
+        "area": "register"
+      },
+      {
+        "key": "CustomersController.UpdateAsync:PUT:api/customers/{id}",
+        "label": "Atualizar cliente",
+        "method": "PUT",
+        "route": "/api/customers/{id}",
+        "risk": "medium",
+        "area": "register"
+      },
+      {
+        "key": "BudgetsController.Create:POST:api/budgets",
+        "label": "Criar orçamento",
+        "method": "POST",
+        "route": "/api/budgets",
+        "risk": "medium",
+        "area": "core"
+      },
+      {
+        "key": "BudgetsController.Won:POST:api/budgets/won",
+        "label": "Ganhar orçamento",
+        "method": "POST",
+        "route": "/api/budgets/won",
+        "risk": "medium",
+        "area": "core"
+      },
+      {
+        "key": "BudgetsController.Lost:POST:api/budgets/lost",
+        "label": "Perder orçamento",
+        "method": "POST",
+        "route": "/api/budgets/lost",
+        "risk": "medium",
+        "area": "core"
+      },
+      {
+        "key": "ExpensesController.CreateExpenseInstallments:POST:api/expenses/create-expense-installments",
+        "label": "Lançar conta a pagar (com parcelas)",
+        "method": "POST",
+        "route": "/api/expenses/create-expense-installments",
+        "risk": "high",
+        "area": "financial"
+      },
+      {
+        "key": "IncomesController.CreateIncomeInstallments:POST:api/incomes/create-income-installments",
+        "label": "Lançar conta a receber (com parcelas)",
+        "method": "POST",
+        "route": "/api/incomes/create-income-installments",
+        "risk": "high",
+        "area": "core"
+      },
+      {
+        "key": "FeedstockController.ChangeFeedstocksPrices:POST:api/feedstocks/change-feedstocks-prices",
+        "label": "Mudar o preço de insumos",
+        "method": "POST",
+        "route": "/api/feedstocks/change-feedstocks-prices",
+        "risk": "medium",
+        "area": "core"
+      },
+      {
+        "key": "PurchaseOrdersController.CreateStockEntry:PUT:api/purchase-orders/stock-entry/{id}",
+        "label": "Dar entrada no estoque pelo pedido de compra",
+        "method": "PUT",
+        "route": "/api/purchase-orders/stock-entry/{id}",
+        "risk": "medium",
+        "area": "core"
+      },
+      {
+        "key": "JobsController.Finalize:POST:api/jobs/finalize",
+        "label": "Finalizar jobs",
+        "method": "POST",
+        "route": "/api/jobs/finalize",
+        "risk": "high",
+        "area": "core"
+      },
+      {
+        "key": "AccountFilesController.PostAsync:POST:api/account-files",
+        "label": "Anexar arquivo à conta",
+        "method": "POST",
+        "route": "/api/account-files",
+        "risk": "medium",
+        "area": "core"
+      },
+      {
+        "key": "NfeController.PutNfesSendAsync:PUT:api/nfes/send/{id}",
+        "label": "Enviar NF-e para a Sefaz",
+        "method": "PUT",
+        "route": "/api/nfes/send/{id}",
+        "risk": "high",
+        "area": "invoice"
+      }
+    ],
+    "modules": [
+      {
+        "module": "core",
+        "total": 597,
+        "risk": {
+          "low": 222,
+          "medium": 235,
+          "high": 140
+        },
+        "resources": {
+          "acabamento": 4,
+          "account-files": 3,
+          "account-notifications": 4,
+          "ai-image-generation": 3,
+          "bank-reconciliations": 4,
+          "boleto": 10,
+          "budget-ai-configuration": 1,
+          "budget-email-tag-resolver": 1,
+          "budget-price-method": 6,
+          "budgets": 89,
+          "cfop": 4,
+          "checklist": 1,
+          "commercial-products": 3,
+          "commission-plans": 6,
+          "commissioned": 4,
+          "companies": 10,
+          "countries": 1,
+          "credit": 3,
+          "customer-groups": 5,
+          "customer-origin": 3,
+          "customer-tracking": 1,
+          "digital-engine-settings": 2,
+          "discount": 1,
+          "email-template": 5,
+          "entities": 10,
+          "exchange-rate": 2,
+          "export-data": 5,
+          "exposure": 1,
+          "feedstock": 43,
+          "feedstock-families": 1,
+          "feedstock-price": 2,
+          "feedstock-purchase-config": 3,
+          "field": 5,
+          "fixed-expenses": 13,
+          "funnels": 4,
+          "general-instructions": 3,
+          "historic": 1,
+          "hold-ai-license": 6,
+          "holdprint-account-financial": 1,
+          "holdprint-account-maintenances": 7,
+          "holdprint-accounts": 12,
+          "holdprint-charge": 3,
+          "holdprint-locale-databases": 2,
+          "holdprint-plan-and-package": 3,
+          "incomes": 26,
+          "ink-profile": 3,
+          "installment-charge": 2,
+          "installment-plans": 3,
+          "installments-generation-setting": 1,
+          "jobs": 51,
+          "journeys": 3,
+          "language": 1,
+          "lost-budget-reasons": 2,
+          "material-machine-compatibility": 3,
+          "measurement-unit": 3,
+          "nfe-email-tag-resolver": 1,
+          "nfse-email-tag-resolver": 1,
+          "payment-condition": 4,
+          "payment-gateway": 2,
+          "payment-options": 7,
+          "plugin-budget-data": 3,
+          "plugin-data": 3,
+          "product": 70,
+          "production-steps": 4,
+          "prompt-attachments": 3,
+          "prompt-budget-data": 10,
+          "purchase-orders": 19,
+          "quotation-assistant": 4,
+          "release-notes": 4,
+          "resource-groups": 3,
+          "resources": 7,
+          "sales-analytics": 2,
+          "sandbox": 3,
+          "sectors": 3,
+          "special-resources": 3,
+          "standard-text": 5,
+          "stock-centrals": 6,
+          "stock-movements": 6,
+          "taxes": 8,
+          "user-notification-preferences": 1,
+          "warning": 5,
+          "whats-app": 7,
+          "workstation": 4
+        }
+      },
+      {
+        "module": "invoice",
+        "total": 222,
+        "risk": {
+          "low": 39,
+          "medium": 0,
+          "high": 183
+        },
+        "resources": {
+          "argentina-delivery-note": 2,
+          "argentina-invoice": 7,
+          "billing-distribution": 4,
+          "bulk-invoice": 1,
+          "commercial-invoice": 7,
+          "company-invoice": 16,
+          "company-invoice-item-feedstock": 1,
+          "company-print-logo": 1,
+          "digital-cetificate": 4,
+          "fiscal-document-print-authorization": 3,
+          "invoice-import": 3,
+          "mdfe": 23,
+          "mdfe-drivers": 2,
+          "mdfe-insurance-contractors": 2,
+          "mdfe-insurers": 2,
+          "mdfe-trailers": 2,
+          "mdfe-vehicles": 2,
+          "nfce": 29,
+          "nfe": 50,
+          "nfse": 49,
+          "pre-billing-batch": 12
+        }
+      },
+      {
+        "module": "financial",
+        "total": 131,
+        "risk": {
+          "low": 41,
+          "medium": 0,
+          "high": 90
+        },
+        "resources": {
+          "account-status": 4,
+          "bank-accounts": 3,
+          "bank-fee-expenses": 1,
+          "card-banner": 4,
+          "card-invoice-pdf": 1,
+          "card-purchases": 4,
+          "card-reconciliations": 11,
+          "cash-accounts": 5,
+          "company-cards": 5,
+          "credit-card": 2,
+          "credit-card-entries": 6,
+          "exchanges": 3,
+          "expenses": 30,
+          "financial-accounts": 4,
+          "financial-transactions": 12,
+          "hold-link": 18,
+          "open-finance": 3,
+          "payment-methods": 5,
+          "payment-terminal-operators": 3,
+          "payment-terminals": 7
+        }
+      },
+      {
+        "module": "defrayal",
+        "total": 110,
+        "risk": {
+          "low": 37,
+          "medium": 61,
+          "high": 12
+        },
+        "resources": {
+          "cost-center-ai": 5,
+          "cost-center-group": 14,
+          "cost-center-method": 2,
+          "equipment": 25,
+          "equipment-families": 1,
+          "outsourced": 25,
+          "process": 33,
+          "user-product-family-image": 5
+        }
+      },
+      {
+        "module": "register",
+        "total": 86,
+        "risk": {
+          "low": 25,
+          "medium": 45,
+          "high": 16
+        },
+        "resources": {
+          "ad-agencies": 14,
+          "customer-branch": 3,
+          "customer-list-public-views": 5,
+          "customers": 29,
+          "employees": 16,
+          "leads": 2,
+          "suppliers": 16,
+          "web-suit-entity": 1
+        }
+      },
+      {
+        "module": "production",
+        "total": 57,
+        "risk": {
+          "low": 18,
+          "medium": 33,
+          "high": 6
+        },
+        "resources": {
+          "attendance": 5,
+          "billing-absence-reasons": 2,
+          "customer-portal": 8,
+          "ecommerce-board": 2,
+          "ecommerce-proof": 5,
+          "job-allocator": 2,
+          "job-feedstock-report": 5,
+          "job-flow": 3,
+          "job-production": 7,
+          "job-production-history": 1,
+          "job-task-calendar": 2,
+          "plan-job": 2,
+          "production-flow": 7,
+          "production-schedule": 3,
+          "production-terminal": 3
+        }
+      },
+      {
+        "module": "crm",
+        "total": 39,
+        "risk": {
+          "low": 11,
+          "medium": 17,
+          "high": 11
+        },
+        "resources": {
+          "budget-cost-simulation": 2,
+          "budget-emails": 4,
+          "budget-history": 1,
+          "budget-step-order": 2,
+          "budget-task": 6,
+          "contract-preferences": 1,
+          "contract-templates": 4,
+          "contracts": 6,
+          "cost-memento": 1,
+          "cost-memento-item": 5,
+          "device-tokens": 2,
+          "invoice-onboarding": 4,
+          "web-suit-budget": 1
+        }
+      },
+      {
+        "module": "dashboards",
+        "total": 34,
+        "risk": {
+          "low": 30,
+          "medium": 2,
+          "high": 2
+        },
+        "resources": {
+          "breakeven-point-dashboard": 3,
+          "budget-task-dashboard": 1,
+          "financial-dashboard": 30
+        }
+      },
+      {
+        "module": "ecommerce",
+        "total": 32,
+        "risk": {
+          "low": 0,
+          "medium": 26,
+          "high": 6
+        },
+        "resources": {
+          "ecommerce-attribute-drafts": 3,
+          "ecommerce-auth": 2,
+          "ecommerce-catalog-items": 5,
+          "ecommerce-catalog-publication": 5,
+          "ecommerce-catalog-settings": 1,
+          "ecommerce-category-drafts": 3,
+          "ecommerce-config": 1,
+          "ecommerce-mapping": 3,
+          "ecommerce-monitor-alerts": 3,
+          "ecommerce-order": 4,
+          "ecommerce-publish-runs": 2
+        }
+      },
+      {
+        "module": "hold-one",
+        "total": 31,
+        "risk": {
+          "low": 9,
+          "medium": 0,
+          "high": 22
+        },
+        "resources": {
+          "hold-one-agent": 5,
+          "hold-one-budget-ai": 3,
+          "hold-one-budget": 2,
+          "hold-one-channel": 5,
+          "hold-one-contact": 11,
+          "hold-one-tag": 5
+        }
+      },
+      {
+        "module": "calendar",
+        "total": 22,
+        "risk": {
+          "low": 7,
+          "medium": 11,
+          "high": 4
+        },
+        "resources": {
+          "calendar": 4,
+          "calendar-event": 9,
+          "calendar-sync": 6,
+          "financial-calendar-projector": 1,
+          "fiscal-crm-calendar-projector": 1,
+          "production-calendar-projector": 1
+        }
+      },
+      {
+        "module": "holdprint",
+        "total": 22,
+        "risk": {
+          "low": 4,
+          "medium": 0,
+          "high": 18
+        },
+        "resources": {
+          "holdprint-users": 22
+        }
+      },
+      {
+        "module": "plugins",
+        "total": 18,
+        "risk": {
+          "low": 2,
+          "medium": 13,
+          "high": 3
+        },
+        "resources": {
+          "plugin-catalog": 2,
+          "plugin-cli": 8,
+          "plugin-installations": 7,
+          "plugin-platform-settings": 1
+        }
+      },
+      {
+        "module": "settings",
+        "total": 16,
+        "risk": {
+          "low": 2,
+          "medium": 6,
+          "high": 8
+        },
+        "resources": {
+          "budget-description-settings": 1,
+          "crm-settings": 1,
+          "financial-settings": 1,
+          "pdv-settings": 1,
+          "production-settings": 1,
+          "system-setting-value": 4,
+          "user-profiles": 7
+        }
+      },
+      {
+        "module": "suppliers",
+        "total": 15,
+        "risk": {
+          "low": 1,
+          "medium": 13,
+          "high": 1
+        },
+        "resources": {
+          "gift-catalog": 7,
+          "supplier-integrations": 8
+        }
+      },
+      {
+        "module": "gift-store",
+        "total": 13,
+        "risk": {
+          "low": 1,
+          "medium": 10,
+          "high": 2
+        },
+        "resources": {
+          "gift-store-connection": 8,
+          "gift-store": 4,
+          "gift-store-monitor": 1
+        }
+      },
+      {
+        "module": "import-ai",
+        "total": 9,
+        "risk": {
+          "low": 0,
+          "medium": 8,
+          "high": 1
+        },
+        "resources": {
+          "import-ai": 9
+        }
+      },
+      {
+        "module": "reports",
+        "total": 6,
+        "risk": {
+          "low": 6,
+          "medium": 0,
+          "high": 0
+        },
+        "resources": {
+          "hold-trace": 6
+        }
+      },
+      {
+        "module": "hpl",
+        "total": 4,
+        "risk": {
+          "low": 1,
+          "medium": 2,
+          "high": 1
+        },
+        "resources": {
+          "hpl-script": 4
+        }
+      },
+      {
+        "module": "hold-bridge",
+        "total": 4,
+        "risk": {
+          "low": 0,
+          "medium": 4,
+          "high": 0
+        },
+        "resources": {
+          "hold-bridge-app": 4
+        }
+      },
+      {
+        "module": "api-key",
+        "total": 2,
+        "risk": {
+          "low": 1,
+          "medium": 1,
+          "high": 0
+        },
+        "resources": {
+          "budgets-ai": 2
+        }
+      },
+      {
+        "module": "common",
+        "total": 2,
+        "risk": {
+          "low": 2,
+          "medium": 0,
+          "high": 0
+        },
+        "resources": {
+          "ibge-code": 2
+        }
+      },
+      {
+        "module": "webhook",
+        "total": 1,
+        "risk": {
+          "low": 0,
+          "medium": 0,
+          "high": 1
+        },
+        "resources": {
+          "stripe-webhook-relay": 1
+        }
+      },
+      {
+        "module": "translation",
+        "total": 1,
+        "risk": {
+          "low": 0,
+          "medium": 1,
+          "high": 0
+        },
+        "resources": {
+          "translation": 1
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,158 @@
+<!-- legacy-id: tools -->
+<h2>Tools do MCP</h2>
+      <p class="section-sub">28 tools — a LLM as compõe para qualquer pergunta. Você não precisa decorá-las; esta referência é para conferência. As de leitura não alteram nada; as de escrita seguem a regra de prévia abaixo.</p>
+
+      <h3>Fluxo canônico</h3>
+      <p>Não chute nomes de entidade ou campo. Sempre: <code class="inline">discover</code> → <code class="inline">describe</code> → <code class="inline">query</code> / <code class="inline">count</code> / <code class="inline">aggregate</code>. Para valores em R$ que somam sub-documentos, use <code class="inline">report</code>. Para escrever, <code class="inline">discover_actions</code> → <code class="inline">action</code> (dry-run primeiro).</p>
+
+      <div class="ref">
+        <div class="ref-head"><code>holdprint_discover</code><span class="ref-tag">leitura</span></div>
+        <div class="ref-body"><p>Resolve um termo em português para a entidade canônica, ou lista todas.</p>
+          <div class="params"><div class="param"><code>term?</code><span>termo livre pt-BR ou nome técnico. Vazio = lista tudo.</span></div></div>
+        </div>
+      </div>
+
+      <div class="ref">
+        <div class="ref-head"><code>holdprint_describe</code><span class="ref-tag">leitura</span></div>
+        <div class="ref-body"><p>Retorna os campos exatos (nome, tipo, enum e valores) de uma entidade. Use antes de filtrar.</p>
+          <div class="params"><div class="param"><code>collection</code><span>entidade ou termo pt-BR.</span></div></div>
+        </div>
+      </div>
+
+      <div class="ref">
+        <div class="ref-head"><code>holdprint_query</code><span class="ref-tag">leitura</span></div>
+        <div class="ref-body"><p>Lê registros com filtro, ordenação e paginação. Traz só <code class="inline">deleted:false</code> por padrão.</p>
+          <div class="params">
+            <div class="param"><code>collection</code><span>entidade.</span></div>
+            <div class="param"><code>where?</code><span>igualdade <code class="inline">{campo: valor}</code> ou operadores <code class="inline">{campo: {gte: x}}</code>: eq, ne, contains, notContains, lt, lte, gt, gte, in.</span></div>
+            <div class="param"><code>fields?</code><span>campos a retornar.</span></div>
+            <div class="param"><code>sort?</code><span><code class="inline">'-campo'</code> (desc), <code class="inline">'campo'</code> (asc), <code class="inline">['-a','b']</code> ou <code class="inline">{campo:-1}</code>.</span></div>
+            <div class="param"><code>limit?</code><span>1–500 (default 50).</span></div>
+            <div class="param"><code>skip?</code><span>paginação.</span></div>
+            <div class="param"><code>search?</code><span>busca textual livre.</span></div>
+          </div>
+          <div class="code" data-copy>
+            <div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">exemplo</span></div>
+            <pre><code>holdprint_query({
+  collection: <span class="f">"Budget"</span>,
+  where: { state: <span class="f">"Won"</span> },
+  sort: <span class="f">"-total_price"</span>, limit: 10
+})</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="ref">
+        <div class="ref-head"><code>holdprint_count</code><span class="ref-tag">leitura</span></div>
+        <div class="ref-body"><p>Conta registros no servidor sem trazer a lista. Exato.</p>
+          <div class="params"><div class="param"><code>collection, where?</code><span>mesma sintaxe do query.</span></div></div>
+        </div>
+      </div>
+
+      <div class="ref">
+        <div class="ref-head"><code>holdprint_aggregate</code><span class="ref-tag">leitura</span></div>
+        <div class="ref-body"><p>sum / avg / min / max / count de um campo numérico, com agrupamento opcional. Some/avg varrem o conjunto inteiro (exato).</p>
+          <div class="params">
+            <div class="param"><code>op</code><span>count | sum | avg | min | max.</span></div>
+            <div class="param"><code>field?</code><span>campo numérico (obrigatório p/ sum/avg/min/max). Aceita dot-notation: <code class="inline">bankAccount.amount</code>.</span></div>
+            <div class="param"><code>groupBy?</code><span>campo para agrupar (ex.: status, vendedor).</span></div>
+          </div>
+          <div class="code" data-copy>
+            <div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">exemplo</span></div>
+            <pre><code>holdprint_aggregate({
+  collection: <span class="f">"Budget"</span>, op: <span class="f">"count"</span>,
+  where: { state: <span class="f">"Won"</span> }, groupBy: <span class="f">"sellerName"</span>
+})</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="ref">
+        <div class="ref-head"><code>holdprint_get</code><span class="ref-tag">leitura</span></div>
+        <div class="ref-body"><p>Busca um registro por id.</p><div class="params"><div class="param"><code>collection, id</code><span>—</span></div></div></div>
+      </div>
+
+      <div class="ref">
+        <div class="ref-head"><code>holdprint_report</code><span class="ref-tag">leitura · R$</span></div>
+        <div class="ref-body"><p>Relatórios de dashboard que somam sub-documentos (o que o aggregate genérico não alcança).</p>
+          <div class="params">
+            <div class="param"><code>report</code><span>vendas_total · nfe_faturamento_valor · nfe_faturamento_qtd · jobs_atrasados · jobs_finalizados · jobs_a_entregar · lucro_mensal · margem_contribuicao · custo_fixo · saldo_contas.</span></div>
+            <div class="param"><code>startDate, endDate</code><span>YYYY-MM-DD (saldo_contas dispensa datas).</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ref">
+        <div class="ref-head"><code>holdprint_discover_actions</code><span class="ref-tag">ação</span></div>
+        <div class="ref-body"><p>Descobre ações não-CRUD (ganhar orçamento, emitir NFe, liquidar despesa…) e seus parâmetros.</p>
+          <div class="params"><div class="param"><code>query</code><span>intenção pt-BR ou nome (ex.: "ganhar orçamento").</span></div></div>
+        </div>
+      </div>
+
+      <div class="ref">
+        <div class="ref-head"><code>holdprint_action</code><span class="ref-tag">escrita</span></div>
+        <div class="ref-body"><p>Executa uma ação <strong>não destrutiva</strong>, direto. Ação marcada <code class="inline">destructive</code> é recusada aqui: use a prévia e a execução abaixo.</p>
+          <div class="params">
+            <div class="param"><code>actionName</code><span>de discover_actions.</span></div>
+            <div class="param"><code>args?</code><span>path params + corpo.</span></div>
+            <div class="param"><code>dryRun?</code><span>default <strong>false</strong>. true só simula (o nome é <code class="inline">dryRun</code>, não <code class="inline">dry_run</code>).</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ref">
+        <div class="ref-head"><code>holdprint_action_preview</code><span class="ref-tag">leitura</span></div>
+        <div class="ref-body"><p>Simula uma ação sem executar: devolve o efeito (rota, corpo, efeitos colaterais, aviso de cascata) e um <code class="inline">previewId</code>. Obrigatória nas ações destrutivas.</p>
+          <div class="params">
+            <div class="param"><code>actionName</code><span>de discover_actions.</span></div>
+            <div class="param"><code>args?</code><span>os mesmos da execução.</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ref">
+        <div class="ref-head"><code>holdprint_action_execute</code><span class="ref-tag">escrita</span></div>
+        <div class="ref-body"><p>Executa exatamente o que a prévia mostrou. O <code class="inline">previewId</code> é de uso único, vale 10 minutos e só serve para a mesma conta, usuário e ação.</p>
+          <div class="params">
+            <div class="param"><code>previewId</code><span>devolvido por holdprint_action_preview.</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ref">
+        <div class="ref-head"><code>holdprint_attach_document</code><span class="ref-tag">escrita</span></div>
+        <div class="ref-body"><p>Anexa ao orçamento um HTML gerado pela IA (ex.: a proposta). HTML vazio, acima de 1 MB ou com <code class="inline">&lt;script&gt;</code>, atributo <code class="inline">on...=</code>, <code class="inline">javascript:</code>, iframe, object, embed, base ou meta refresh é recusado antes de qualquer chamada ao ERP. Orçamento inexistente ou importado também é recusado.</p>
+          <div class="params">
+            <div class="param"><code>budgetId</code><span>id do orçamento (de holdprint_query).</span></div>
+            <div class="param"><code>html</code><span>documento HTML completo e estático, até 1 MB.</span></div>
+            <div class="param"><code>fileName?</code><span>nome do arquivo (vira .html).</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ref">
+        <div class="ref-head"><code>holdprint_import</code> · <code>_financials</code> · <code>_stock</code> · <code>_feedstock</code><span class="ref-tag">escrita</span></div>
+        <div class="ref-body"><p>Importações em lote (clientes/fornecedores, contas a receber e a pagar, movimentações de estoque, matérias-primas). Simulam por padrão e só gravam com o <code class="inline">previewId</code> da simulação do mesmo conteúdo.</p>
+          <div class="params">
+            <div class="param"><code>rows</code><span>até 500 linhas (coluna→valor).</span></div>
+            <div class="param"><code>mapping</code><span>coluna→campo.</span></div>
+            <div class="param"><code>dry_run?</code><span>default <strong>true</strong>: simula e devolve o <code class="inline">previewId</code>.</span></div>
+            <div class="param"><code>previewId?</code><span>obrigatório com <code class="inline">dry_run:false</code>; uso único, 10 minutos, mesmo conteúdo.</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ref">
+        <div class="ref-head"><code>outras tools</code><span class="ref-tag">leitura e escrita</span></div>
+        <div class="ref-body"><p><code class="inline">holdprint_whoami</code>, <code class="inline">holdprint_job_slim</code>, <code class="inline">holdprint_checkup</code>, <code class="inline">holdprint_breakeven</code>, <code class="inline">holdprint_lookup_cnpj</code> e <code class="inline">holdprint_lookup_cep</code> (leitura); <code class="inline">holdprint_budget_link</code>, <code class="inline">holdprint_add_item</code>, <code class="inline">holdprint_stock_movement</code>, <code class="inline">holdprint_stock_transfer</code> e <code class="inline">holdprint_set_feedstock_price</code> (escrita não destrutiva). Toda tool traz as anotações MCP <code class="inline">readOnlyHint</code> e <code class="inline">destructiveHint</code>, que os clientes usam para pedir confirmação.</p></div>
+      </div>
+
+      <div class="ref">
+        <div class="ref-head"><code>holdprint_examples</code><span class="ref-tag">leitura</span></div>
+        <div class="ref-body"><p>Retorna jornadas comuns com os <code class="inline">args</code> já modelados — use antes de montar do zero.</p></div>
+      </div>
+
+      <div class="callout info">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+        <div><p class="ct-title">Ação destrutiva exige prévia</p><p>Apagar, liquidar, estornar e emitir ou cancelar nota passam por duas etapas: a prévia mostra o efeito e devolve um código de uso único (10 minutos); só ele executa. Importações em lote seguem a mesma regra. Ação não destrutiva executa direto.</p></div>
+      </div>

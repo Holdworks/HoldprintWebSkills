@@ -1,0 +1,116 @@
+<!-- legacy-id: api-suppliers -->
+<h2>Fornecedores</h2><p class="section-sub">Consulta o cadastro de fornecedores de forma paginada, com busca por nome, e-mail ou documento, filtro por categoria e dados completos de contato, endereço e condições de pagamento.</p>
+<div class="ref">
+  <div class="ref-head"><span class="ref-tag get">GET</span><code>/api-key/suppliers/data</code></div>
+  <div class="ref-body">
+    <p>Consulta dados de fornecedores cadastrados na plataforma. Este endpoint permite consultar o cadastro de fornecedores de forma paginada, com suporte a busca por nome, e-mail ou documento, e filtro por categoria. Os dados retornados incluem informações completas de contato, endereço, categoria e condições de pagamento, facilitando integrações com sistemas de compras e controle de estoque. Se nenhum parâmetro for informado, o endpoint retorna todos os fornecedores ativos cadastrados.</p>
+    <p>Autenticação via API Key no header <code>x-api-key</code>. Base da API: <code>https://api.holdworks.ai</code>.</p>
+    <h3>Parâmetros de Query</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>page</td><td>int</td><td class="req-no">opcional</td><td>Número da página para paginação (padrão: 1)</td></tr>
+      <tr><td>limit</td><td>int</td><td class="req-no">opcional</td><td>Quantidade de registros por página (padrão: 50 • máximo: 100)</td></tr>
+      <tr><td>search</td><td>string</td><td class="req-no">opcional</td><td>Busca por nome, e-mail ou documento do fornecedor (exemplo: Fornecedor XYZ)</td></tr>
+      <tr><td>category</td><td>string</td><td class="req-no">opcional</td><td>Filtrar por categoria de fornecedor (exemplo: paper_supplies)</td></tr>
+      <tr><td>active</td><td>boolean</td><td class="req-no">opcional</td><td>Filtrar apenas fornecedores ativos (true/false) (padrão: true)</td></tr>
+      <tr><td>translate</td><td>boolean</td><td class="req-no">opcional</td><td>Traduzir nomes de campos (true/false) (padrão: false)</td></tr>
+    </tbody></table>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">bash</span></div><pre><code>curl -X GET "https://api.holdworks.ai/api-key/suppliers/data?page=1&amp;limit=50&amp;category=paper_supplies" \
+  -H "x-api-key: sua_api_key_aqui"</code></pre></div>
+    <div class="code" data-copy><div class="code-head"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span><span class="code-label">json</span></div><pre><code>{
+  "success": true,
+  "data": {
+    "items": [
+      {
+        "id": 55,
+        "name": "Fornecedor XYZ",
+        "email": "vendas@fornecedor.com",
+        "phone": "+55 11 91234-5678",
+        "document": "98.765.432/0001-11",
+        "category": "paper_supplies",
+        "address": {
+          "street": "Rua Industrial, 500",
+          "complement": "Galpão 3",
+          "neighborhood": "Distrito Industrial",
+          "city": "São Paulo",
+          "state": "SP",
+          "zip_code": "03456-789",
+          "country": "Brasil"
+        },
+        "contact_person": "Carlos Almeida",
+        "payment_terms": "30/60 dias",
+        "active": true,
+        "notes": "Fornecedor principal de papel offset",
+        "created_at": "2023-08-10T10:00:00Z",
+        "updated_at": "2025-01-05T09:30:00Z"
+      },
+      {
+        "id": 56,
+        "name": "Tintas Premium LTDA",
+        "email": "comercial@tintaspremium.com",
+        "phone": "+55 11 98765-4321",
+        "document": "12.345.678/0001-22",
+        "category": "ink_supplies",
+        "address": {
+          "street": "Av. das Tintas, 200",
+          "complement": null,
+          "neighborhood": "Zona Norte",
+          "city": "São Paulo",
+          "state": "SP",
+          "zip_code": "02123-456",
+          "country": "Brasil"
+        },
+        "contact_person": "Ana Paula",
+        "payment_terms": "À vista com desconto",
+        "active": true,
+        "notes": null,
+        "created_at": "2024-02-15T14:00:00Z",
+        "updated_at": "2024-12-20T10:15:00Z"
+      }
+    ],
+    "pagination": {
+      "page": 1,
+      "limit": 50,
+      "total": 78,
+      "pages": 2
+    }
+  },
+  "message": "Success"
+}</code></pre></div>
+    <h3>Categorias de Fornecedores</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>paper_supplies</td><td>string</td><td>Fornecedores de papel e substratos</td></tr>
+      <tr><td>ink_supplies</td><td>string</td><td>Fornecedores de tintas e consumíveis</td></tr>
+      <tr><td>equipment</td><td>string</td><td>Fornecedores de equipamentos e maquinário</td></tr>
+      <tr><td>services</td><td>string</td><td>Fornecedores de serviços terceirizados</td></tr>
+      <tr><td>other</td><td>string</td><td>Outros fornecedores</td></tr>
+    </tbody></table>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Dica</p><p>Filtre fornecedores por categoria para encontrar rapidamente parceiros específicos para cada tipo de insumo ou serviço necessário na produção.</p></div></div>
+    <h3>Estrutura de Dados</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>id</td><td>number</td><td>Identificador único do fornecedor</td></tr>
+      <tr><td>name</td><td>string</td><td>Nome ou razão social do fornecedor</td></tr>
+      <tr><td>email</td><td>string</td><td>E-mail de contato</td></tr>
+      <tr><td>phone</td><td>string</td><td>Telefone de contato</td></tr>
+      <tr><td>document</td><td>string</td><td>CNPJ do fornecedor</td></tr>
+      <tr><td>category</td><td>string</td><td>Categoria do fornecedor</td></tr>
+      <tr><td>address</td><td>object</td><td>Endereço completo do fornecedor</td></tr>
+      <tr><td>contact_person</td><td>string</td><td>Nome da pessoa de contato</td></tr>
+      <tr><td>payment_terms</td><td>string</td><td>Condições de pagamento acordadas</td></tr>
+      <tr><td>active</td><td>boolean</td><td>Indica se o fornecedor está ativo</td></tr>
+      <tr><td>notes</td><td>string | null</td><td>Observações sobre o fornecedor</td></tr>
+      <tr><td>created_at</td><td>string</td><td>Data de cadastro (ISO 8601)</td></tr>
+      <tr><td>updated_at</td><td>string</td><td>Data da última atualização (ISO 8601)</td></tr>
+    </tbody></table>
+    <h3>Objeto Address</h3>
+    <table class="dtable"><thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead><tbody>
+      <tr><td>street</td><td>string</td><td>Logradouro e número</td></tr>
+      <tr><td>complement</td><td>string</td><td>Complemento (opcional)</td></tr>
+      <tr><td>neighborhood</td><td>string</td><td>Bairro</td></tr>
+      <tr><td>city</td><td>string</td><td>Cidade</td></tr>
+      <tr><td>state</td><td>string</td><td>Estado (sigla)</td></tr>
+      <tr><td>zip_code</td><td>string</td><td>CEP</td></tr>
+      <tr><td>country</td><td>string</td><td>País</td></tr>
+    </tbody></table>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><p class="ct-title">Boas Práticas</p><ul><li>Use paginação para grandes volumes de dados</li><li>Implemente cache local para reduzir requisições</li><li>Utilize filtros por categoria para encontrar fornecedores específicos</li><li>Mantenha as condições de pagamento atualizadas (payment_terms)</li></ul></div></div>
+  </div>
+</div>
